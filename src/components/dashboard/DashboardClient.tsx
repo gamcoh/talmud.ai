@@ -61,6 +61,7 @@ export function DashboardClient() {
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
   const [searchResult, setSearchResult] = useState<any | null>(null);
+  const [selectedSectionIndex, setSelectedSectionIndex] = useState<number | null>(null);
 
   const [studied, setStudied] = useState<StudiedText[]>([]);
   const [studiedLoading, setStudiedLoading] = useState(false);
@@ -92,7 +93,7 @@ export function DashboardClient() {
     setSearchError(null);
     setSearchResult(null);
     try {
-      const res = await fetch(`/api/sefaria/texts?query=${encodeURIComponent(q)}`, {
+      const res = await fetch(`https://www.sefaria.org/api/v3/texts/${encodeURIComponent(query)}`, {
         cache: "no-store",
       });
       if (!res.ok) {
@@ -100,6 +101,7 @@ export function DashboardClient() {
         return;
       }
       const data = (await res.json()) as any;
+      console.log(data);
       setSearchResult(data);
     } catch {
       setSearchError("Failed to fetch from Sefaria");
@@ -112,17 +114,27 @@ export function DashboardClient() {
     const ref = (result?.ref ?? query.trim()) as string;
     if (!ref || !userKey) return;
 
+    const versions = Array.isArray(result?.versions) ? result.versions : [];
+    const baseTextArray = Array.isArray(versions[0]?.text) ? versions[0].text : [];
+
+    // Use the selected section (can be HTML) or fallback to all sections joined
+    const chosenText =
+      typeof selectedSectionIndex === "number" && baseTextArray[selectedSectionIndex]
+        ? String(baseTextArray[selectedSectionIndex])
+        : baseTextArray.filter(Boolean).join(" ");
+
     const payload = {
       userKey,
       ref,
       heRef: (result?.heRef ?? null) as string | null,
       url: result?.url ? `https://www.sefaria.org/${result.url}` : null,
       title: (result?.title ?? result?.primaryTitle ?? null) as string | null,
+      // store raw HTML / text (truncated), we’ll render it as HTML later
       snippet:
-        (Array.isArray(result?.versions?.[0]?.text)
-          ? result.versions[0].text.filter(Boolean).join(" ").slice(0, 180)
+        (chosenText
+          ? chosenText.slice(0, 1800) // allow a bit more for HTML
           : typeof result?.text === "string"
-          ? result.text.slice(0, 180)
+          ? result.text.slice(0, 1800)
           : null) ?? null,
     };
 
@@ -222,8 +234,8 @@ export function DashboardClient() {
 
         {searchResult && (
           <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur">
-            <div className="flex items-start justify-between gap-4">
-              <div className="space-y-1">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+              <div className="space-y-1 min-w-0">
                 <div className="text-sm font-medium text-white/70">Result</div>
                 <div className="text-lg font-semibold text-white">
                   {searchResult?.ref ?? query.trim()}
@@ -231,9 +243,61 @@ export function DashboardClient() {
                 {searchResult?.heRef && (
                   <div className="text-sm text-white/60">{searchResult.heRef}</div>
                 )}
+                {Array.isArray(searchResult?.versions?.[0]?.text) &&
+                  searchResult.versions[0].text.length > 0 && (
+                    <div className="mt-3 space-y-1">
+                      <div className="text-xs font-medium text-white/60">
+                        Pick a section to save
+                      </div>
+                      <select
+                        className="w-full rounded-xl border border-white/10 bg-[#15162c]/60 px-2 py-1 text-xs text-white outline-none ring-0 focus:border-white/20"
+                        value={
+                          selectedSectionIndex !== null ? String(selectedSectionIndex) : ""
+                        }
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          setSelectedSectionIndex(v === "" ? null : Number(v));
+                        }}
+                      >
+                        <option value="">All sections (default)</option>
+                        {searchResult.versions[0].text.map(
+                          (section: any, idx: number) =>
+                            section && (
+                              <option key={idx} value={idx}>
+                                {`${idx + 1}. ${String(section).slice(0, 60)}${
+                                  String(section).length > 60 ? "…" : ""
+                                }`}
+                              </option>
+                            ),
+                        )}
+                      </select>
+                    </div>
+                  )}
+                {/* show selected section content (HTML) */}
+                {Array.isArray(searchResult?.versions?.[0]?.text) && (
+                  <div className="mt-3 rounded-xl border border-white/10 bg-[#15162c]/40 p-3 text-sm text-white/80">
+                    <div className="mb-1 text-xs font-medium text-white/60">
+                      Preview
+                    </div>
+                    <div
+                      className="prose prose-invert max-w-none text-sm"
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          typeof selectedSectionIndex === "number" &&
+                          searchResult.versions[0].text[selectedSectionIndex]
+                            ? String(searchResult.versions[0].text[selectedSectionIndex])
+                            : String(
+                                searchResult.versions[0].text
+                                  .filter(Boolean)
+                                  .join(" "),
+                              ),
+                      }}
+                    />
+                  </div>
+                )}
               </div>
               <button
-                className="rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10"
+                className="w-full md:w-auto rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10"
                 onClick={() => void addStudiedFromSefaria(searchResult)}
               >
                 Add to dashboard
@@ -252,16 +316,21 @@ export function DashboardClient() {
               No saved texts yet. Search above and add one.
             </div>
           ) : (
-            <div className="flex gap-3 overflow-x-auto pb-2">
+            <div className="grid grid-cols-1 gap-3 sm:flex sm:gap-3 sm:overflow-x-auto sm:pb-2">
               {studied.map((t) => (
                 <div
                   key={t.id}
-                  className="min-w-[280px] max-w-[360px] flex-shrink-0 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"
+                  className="w-full sm:min-w-[280px] sm:max-w-[360px] sm:flex-shrink-0 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"
                 >
                   <div className="text-xs text-white/60">Studied</div>
                   <div className="mt-1 text-base font-semibold text-white">{t.ref}</div>
                   {t.heRef && <div className="mt-1 text-sm text-white/60">{t.heRef}</div>}
-                  {t.snippet && <div className="mt-2 text-sm text-white/75">{t.snippet}</div>}
+                  {t.snippet && (
+                    <div
+                      className="mt-2 text-sm text-white/75 prose prose-invert max-w-none"
+                      dangerouslySetInnerHTML={{ __html: t.snippet }}
+                    />
+                  )}
                   {t.url && (
                     <a
                       className="mt-3 inline-block text-sm font-semibold text-white/80 hover:text-white"
