@@ -1,4 +1,4 @@
-import { db } from "~/server/db";
+import db from "~/server/db";
 import type { Portion } from "~/lib/mock-data";
 import { getSeedsForPortion } from "~/lib/flashcards/mock-bank";
 
