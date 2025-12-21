@@ -19,3 +19,52 @@ model Post {
 
   @@index([name])
 }
+
+enum PortionType {
+  Parasha
+  Daf
+  Perek
+}
+
+enum Grade {
+  Again
+  Hard
+  Good
+  Easy
+}
+
+model Flashcard {
+  id           String      @id @default(cuid())
+  portionType  PortionType
+  portionLabel String
+  prompt       String
+  answer       String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reviews FlashcardReview[]
+
+  @@index([portionType, portionLabel])
+}
+
+model FlashcardReview {
+  id          String    @id @default(cuid())
+  flashcardId String
+  flashcard   Flashcard @relation(fields: [flashcardId], references: [id], onDelete: Cascade)
+
+  // scheduling (simple SM-2-ish)
+  dueAt        DateTime @default(now())
+  intervalDays Int      @default(0)
+  ease         Float    @default(2.5)
+  reps         Int      @default(0)
+
+  lastGrade      Grade?
+  lastReviewedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([dueAt])
+  @@index([flashcardId])
+}
