@@ -134,8 +134,8 @@ export function DashboardClient() {
         (chosenText
           ? chosenText.slice(0, 1800) // allow a bit more for HTML
           : typeof result?.text === "string"
-          ? result.text.slice(0, 1800)
-          : null) ?? null,
+            ? result.text.slice(0, 1800)
+            : null) ?? null,
     };
 
     const res = await fetch("/api/studied-texts", {
@@ -159,9 +159,9 @@ export function DashboardClient() {
 
       const lastStudied =
         parsed.lastStudied &&
-        typeof parsed.lastStudied === "object" &&
-        "type" in parsed.lastStudied &&
-        "label" in parsed.lastStudied
+          typeof parsed.lastStudied === "object" &&
+          "type" in parsed.lastStudied &&
+          "label" in parsed.lastStudied
           ? (parsed.lastStudied as Portion)
           : DEFAULT_PROGRESS.lastStudied;
 
@@ -205,7 +205,7 @@ export function DashboardClient() {
 
       <section className="space-y-3">
         <div className="flex flex-col gap-2 md:flex-row md:items-end">
-          <div className="w-full">
+          <div className="w-full md:flex-1">
             <label className="text-sm text-white/70" htmlFor="sefariaSearch">
               Search Sefaria
             </label>
@@ -222,7 +222,7 @@ export function DashboardClient() {
           </div>
 
           <button
-            className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-[#15162c] hover:bg-white/90 disabled:opacity-60"
+            className="mt-2 md:mt-0 md:h-[42px] md:self-end rounded-xl bg-white px-4 py-2 text-sm font-semibold text-[#15162c] hover:bg-white/90 disabled:opacity-60"
             onClick={() => void runSearch()}
             disabled={searchLoading || !query.trim()}
           >
@@ -241,7 +241,14 @@ export function DashboardClient() {
                   {searchResult?.ref ?? query.trim()}
                 </div>
                 {searchResult?.heRef && (
-                  <div className="text-sm text-white/60">{searchResult.heRef}</div>
+                  <div
+                    className="text-sm text-white/60"
+                    style={{ fontFamily: "var(--font-hebrew-serif)" }}
+                    dir="rtl"
+                    lang="he"
+                  >
+                    {searchResult.heRef}
+                  </div>
                 )}
                 {Array.isArray(searchResult?.versions?.[0]?.text) &&
                   searchResult.versions[0].text.length > 0 && (
@@ -264,9 +271,8 @@ export function DashboardClient() {
                           (section: any, idx: number) =>
                             section && (
                               <option key={idx} value={idx}>
-                                {`${idx + 1}. ${String(section).slice(0, 60)}${
-                                  String(section).length > 60 ? "…" : ""
-                                }`}
+                                {`${idx + 1}. ${String(section).slice(0, 60)}${String(section).length > 60 ? "…" : ""
+                                  }`}
                               </option>
                             ),
                         )}
@@ -281,16 +287,17 @@ export function DashboardClient() {
                     </div>
                     <div
                       className="prose prose-invert max-w-none text-sm"
+                      style={{ fontFamily: "var(--font-hebrew-sans)" }}
                       dangerouslySetInnerHTML={{
                         __html:
                           typeof selectedSectionIndex === "number" &&
-                          searchResult.versions[0].text[selectedSectionIndex]
+                            searchResult.versions[0].text[selectedSectionIndex]
                             ? String(searchResult.versions[0].text[selectedSectionIndex])
                             : String(
-                                searchResult.versions[0].text
-                                  .filter(Boolean)
-                                  .join(" "),
-                              ),
+                              searchResult.versions[0].text
+                                .filter(Boolean)
+                                .join(" "),
+                            ),
                       }}
                     />
                   </div>
@@ -324,13 +331,42 @@ export function DashboardClient() {
                 >
                   <div className="text-xs text-white/60">Studied</div>
                   <div className="mt-1 text-base font-semibold text-white">{t.ref}</div>
-                  {t.heRef && <div className="mt-1 text-sm text-white/60">{t.heRef}</div>}
+                  {t.heRef && (
+                    <div
+                      className="mt-1 text-sm text-white/60"
+                      style={{ fontFamily: "var(--font-hebrew-serif)" }}
+                      dir="rtl"
+                      lang="he"
+                    >
+                      {t.heRef}
+                    </div>
+                  )}
+
                   {t.snippet && (
                     <div
                       className="mt-2 text-sm text-white/75 prose prose-invert max-w-none"
-                      dangerouslySetInnerHTML={{ __html: t.snippet }}
+                      style={{ fontFamily: "var(--font-hebrew-sans)" }}
+                      dangerouslySetInnerHTML={{
+                        __html: (() => {
+                          const html = String(t.snippet ?? "");
+
+                          // Truncate by words but keep HTML (best-effort).
+                          // NOTE: This does not sanitize HTML. Only do this if you trust the source.
+                          const FIRST_WORDS = 18;
+                          const LAST_WORDS = 12;
+
+                          const words = html.split(/\s+/).filter(Boolean);
+
+                          const head = words.slice(0, FIRST_WORDS).join(" ");
+                          const tail = words.slice(-LAST_WORDS).join(" ");
+
+                          // Render truncated as HTML (simple text wrapped), preserving injection
+                          return `<span>${head} … ${tail}</span>`;
+                        })(),
+                      }}
                     />
                   )}
+
                   {t.url && (
                     <a
                       className="mt-3 inline-block text-sm font-semibold text-white/80 hover:text-white"

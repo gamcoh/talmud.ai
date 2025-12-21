@@ -2,6 +2,7 @@ import "~/styles/globals.css";
 
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
+import { Noto_Sans_Hebrew, Frank_Ruhl_Libre } from "next/font/google";
 import { AppShell } from "~/components/app/AppShell";
 
 export const metadata: Metadata = {
@@ -15,11 +16,23 @@ const geist = Geist({
   variable: "--font-geist-sans",
 });
 
+const hebrewSans = Noto_Sans_Hebrew({
+  subsets: ["hebrew", "latin"],
+  variable: "--font-hebrew-sans",
+  display: "swap",
+});
+
+const hebrewSerif = Frank_Ruhl_Libre({
+  subsets: ["hebrew", "latin"],
+  variable: "--font-hebrew-serif",
+  display: "swap",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable}`}>
+    <html lang="en" className={`${geist.variable} ${hebrewSans.variable} ${hebrewSerif.variable}`}>
       <body>
         <AppShell>{children}</AppShell>
       </body>
