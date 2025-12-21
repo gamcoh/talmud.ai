@@ -12,6 +12,18 @@ import { ProgressBar } from "~/components/ui/ProgressBar";
 import { StatCard } from "~/components/ui/StatCard";
 
 const STORAGE_KEY = "talmud.ai:user-progress:v1";
+const USER_KEY_STORAGE = "talmud.ai:user-key:v1";
+
+type StudiedText = {
+  id: string;
+  userKey: string;
+  ref: string;
+  heRef?: string | null;
+  url?: string | null;
+  title?: string | null;
+  snippet?: string | null;
+  createdAt: string;
+};
 
 function portionToKey(p: Portion) {
   return `${p.type}:${p.label}`;
@@ -25,8 +37,106 @@ function keyToPortion(key: string): Portion | null {
   return { type, label };
 }
 
+function getOrCreateUserKey() {
+  try {
+    const existing = localStorage.getItem(USER_KEY_STORAGE);
+    if (existing) return existing;
+    const key =
+      typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : `anon_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    localStorage.setItem(USER_KEY_STORAGE, key);
+    return key;
+  } catch {
+    return "anon";
+  }
+}
+
 export function DashboardClient() {
   const [progress, setProgress] = useState<UserProgress>(DEFAULT_PROGRESS);
+
+  const [userKey, setUserKey] = useState<string>("anon");
+
+  const [query, setQuery] = useState("");
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
+  const [searchResult, setSearchResult] = useState<any | null>(null);
+
+  const [studied, setStudied] = useState<StudiedText[]>([]);
+  const [studiedLoading, setStudiedLoading] = useState(false);
+
+  useEffect(() => {
+    setUserKey(getOrCreateUserKey());
+  }, []);
+
+  useEffect(() => {
+    if (!userKey) return;
+    setStudiedLoading(true);
+    void (async () => {
+      try {
+        const res = await fetch(`/api/studied-texts?userKey=${encodeURIComponent(userKey)}`, {
+          cache: "no-store",
+        });
+        const data = (await res.json()) as { items?: StudiedText[] };
+        setStudied(Array.isArray(data.items) ? data.items : []);
+      } finally {
+        setStudiedLoading(false);
+      }
+    })();
+  }, [userKey]);
+
+  async function runSearch() {
+    const q = query.trim();
+    if (!q) return;
+    setSearchLoading(true);
+    setSearchError(null);
+    setSearchResult(null);
+    try {
+      const res = await fetch(`/api/sefaria/texts?query=${encodeURIComponent(q)}`, {
+        cache: "no-store",
+      });
+      if (!res.ok) {
+        setSearchError(`Sefaria error (${res.status})`);
+        return;
+      }
+      const data = (await res.json()) as any;
+      setSearchResult(data);
+    } catch {
+      setSearchError("Failed to fetch from Sefaria");
+    } finally {
+      setSearchLoading(false);
+    }
+  }
+
+  async function addStudiedFromSefaria(result: any) {
+    const ref = (result?.ref ?? query.trim()) as string;
+    if (!ref || !userKey) return;
+
+    const payload = {
+      userKey,
+      ref,
+      heRef: (result?.heRef ?? null) as string | null,
+      url: result?.url ? `https://www.sefaria.org/${result.url}` : null,
+      title: (result?.title ?? result?.primaryTitle ?? null) as string | null,
+      snippet:
+        (Array.isArray(result?.versions?.[0]?.text)
+          ? result.versions[0].text.filter(Boolean).join(" ").slice(0, 180)
+          : typeof result?.text === "string"
+          ? result.text.slice(0, 180)
+          : null) ?? null,
+    };
+
+    const res = await fetch("/api/studied-texts", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = (await res.json()) as { item?: StudiedText };
+
+    if (data.item) {
+      setStudied((prev) => [data.item!, ...prev.filter((x) => x.id !== data.item!.id)]);
+    }
+  }
 
   useEffect(() => {
     try {
@@ -35,7 +145,6 @@ export function DashboardClient() {
       const parsed = JSON.parse(raw) as Partial<UserProgress> | null;
       if (!parsed) return;
 
-      // minimal validation (no zod on client yet)
       const lastStudied =
         parsed.lastStudied &&
         typeof parsed.lastStudied === "object" &&
@@ -80,6 +189,94 @@ export function DashboardClient() {
         <p className="text-white/70">
           Keep your streak alive. Small wins, every day.
         </p>
+      </section>
+
+      <section className="space-y-3">
+        <div className="flex flex-col gap-2 md:flex-row md:items-end">
+          <div className="w-full">
+            <label className="text-sm text-white/70" htmlFor="sefariaSearch">
+              Search Sefaria
+            </label>
+            <input
+              id="sefariaSearch"
+              className="mt-2 w-full rounded-xl border border-white/10 bg-[#15162c]/60 px-3 py-2 text-white outline-none ring-0 focus:border-white/20"
+              placeholder='e.g. "Berakhot 2a"'
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") void runSearch();
+              }}
+            />
+          </div>
+
+          <button
+            className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-[#15162c] hover:bg-white/90 disabled:opacity-60"
+            onClick={() => void runSearch()}
+            disabled={searchLoading || !query.trim()}
+          >
+            {searchLoading ? "Searching…" : "Search"}
+          </button>
+        </div>
+
+        {searchError && <div className="text-sm text-red-200/90">{searchError}</div>}
+
+        {searchResult && (
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur">
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-1">
+                <div className="text-sm font-medium text-white/70">Result</div>
+                <div className="text-lg font-semibold text-white">
+                  {searchResult?.ref ?? query.trim()}
+                </div>
+                {searchResult?.heRef && (
+                  <div className="text-sm text-white/60">{searchResult.heRef}</div>
+                )}
+              </div>
+              <button
+                className="rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10"
+                onClick={() => void addStudiedFromSefaria(searchResult)}
+              >
+                Add to dashboard
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className="space-y-2">
+          <div className="text-sm font-medium text-white/70">What you studied</div>
+
+          {studiedLoading ? (
+            <div className="text-sm text-white/60">Loading…</div>
+          ) : studied.length === 0 ? (
+            <div className="text-sm text-white/60">
+              No saved texts yet. Search above and add one.
+            </div>
+          ) : (
+            <div className="flex gap-3 overflow-x-auto pb-2">
+              {studied.map((t) => (
+                <div
+                  key={t.id}
+                  className="min-w-[280px] max-w-[360px] flex-shrink-0 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"
+                >
+                  <div className="text-xs text-white/60">Studied</div>
+                  <div className="mt-1 text-base font-semibold text-white">{t.ref}</div>
+                  {t.heRef && <div className="mt-1 text-sm text-white/60">{t.heRef}</div>}
+                  {t.snippet && <div className="mt-2 text-sm text-white/75">{t.snippet}</div>}
+                  {t.url && (
+                    <a
+                      className="mt-3 inline-block text-sm font-semibold text-white/80 hover:text-white"
+                      href={t.url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Open on Sefaria
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </section>
 
       <section className="grid gap-4 sm:grid-cols-3">

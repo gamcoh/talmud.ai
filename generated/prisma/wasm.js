@@ -123,6 +123,17 @@ exports.Prisma.FlashcardReviewScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.StudiedTextScalarFieldEnum = {
+  id: 'id',
+  userKey: 'userKey',
+  ref: 'ref',
+  heRef: 'heRef',
+  url: 'url',
+  title: 'title',
+  snippet: 'snippet',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -153,7 +164,8 @@ exports.Grade = exports.$Enums.Grade = {
 exports.Prisma.ModelName = {
   Post: 'Post',
   Flashcard: 'Flashcard',
-  FlashcardReview: 'FlashcardReview'
+  FlashcardReview: 'FlashcardReview',
+  StudiedText: 'StudiedText'
 };
 /**
  * Create the Client
@@ -194,6 +206,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -202,13 +215,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Post {\n  id        Int      @id @default(autoincrement())\n  name      String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@index([name])\n}\n\nenum PortionType {\n  Parasha\n  Daf\n  Perek\n}\n\nenum Grade {\n  Again\n  Hard\n  Good\n  Easy\n}\n\nmodel Flashcard {\n  id           String      @id @default(cuid())\n  portionType  PortionType\n  portionLabel String\n  prompt       String\n  answer       String\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  reviews FlashcardReview[]\n\n  @@index([portionType, portionLabel])\n}\n\nmodel FlashcardReview {\n  id          String    @id @default(cuid())\n  flashcardId String\n  flashcard   Flashcard @relation(fields: [flashcardId], references: [id], onDelete: Cascade)\n\n  // scheduling (simple SM-2-ish)\n  dueAt        DateTime @default(now())\n  intervalDays Int      @default(0)\n  ease         Float    @default(2.5)\n  reps         Int      @default(0)\n\n  lastGrade      Grade?\n  lastReviewedAt DateTime?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now())\n\n  @@index([dueAt])\n  @@index([flashcardId])\n}\n",
-  "inlineSchemaHash": "119044b6c0c60239d49a8c8e297e3296193af514fbdf08bce1659efcde4f7f72",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Post {\n  id        Int      @id @default(autoincrement())\n  name      String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@index([name])\n}\n\nenum PortionType {\n  Parasha\n  Daf\n  Perek\n}\n\nenum Grade {\n  Again\n  Hard\n  Good\n  Easy\n}\n\nmodel Flashcard {\n  id           String      @id @default(cuid())\n  portionType  PortionType\n  portionLabel String\n  prompt       String\n  answer       String\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  reviews FlashcardReview[]\n\n  @@index([portionType, portionLabel])\n}\n\nmodel FlashcardReview {\n  id          String    @id @default(cuid())\n  flashcardId String\n  flashcard   Flashcard @relation(fields: [flashcardId], references: [id], onDelete: Cascade)\n\n  // scheduling (simple SM-2-ish)\n  dueAt        DateTime @default(now())\n  intervalDays Int      @default(0)\n  ease         Float    @default(2.5)\n  reps         Int      @default(0)\n\n  lastGrade      Grade?\n  lastReviewedAt DateTime?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now())\n\n  @@index([dueAt])\n  @@index([flashcardId])\n}\n\nmodel StudiedText {\n  id      String @id @default(cuid())\n  userKey String // simple identifier (e.g. from localStorage) until auth exists\n\n  // Sefaria reference\n  ref   String\n  heRef String?\n  url   String?\n\n  // Snapshot for display\n  title   String?\n  snippet String?\n\n  createdAt DateTime @default(now())\n\n  @@unique([userKey, ref])\n  @@index([userKey, createdAt])\n}\n",
+  "inlineSchemaHash": "b1b8bf75c068f6567033f74db4ad6d2f3398f3f45a4f73aa213948b15dd10449",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Post\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Flashcard\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"portionType\",\"kind\":\"enum\",\"type\":\"PortionType\"},{\"name\":\"portionLabel\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"prompt\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"answer\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"reviews\",\"kind\":\"object\",\"type\":\"FlashcardReview\",\"relationName\":\"FlashcardToFlashcardReview\"}],\"dbName\":null},\"FlashcardReview\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"flashcardId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"flashcard\",\"kind\":\"object\",\"type\":\"Flashcard\",\"relationName\":\"FlashcardToFlashcardReview\"},{\"name\":\"dueAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"intervalDays\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"ease\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"reps\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"lastGrade\",\"kind\":\"enum\",\"type\":\"Grade\"},{\"name\":\"lastReviewedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Post\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Flashcard\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"portionType\",\"kind\":\"enum\",\"type\":\"PortionType\"},{\"name\":\"portionLabel\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"prompt\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"answer\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"reviews\",\"kind\":\"object\",\"type\":\"FlashcardReview\",\"relationName\":\"FlashcardToFlashcardReview\"}],\"dbName\":null},\"FlashcardReview\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"flashcardId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"flashcard\",\"kind\":\"object\",\"type\":\"Flashcard\",\"relationName\":\"FlashcardToFlashcardReview\"},{\"name\":\"dueAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"intervalDays\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"ease\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"reps\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"lastGrade\",\"kind\":\"enum\",\"type\":\"Grade\"},{\"name\":\"lastReviewedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"StudiedText\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"ref\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"heRef\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"snippet\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

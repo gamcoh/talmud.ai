@@ -28,6 +28,11 @@ export type Flashcard = $Result.DefaultSelection<Prisma.$FlashcardPayload>
  * 
  */
 export type FlashcardReview = $Result.DefaultSelection<Prisma.$FlashcardReviewPayload>
+/**
+ * Model StudiedText
+ * 
+ */
+export type StudiedText = $Result.DefaultSelection<Prisma.$StudiedTextPayload>
 
 /**
  * Enums
@@ -208,6 +213,16 @@ export class PrismaClient<
     * ```
     */
   get flashcardReview(): Prisma.FlashcardReviewDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.studiedText`: Exposes CRUD operations for the **StudiedText** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StudiedTexts
+    * const studiedTexts = await prisma.studiedText.findMany()
+    * ```
+    */
+  get studiedText(): Prisma.StudiedTextDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -651,7 +666,8 @@ export namespace Prisma {
   export const ModelName: {
     Post: 'Post',
     Flashcard: 'Flashcard',
-    FlashcardReview: 'FlashcardReview'
+    FlashcardReview: 'FlashcardReview',
+    StudiedText: 'StudiedText'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -670,7 +686,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "post" | "flashcard" | "flashcardReview"
+      modelProps: "post" | "flashcard" | "flashcardReview" | "studiedText"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -896,6 +912,80 @@ export namespace Prisma {
           }
         }
       }
+      StudiedText: {
+        payload: Prisma.$StudiedTextPayload<ExtArgs>
+        fields: Prisma.StudiedTextFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StudiedTextFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudiedTextPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StudiedTextFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudiedTextPayload>
+          }
+          findFirst: {
+            args: Prisma.StudiedTextFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudiedTextPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StudiedTextFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudiedTextPayload>
+          }
+          findMany: {
+            args: Prisma.StudiedTextFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudiedTextPayload>[]
+          }
+          create: {
+            args: Prisma.StudiedTextCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudiedTextPayload>
+          }
+          createMany: {
+            args: Prisma.StudiedTextCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.StudiedTextCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudiedTextPayload>[]
+          }
+          delete: {
+            args: Prisma.StudiedTextDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudiedTextPayload>
+          }
+          update: {
+            args: Prisma.StudiedTextUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudiedTextPayload>
+          }
+          deleteMany: {
+            args: Prisma.StudiedTextDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StudiedTextUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.StudiedTextUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudiedTextPayload>[]
+          }
+          upsert: {
+            args: Prisma.StudiedTextUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudiedTextPayload>
+          }
+          aggregate: {
+            args: Prisma.StudiedTextAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStudiedText>
+          }
+          groupBy: {
+            args: Prisma.StudiedTextGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StudiedTextGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StudiedTextCountArgs<ExtArgs>
+            result: $Utils.Optional<StudiedTextCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -995,6 +1085,7 @@ export namespace Prisma {
     post?: PostOmit
     flashcard?: FlashcardOmit
     flashcardReview?: FlashcardReviewOmit
+    studiedText?: StudiedTextOmit
   }
 
   /* Types for Logging */
@@ -4383,6 +4474,1040 @@ export namespace Prisma {
 
 
   /**
+   * Model StudiedText
+   */
+
+  export type AggregateStudiedText = {
+    _count: StudiedTextCountAggregateOutputType | null
+    _min: StudiedTextMinAggregateOutputType | null
+    _max: StudiedTextMaxAggregateOutputType | null
+  }
+
+  export type StudiedTextMinAggregateOutputType = {
+    id: string | null
+    userKey: string | null
+    ref: string | null
+    heRef: string | null
+    url: string | null
+    title: string | null
+    snippet: string | null
+    createdAt: Date | null
+  }
+
+  export type StudiedTextMaxAggregateOutputType = {
+    id: string | null
+    userKey: string | null
+    ref: string | null
+    heRef: string | null
+    url: string | null
+    title: string | null
+    snippet: string | null
+    createdAt: Date | null
+  }
+
+  export type StudiedTextCountAggregateOutputType = {
+    id: number
+    userKey: number
+    ref: number
+    heRef: number
+    url: number
+    title: number
+    snippet: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type StudiedTextMinAggregateInputType = {
+    id?: true
+    userKey?: true
+    ref?: true
+    heRef?: true
+    url?: true
+    title?: true
+    snippet?: true
+    createdAt?: true
+  }
+
+  export type StudiedTextMaxAggregateInputType = {
+    id?: true
+    userKey?: true
+    ref?: true
+    heRef?: true
+    url?: true
+    title?: true
+    snippet?: true
+    createdAt?: true
+  }
+
+  export type StudiedTextCountAggregateInputType = {
+    id?: true
+    userKey?: true
+    ref?: true
+    heRef?: true
+    url?: true
+    title?: true
+    snippet?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type StudiedTextAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StudiedText to aggregate.
+     */
+    where?: StudiedTextWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudiedTexts to fetch.
+     */
+    orderBy?: StudiedTextOrderByWithRelationInput | StudiedTextOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StudiedTextWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudiedTexts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudiedTexts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StudiedTexts
+    **/
+    _count?: true | StudiedTextCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StudiedTextMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StudiedTextMaxAggregateInputType
+  }
+
+  export type GetStudiedTextAggregateType<T extends StudiedTextAggregateArgs> = {
+        [P in keyof T & keyof AggregateStudiedText]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStudiedText[P]>
+      : GetScalarType<T[P], AggregateStudiedText[P]>
+  }
+
+
+
+
+  export type StudiedTextGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudiedTextWhereInput
+    orderBy?: StudiedTextOrderByWithAggregationInput | StudiedTextOrderByWithAggregationInput[]
+    by: StudiedTextScalarFieldEnum[] | StudiedTextScalarFieldEnum
+    having?: StudiedTextScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StudiedTextCountAggregateInputType | true
+    _min?: StudiedTextMinAggregateInputType
+    _max?: StudiedTextMaxAggregateInputType
+  }
+
+  export type StudiedTextGroupByOutputType = {
+    id: string
+    userKey: string
+    ref: string
+    heRef: string | null
+    url: string | null
+    title: string | null
+    snippet: string | null
+    createdAt: Date
+    _count: StudiedTextCountAggregateOutputType | null
+    _min: StudiedTextMinAggregateOutputType | null
+    _max: StudiedTextMaxAggregateOutputType | null
+  }
+
+  type GetStudiedTextGroupByPayload<T extends StudiedTextGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StudiedTextGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StudiedTextGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StudiedTextGroupByOutputType[P]>
+            : GetScalarType<T[P], StudiedTextGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StudiedTextSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userKey?: boolean
+    ref?: boolean
+    heRef?: boolean
+    url?: boolean
+    title?: boolean
+    snippet?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["studiedText"]>
+
+  export type StudiedTextSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userKey?: boolean
+    ref?: boolean
+    heRef?: boolean
+    url?: boolean
+    title?: boolean
+    snippet?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["studiedText"]>
+
+  export type StudiedTextSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userKey?: boolean
+    ref?: boolean
+    heRef?: boolean
+    url?: boolean
+    title?: boolean
+    snippet?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["studiedText"]>
+
+  export type StudiedTextSelectScalar = {
+    id?: boolean
+    userKey?: boolean
+    ref?: boolean
+    heRef?: boolean
+    url?: boolean
+    title?: boolean
+    snippet?: boolean
+    createdAt?: boolean
+  }
+
+  export type StudiedTextOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userKey" | "ref" | "heRef" | "url" | "title" | "snippet" | "createdAt", ExtArgs["result"]["studiedText"]>
+
+  export type $StudiedTextPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StudiedText"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userKey: string
+      ref: string
+      heRef: string | null
+      url: string | null
+      title: string | null
+      snippet: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["studiedText"]>
+    composites: {}
+  }
+
+  type StudiedTextGetPayload<S extends boolean | null | undefined | StudiedTextDefaultArgs> = $Result.GetResult<Prisma.$StudiedTextPayload, S>
+
+  type StudiedTextCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StudiedTextFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StudiedTextCountAggregateInputType | true
+    }
+
+  export interface StudiedTextDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StudiedText'], meta: { name: 'StudiedText' } }
+    /**
+     * Find zero or one StudiedText that matches the filter.
+     * @param {StudiedTextFindUniqueArgs} args - Arguments to find a StudiedText
+     * @example
+     * // Get one StudiedText
+     * const studiedText = await prisma.studiedText.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StudiedTextFindUniqueArgs>(args: SelectSubset<T, StudiedTextFindUniqueArgs<ExtArgs>>): Prisma__StudiedTextClient<$Result.GetResult<Prisma.$StudiedTextPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StudiedText that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StudiedTextFindUniqueOrThrowArgs} args - Arguments to find a StudiedText
+     * @example
+     * // Get one StudiedText
+     * const studiedText = await prisma.studiedText.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StudiedTextFindUniqueOrThrowArgs>(args: SelectSubset<T, StudiedTextFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StudiedTextClient<$Result.GetResult<Prisma.$StudiedTextPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StudiedText that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudiedTextFindFirstArgs} args - Arguments to find a StudiedText
+     * @example
+     * // Get one StudiedText
+     * const studiedText = await prisma.studiedText.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StudiedTextFindFirstArgs>(args?: SelectSubset<T, StudiedTextFindFirstArgs<ExtArgs>>): Prisma__StudiedTextClient<$Result.GetResult<Prisma.$StudiedTextPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StudiedText that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudiedTextFindFirstOrThrowArgs} args - Arguments to find a StudiedText
+     * @example
+     * // Get one StudiedText
+     * const studiedText = await prisma.studiedText.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StudiedTextFindFirstOrThrowArgs>(args?: SelectSubset<T, StudiedTextFindFirstOrThrowArgs<ExtArgs>>): Prisma__StudiedTextClient<$Result.GetResult<Prisma.$StudiedTextPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StudiedTexts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudiedTextFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StudiedTexts
+     * const studiedTexts = await prisma.studiedText.findMany()
+     * 
+     * // Get first 10 StudiedTexts
+     * const studiedTexts = await prisma.studiedText.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const studiedTextWithIdOnly = await prisma.studiedText.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StudiedTextFindManyArgs>(args?: SelectSubset<T, StudiedTextFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudiedTextPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StudiedText.
+     * @param {StudiedTextCreateArgs} args - Arguments to create a StudiedText.
+     * @example
+     * // Create one StudiedText
+     * const StudiedText = await prisma.studiedText.create({
+     *   data: {
+     *     // ... data to create a StudiedText
+     *   }
+     * })
+     * 
+     */
+    create<T extends StudiedTextCreateArgs>(args: SelectSubset<T, StudiedTextCreateArgs<ExtArgs>>): Prisma__StudiedTextClient<$Result.GetResult<Prisma.$StudiedTextPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StudiedTexts.
+     * @param {StudiedTextCreateManyArgs} args - Arguments to create many StudiedTexts.
+     * @example
+     * // Create many StudiedTexts
+     * const studiedText = await prisma.studiedText.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StudiedTextCreateManyArgs>(args?: SelectSubset<T, StudiedTextCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many StudiedTexts and returns the data saved in the database.
+     * @param {StudiedTextCreateManyAndReturnArgs} args - Arguments to create many StudiedTexts.
+     * @example
+     * // Create many StudiedTexts
+     * const studiedText = await prisma.studiedText.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many StudiedTexts and only return the `id`
+     * const studiedTextWithIdOnly = await prisma.studiedText.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends StudiedTextCreateManyAndReturnArgs>(args?: SelectSubset<T, StudiedTextCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudiedTextPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a StudiedText.
+     * @param {StudiedTextDeleteArgs} args - Arguments to delete one StudiedText.
+     * @example
+     * // Delete one StudiedText
+     * const StudiedText = await prisma.studiedText.delete({
+     *   where: {
+     *     // ... filter to delete one StudiedText
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StudiedTextDeleteArgs>(args: SelectSubset<T, StudiedTextDeleteArgs<ExtArgs>>): Prisma__StudiedTextClient<$Result.GetResult<Prisma.$StudiedTextPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StudiedText.
+     * @param {StudiedTextUpdateArgs} args - Arguments to update one StudiedText.
+     * @example
+     * // Update one StudiedText
+     * const studiedText = await prisma.studiedText.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StudiedTextUpdateArgs>(args: SelectSubset<T, StudiedTextUpdateArgs<ExtArgs>>): Prisma__StudiedTextClient<$Result.GetResult<Prisma.$StudiedTextPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StudiedTexts.
+     * @param {StudiedTextDeleteManyArgs} args - Arguments to filter StudiedTexts to delete.
+     * @example
+     * // Delete a few StudiedTexts
+     * const { count } = await prisma.studiedText.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StudiedTextDeleteManyArgs>(args?: SelectSubset<T, StudiedTextDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StudiedTexts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudiedTextUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StudiedTexts
+     * const studiedText = await prisma.studiedText.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StudiedTextUpdateManyArgs>(args: SelectSubset<T, StudiedTextUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StudiedTexts and returns the data updated in the database.
+     * @param {StudiedTextUpdateManyAndReturnArgs} args - Arguments to update many StudiedTexts.
+     * @example
+     * // Update many StudiedTexts
+     * const studiedText = await prisma.studiedText.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more StudiedTexts and only return the `id`
+     * const studiedTextWithIdOnly = await prisma.studiedText.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends StudiedTextUpdateManyAndReturnArgs>(args: SelectSubset<T, StudiedTextUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudiedTextPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one StudiedText.
+     * @param {StudiedTextUpsertArgs} args - Arguments to update or create a StudiedText.
+     * @example
+     * // Update or create a StudiedText
+     * const studiedText = await prisma.studiedText.upsert({
+     *   create: {
+     *     // ... data to create a StudiedText
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StudiedText we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StudiedTextUpsertArgs>(args: SelectSubset<T, StudiedTextUpsertArgs<ExtArgs>>): Prisma__StudiedTextClient<$Result.GetResult<Prisma.$StudiedTextPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StudiedTexts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudiedTextCountArgs} args - Arguments to filter StudiedTexts to count.
+     * @example
+     * // Count the number of StudiedTexts
+     * const count = await prisma.studiedText.count({
+     *   where: {
+     *     // ... the filter for the StudiedTexts we want to count
+     *   }
+     * })
+    **/
+    count<T extends StudiedTextCountArgs>(
+      args?: Subset<T, StudiedTextCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StudiedTextCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StudiedText.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudiedTextAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StudiedTextAggregateArgs>(args: Subset<T, StudiedTextAggregateArgs>): Prisma.PrismaPromise<GetStudiedTextAggregateType<T>>
+
+    /**
+     * Group by StudiedText.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudiedTextGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StudiedTextGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StudiedTextGroupByArgs['orderBy'] }
+        : { orderBy?: StudiedTextGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StudiedTextGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStudiedTextGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StudiedText model
+   */
+  readonly fields: StudiedTextFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StudiedText.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StudiedTextClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StudiedText model
+   */
+  interface StudiedTextFieldRefs {
+    readonly id: FieldRef<"StudiedText", 'String'>
+    readonly userKey: FieldRef<"StudiedText", 'String'>
+    readonly ref: FieldRef<"StudiedText", 'String'>
+    readonly heRef: FieldRef<"StudiedText", 'String'>
+    readonly url: FieldRef<"StudiedText", 'String'>
+    readonly title: FieldRef<"StudiedText", 'String'>
+    readonly snippet: FieldRef<"StudiedText", 'String'>
+    readonly createdAt: FieldRef<"StudiedText", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StudiedText findUnique
+   */
+  export type StudiedTextFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudiedText
+     */
+    select?: StudiedTextSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudiedText
+     */
+    omit?: StudiedTextOmit<ExtArgs> | null
+    /**
+     * Filter, which StudiedText to fetch.
+     */
+    where: StudiedTextWhereUniqueInput
+  }
+
+  /**
+   * StudiedText findUniqueOrThrow
+   */
+  export type StudiedTextFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudiedText
+     */
+    select?: StudiedTextSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudiedText
+     */
+    omit?: StudiedTextOmit<ExtArgs> | null
+    /**
+     * Filter, which StudiedText to fetch.
+     */
+    where: StudiedTextWhereUniqueInput
+  }
+
+  /**
+   * StudiedText findFirst
+   */
+  export type StudiedTextFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudiedText
+     */
+    select?: StudiedTextSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudiedText
+     */
+    omit?: StudiedTextOmit<ExtArgs> | null
+    /**
+     * Filter, which StudiedText to fetch.
+     */
+    where?: StudiedTextWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudiedTexts to fetch.
+     */
+    orderBy?: StudiedTextOrderByWithRelationInput | StudiedTextOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StudiedTexts.
+     */
+    cursor?: StudiedTextWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudiedTexts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudiedTexts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StudiedTexts.
+     */
+    distinct?: StudiedTextScalarFieldEnum | StudiedTextScalarFieldEnum[]
+  }
+
+  /**
+   * StudiedText findFirstOrThrow
+   */
+  export type StudiedTextFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudiedText
+     */
+    select?: StudiedTextSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudiedText
+     */
+    omit?: StudiedTextOmit<ExtArgs> | null
+    /**
+     * Filter, which StudiedText to fetch.
+     */
+    where?: StudiedTextWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudiedTexts to fetch.
+     */
+    orderBy?: StudiedTextOrderByWithRelationInput | StudiedTextOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StudiedTexts.
+     */
+    cursor?: StudiedTextWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudiedTexts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudiedTexts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StudiedTexts.
+     */
+    distinct?: StudiedTextScalarFieldEnum | StudiedTextScalarFieldEnum[]
+  }
+
+  /**
+   * StudiedText findMany
+   */
+  export type StudiedTextFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudiedText
+     */
+    select?: StudiedTextSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudiedText
+     */
+    omit?: StudiedTextOmit<ExtArgs> | null
+    /**
+     * Filter, which StudiedTexts to fetch.
+     */
+    where?: StudiedTextWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudiedTexts to fetch.
+     */
+    orderBy?: StudiedTextOrderByWithRelationInput | StudiedTextOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StudiedTexts.
+     */
+    cursor?: StudiedTextWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudiedTexts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudiedTexts.
+     */
+    skip?: number
+    distinct?: StudiedTextScalarFieldEnum | StudiedTextScalarFieldEnum[]
+  }
+
+  /**
+   * StudiedText create
+   */
+  export type StudiedTextCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudiedText
+     */
+    select?: StudiedTextSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudiedText
+     */
+    omit?: StudiedTextOmit<ExtArgs> | null
+    /**
+     * The data needed to create a StudiedText.
+     */
+    data: XOR<StudiedTextCreateInput, StudiedTextUncheckedCreateInput>
+  }
+
+  /**
+   * StudiedText createMany
+   */
+  export type StudiedTextCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StudiedTexts.
+     */
+    data: StudiedTextCreateManyInput | StudiedTextCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StudiedText createManyAndReturn
+   */
+  export type StudiedTextCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudiedText
+     */
+    select?: StudiedTextSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudiedText
+     */
+    omit?: StudiedTextOmit<ExtArgs> | null
+    /**
+     * The data used to create many StudiedTexts.
+     */
+    data: StudiedTextCreateManyInput | StudiedTextCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StudiedText update
+   */
+  export type StudiedTextUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudiedText
+     */
+    select?: StudiedTextSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudiedText
+     */
+    omit?: StudiedTextOmit<ExtArgs> | null
+    /**
+     * The data needed to update a StudiedText.
+     */
+    data: XOR<StudiedTextUpdateInput, StudiedTextUncheckedUpdateInput>
+    /**
+     * Choose, which StudiedText to update.
+     */
+    where: StudiedTextWhereUniqueInput
+  }
+
+  /**
+   * StudiedText updateMany
+   */
+  export type StudiedTextUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StudiedTexts.
+     */
+    data: XOR<StudiedTextUpdateManyMutationInput, StudiedTextUncheckedUpdateManyInput>
+    /**
+     * Filter which StudiedTexts to update
+     */
+    where?: StudiedTextWhereInput
+    /**
+     * Limit how many StudiedTexts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StudiedText updateManyAndReturn
+   */
+  export type StudiedTextUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudiedText
+     */
+    select?: StudiedTextSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudiedText
+     */
+    omit?: StudiedTextOmit<ExtArgs> | null
+    /**
+     * The data used to update StudiedTexts.
+     */
+    data: XOR<StudiedTextUpdateManyMutationInput, StudiedTextUncheckedUpdateManyInput>
+    /**
+     * Filter which StudiedTexts to update
+     */
+    where?: StudiedTextWhereInput
+    /**
+     * Limit how many StudiedTexts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StudiedText upsert
+   */
+  export type StudiedTextUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudiedText
+     */
+    select?: StudiedTextSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudiedText
+     */
+    omit?: StudiedTextOmit<ExtArgs> | null
+    /**
+     * The filter to search for the StudiedText to update in case it exists.
+     */
+    where: StudiedTextWhereUniqueInput
+    /**
+     * In case the StudiedText found by the `where` argument doesn't exist, create a new StudiedText with this data.
+     */
+    create: XOR<StudiedTextCreateInput, StudiedTextUncheckedCreateInput>
+    /**
+     * In case the StudiedText was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StudiedTextUpdateInput, StudiedTextUncheckedUpdateInput>
+  }
+
+  /**
+   * StudiedText delete
+   */
+  export type StudiedTextDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudiedText
+     */
+    select?: StudiedTextSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudiedText
+     */
+    omit?: StudiedTextOmit<ExtArgs> | null
+    /**
+     * Filter which StudiedText to delete.
+     */
+    where: StudiedTextWhereUniqueInput
+  }
+
+  /**
+   * StudiedText deleteMany
+   */
+  export type StudiedTextDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StudiedTexts to delete
+     */
+    where?: StudiedTextWhereInput
+    /**
+     * Limit how many StudiedTexts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StudiedText without action
+   */
+  export type StudiedTextDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudiedText
+     */
+    select?: StudiedTextSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudiedText
+     */
+    omit?: StudiedTextOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -4433,6 +5558,20 @@ export namespace Prisma {
   };
 
   export type FlashcardReviewScalarFieldEnum = (typeof FlashcardReviewScalarFieldEnum)[keyof typeof FlashcardReviewScalarFieldEnum]
+
+
+  export const StudiedTextScalarFieldEnum: {
+    id: 'id',
+    userKey: 'userKey',
+    ref: 'ref',
+    heRef: 'heRef',
+    url: 'url',
+    title: 'title',
+    snippet: 'snippet',
+    createdAt: 'createdAt'
+  };
+
+  export type StudiedTextScalarFieldEnum = (typeof StudiedTextScalarFieldEnum)[keyof typeof StudiedTextScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -4747,6 +5886,74 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"FlashcardReview"> | Date | string
   }
 
+  export type StudiedTextWhereInput = {
+    AND?: StudiedTextWhereInput | StudiedTextWhereInput[]
+    OR?: StudiedTextWhereInput[]
+    NOT?: StudiedTextWhereInput | StudiedTextWhereInput[]
+    id?: StringFilter<"StudiedText"> | string
+    userKey?: StringFilter<"StudiedText"> | string
+    ref?: StringFilter<"StudiedText"> | string
+    heRef?: StringNullableFilter<"StudiedText"> | string | null
+    url?: StringNullableFilter<"StudiedText"> | string | null
+    title?: StringNullableFilter<"StudiedText"> | string | null
+    snippet?: StringNullableFilter<"StudiedText"> | string | null
+    createdAt?: DateTimeFilter<"StudiedText"> | Date | string
+  }
+
+  export type StudiedTextOrderByWithRelationInput = {
+    id?: SortOrder
+    userKey?: SortOrder
+    ref?: SortOrder
+    heRef?: SortOrderInput | SortOrder
+    url?: SortOrderInput | SortOrder
+    title?: SortOrderInput | SortOrder
+    snippet?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StudiedTextWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userKey_ref?: StudiedTextUserKeyRefCompoundUniqueInput
+    AND?: StudiedTextWhereInput | StudiedTextWhereInput[]
+    OR?: StudiedTextWhereInput[]
+    NOT?: StudiedTextWhereInput | StudiedTextWhereInput[]
+    userKey?: StringFilter<"StudiedText"> | string
+    ref?: StringFilter<"StudiedText"> | string
+    heRef?: StringNullableFilter<"StudiedText"> | string | null
+    url?: StringNullableFilter<"StudiedText"> | string | null
+    title?: StringNullableFilter<"StudiedText"> | string | null
+    snippet?: StringNullableFilter<"StudiedText"> | string | null
+    createdAt?: DateTimeFilter<"StudiedText"> | Date | string
+  }, "id" | "userKey_ref">
+
+  export type StudiedTextOrderByWithAggregationInput = {
+    id?: SortOrder
+    userKey?: SortOrder
+    ref?: SortOrder
+    heRef?: SortOrderInput | SortOrder
+    url?: SortOrderInput | SortOrder
+    title?: SortOrderInput | SortOrder
+    snippet?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: StudiedTextCountOrderByAggregateInput
+    _max?: StudiedTextMaxOrderByAggregateInput
+    _min?: StudiedTextMinOrderByAggregateInput
+  }
+
+  export type StudiedTextScalarWhereWithAggregatesInput = {
+    AND?: StudiedTextScalarWhereWithAggregatesInput | StudiedTextScalarWhereWithAggregatesInput[]
+    OR?: StudiedTextScalarWhereWithAggregatesInput[]
+    NOT?: StudiedTextScalarWhereWithAggregatesInput | StudiedTextScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"StudiedText"> | string
+    userKey?: StringWithAggregatesFilter<"StudiedText"> | string
+    ref?: StringWithAggregatesFilter<"StudiedText"> | string
+    heRef?: StringNullableWithAggregatesFilter<"StudiedText"> | string | null
+    url?: StringNullableWithAggregatesFilter<"StudiedText"> | string | null
+    title?: StringNullableWithAggregatesFilter<"StudiedText"> | string | null
+    snippet?: StringNullableWithAggregatesFilter<"StudiedText"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"StudiedText"> | Date | string
+  }
+
   export type PostCreateInput = {
     name: string
     createdAt?: Date | string
@@ -4955,6 +6162,83 @@ export namespace Prisma {
     lastReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudiedTextCreateInput = {
+    id?: string
+    userKey: string
+    ref: string
+    heRef?: string | null
+    url?: string | null
+    title?: string | null
+    snippet?: string | null
+    createdAt?: Date | string
+  }
+
+  export type StudiedTextUncheckedCreateInput = {
+    id?: string
+    userKey: string
+    ref: string
+    heRef?: string | null
+    url?: string | null
+    title?: string | null
+    snippet?: string | null
+    createdAt?: Date | string
+  }
+
+  export type StudiedTextUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    ref?: StringFieldUpdateOperationsInput | string
+    heRef?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    snippet?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudiedTextUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    ref?: StringFieldUpdateOperationsInput | string
+    heRef?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    snippet?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudiedTextCreateManyInput = {
+    id?: string
+    userKey: string
+    ref: string
+    heRef?: string | null
+    url?: string | null
+    title?: string | null
+    snippet?: string | null
+    createdAt?: Date | string
+  }
+
+  export type StudiedTextUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    ref?: StringFieldUpdateOperationsInput | string
+    heRef?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    snippet?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudiedTextUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    ref?: StringFieldUpdateOperationsInput | string
+    heRef?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    snippet?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -5258,6 +6542,77 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type StudiedTextUserKeyRefCompoundUniqueInput = {
+    userKey: string
+    ref: string
+  }
+
+  export type StudiedTextCountOrderByAggregateInput = {
+    id?: SortOrder
+    userKey?: SortOrder
+    ref?: SortOrder
+    heRef?: SortOrder
+    url?: SortOrder
+    title?: SortOrder
+    snippet?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StudiedTextMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userKey?: SortOrder
+    ref?: SortOrder
+    heRef?: SortOrder
+    url?: SortOrder
+    title?: SortOrder
+    snippet?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StudiedTextMinOrderByAggregateInput = {
+    id?: SortOrder
+    userKey?: SortOrder
+    ref?: SortOrder
+    heRef?: SortOrder
+    url?: SortOrder
+    title?: SortOrder
+    snippet?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -5348,6 +6703,10 @@ export namespace Prisma {
     upsert?: FlashcardUpsertWithoutReviewsInput
     connect?: FlashcardWhereUniqueInput
     update?: XOR<XOR<FlashcardUpdateToOneWithWhereWithoutReviewsInput, FlashcardUpdateWithoutReviewsInput>, FlashcardUncheckedUpdateWithoutReviewsInput>
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -5528,6 +6887,37 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type FlashcardReviewCreateWithoutFlashcardInput = {

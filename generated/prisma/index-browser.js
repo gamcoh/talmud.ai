@@ -151,6 +151,17 @@ exports.Prisma.FlashcardReviewScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.StudiedTextScalarFieldEnum = {
+  id: 'id',
+  userKey: 'userKey',
+  ref: 'ref',
+  heRef: 'heRef',
+  url: 'url',
+  title: 'title',
+  snippet: 'snippet',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -181,7 +192,8 @@ exports.Grade = exports.$Enums.Grade = {
 exports.Prisma.ModelName = {
   Post: 'Post',
   Flashcard: 'Flashcard',
-  FlashcardReview: 'FlashcardReview'
+  FlashcardReview: 'FlashcardReview',
+  StudiedText: 'StudiedText'
 };
 
 /**

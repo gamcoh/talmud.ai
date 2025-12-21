@@ -68,3 +68,22 @@ model FlashcardReview {
   @@index([dueAt])
   @@index([flashcardId])
 }
+
+model StudiedText {
+  id      String @id @default(cuid())
+  userKey String // simple identifier (e.g. from localStorage) until auth exists
+
+  // Sefaria reference
+  ref   String
+  heRef String?
+  url   String?
+
+  // Snapshot for display
+  title   String?
+  snippet String?
+
+  createdAt DateTime @default(now())
+
+  @@unique([userKey, ref])
+  @@index([userKey, createdAt])
+}
