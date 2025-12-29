@@ -368,33 +368,58 @@ export async function getDailyWisdom() {
 export async function getWeeklyCalendar(userKey: string) {
   const user = await getOrCreateUser(userKey);
   
-  // Get study sessions for the last 7 days
+  // Get the start of the current week (Sunday)
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
-  const sevenDaysAgo = new Date(today);
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+  const currentDayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - currentDayOfWeek); // Go back to Sunday
+  
+  const endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(startOfWeek.getDate() + 6); // Saturday
 
-  const sessions = await db.studySession.findMany({
-    where: {
-      userId: user.id,
-      date: {
-        gte: sevenDaysAgo,
-        lte: today,
+  const [sessions, studiedTexts] = await Promise.all([
+    db.studySession.findMany({
+      where: {
+        userId: user.id,
+        date: {
+          gte: startOfWeek,
+          lte: endOfWeek,
+        },
       },
-    },
-    orderBy: { date: "asc" },
-  });
+      orderBy: { date: "asc" },
+    }),
+    db.studiedText.findMany({
+      where: {
+        userKey,
+        createdAt: {
+          gte: startOfWeek,
+          lte: new Date(endOfWeek.getTime() + 24 * 60 * 60 * 1000 - 1), // End of Saturday
+        },
+      },
+      select: {
+        createdAt: true,
+      },
+    }),
+  ]);
 
-  // Build array of last 7 days
+  // Build array of 7 days for the current week (Sun-Sat)
   const weekData = [];
-  for (let i = 6; i >= 0; i--) {
-    const date = new Date(today);
-    date.setDate(date.getDate() - i);
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(startOfWeek);
+    date.setDate(startOfWeek.getDate() + i);
     
     const session = sessions.find(s => {
       const sessionDate = new Date(s.date);
       return sessionDate.getTime() === date.getTime();
+    });
+    
+    // Check if any texts were studied on this day
+    const hasStudiedTexts = studiedTexts.some(st => {
+      const studiedDate = new Date(st.createdAt);
+      studiedDate.setHours(0, 0, 0, 0);
+      return studiedDate.getTime() === date.getTime();
     });
 
     const dayName = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][date.getDay()];
@@ -402,7 +427,7 @@ export async function getWeeklyCalendar(userKey: string) {
     weekData.push({
       day: dayName!,
       date: date.toISOString(), // Return ISO string for JSON serialization
-      studied: !!session,
+      studied: !!session || hasStudiedTexts,
       minutes: session?.duration ?? 0,
     });
   }
