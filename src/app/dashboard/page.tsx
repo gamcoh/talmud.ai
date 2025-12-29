@@ -1,5 +1,10 @@
 import { DashboardClient } from "~/components/dashboard/DashboardClient";
+import { DashboardProvider } from "~/contexts/DashboardContext";
 
 export default function DashboardPage() {
-  return <DashboardClient />;
+  return (
+    <DashboardProvider>
+      <DashboardClient />
+    </DashboardProvider>
+  );
 }

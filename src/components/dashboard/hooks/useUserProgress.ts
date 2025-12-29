@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { DEFAULT_PROGRESS, type Portion, type UserProgress } from "~/lib/mock-data";
+import { useDashboard } from "~/contexts/DashboardContext";
 
 type Goal = {
   id: string;
@@ -41,6 +42,7 @@ type UserStats = {
 };
 
 export function useUserProgress() {
+  const { setStats: setDashboardStats } = useDashboard();
   const [progress, setProgress] = useState<UserProgress>(DEFAULT_PROGRESS);
   const [stats, setStats] = useState<UserStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -78,10 +80,19 @@ export function useUserProgress() {
             }
           }
 
-          setProgress({
+          const progressData = {
             points: data.level?.totalPoints ?? 0,
             streakDays: data.streak?.currentStreak ?? 0,
             lastStudied,
+          };
+          setProgress(progressData);
+
+          // Sync with dashboard context
+          setDashboardStats({
+            points: data.level?.totalPoints ?? 0,
+            level: data.level?.currentLevel ?? 1,
+            streakDays: data.streak?.currentStreak ?? 0,
+            totalTextsStudied: data.daysStudied ?? 0,
           });
         }
       } catch (error) {
@@ -92,7 +103,7 @@ export function useUserProgress() {
     }
 
     void fetchStats();
-  }, []);
+  }, [setDashboardStats]);
 
   return { progress, setProgress, stats, loading };
 }

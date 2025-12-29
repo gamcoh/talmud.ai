@@ -1,7 +1,9 @@
 import { useState } from "react";
 import type { StudiedText } from "../types";
+import { useDashboard } from "~/contexts/DashboardContext";
 
 export function useSefariaSearch(userKey: string, onAddStudied: (items: StudiedText[]) => void) {
+  const { optimisticAddStudiedText, optimisticAddPoints, confirmAddStudiedText, rollbackAddStudiedText } = useDashboard();
   const [query, setQuery] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
@@ -64,19 +66,65 @@ export function useSefariaSearch(userKey: string, onAddStudied: (items: StudiedT
             .filter((p) => p.snippet)
         : [{ ...basePayload, snippet: makeSnippet(result?.text) }];
 
-    const createdItems: StudiedText[] = [];
-    for (const payload of payloads) {
-      const res = await fetch("/api/studied-texts", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = (await res.json()) as { item?: StudiedText };
-      if (data.item) createdItems.push(data.item);
-    }
+    // Create temporary items for optimistic update
+    const tempItems: StudiedText[] = payloads.map((payload, idx) => ({
+      id: `temp-${Date.now()}-${idx}`,
+      userKey: payload.userKey,
+      ref: payload.ref,
+      heRef: payload.heRef ?? null,
+      url: payload.url ?? null,
+      title: payload.title ?? null,
+      snippet: payload.snippet ?? null,
+      createdAt: new Date().toISOString(),
+    }));
 
-    if (createdItems.length > 0) {
-      onAddStudied(createdItems);
+    // Optimistically update UI
+    tempItems.forEach((item) => {
+      optimisticAddStudiedText(item);
+    });
+    
+    // Award points optimistically (10 points per text)
+    optimisticAddPoints(10 * payloads.length);
+
+    // Try to create items in database
+    const createdItems: StudiedText[] = [];
+    let hasError = false;
+
+    try {
+      for (const payload of payloads) {
+        const res = await fetch("/api/studied-texts", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        
+        if (!res.ok) {
+          hasError = true;
+          break;
+        }
+        
+        const data = (await res.json()) as { item?: StudiedText };
+        if (data.item) createdItems.push(data.item);
+      }
+
+      if (hasError || createdItems.length === 0) {
+        // Rollback on error
+        tempItems.forEach((item) => {
+          rollbackAddStudiedText(item.id);
+        });
+        optimisticAddPoints(-10 * payloads.length);
+      } else {
+        // Confirm with real data
+        confirmAddStudiedText(createdItems);
+        onAddStudied(createdItems);
+      }
+    } catch (error) {
+      // Rollback on error
+      tempItems.forEach((item) => {
+        rollbackAddStudiedText(item.id);
+      });
+      optimisticAddPoints(-10 * payloads.length);
+      console.error("Error adding studied texts:", error);
     }
   }
 

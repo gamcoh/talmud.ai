@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import type { StudiedText } from "../types";
 import { PAGE_SIZE } from "../constants";
+import { useDashboard } from "~/contexts/DashboardContext";
 
 export function useStudiedTexts(userKey: string) {
+  const { setStudiedTexts } = useDashboard();
   const [studied, setStudied] = useState<StudiedText[]>([]);
   const [studiedLoading, setStudiedLoading] = useState(false);
   const [studiedPage, setStudiedPage] = useState(1);
@@ -21,14 +23,18 @@ export function useStudiedTexts(userKey: string) {
           { cache: "no-store" }
         );
         const data = (await res.json()) as { items?: StudiedText[]; hasMore?: boolean; totalCount?: number };
-        setStudied(Array.isArray(data.items) ? data.items : []);
+        const items = Array.isArray(data.items) ? data.items : [];
+        setStudied(items);
         setStudiedHasMore(!!data.hasMore);
         setTotalCount(data.totalCount ?? 0);
+        
+        // Sync with dashboard context
+        setStudiedTexts(items, data.totalCount ?? 0);
       } finally {
         setStudiedLoading(false);
       }
     })();
-  }, [userKey]);
+  }, [userKey, setStudiedTexts]);
 
   async function loadMoreStudied() {
     if (!userKey || loadingMore || !studiedHasMore) return;

@@ -9,6 +9,7 @@ import { WeeklyCalendar } from "~/components/ui/WeeklyCalendar";
 import { Button } from "~/components/ui/Button";
 import Link from "next/link";
 import confetti from "canvas-confetti";
+import { useDashboard } from "~/contexts/DashboardContext";
 
 import { useUserProgress, useStudiedTexts, useSefariaSearch } from "./hooks";
 import { StatsSection, SearchSection, StudyHistorySection, FocusSection } from "./sections";
@@ -16,6 +17,7 @@ import { StatsSection, SearchSection, StudyHistorySection, FocusSection } from "
 export function DashboardClient() {
   const [userKey, setUserKey] = useState<string>("demo-user");
   const [dashboardPulse, setDashboardPulse] = useState(false);
+  const dashboard = useDashboard();
 
   const { progress, stats, loading } = useUserProgress();
   const {
@@ -66,12 +68,19 @@ export function DashboardClient() {
     setUserKey(key);
   }, []);
 
-  const levelInfo = useMemo(() => getLevelFromPoints(progress.points), [progress.points]);
+  const levelInfo = useMemo(() => getLevelFromPoints(dashboard.state.stats.points || progress.points), [dashboard.state.stats.points, progress.points]);
   const weeklyData = stats?.weeklyCalendar ?? [];
   const currentStreak = weeklyData.filter((d) => d.studied).length;
 
-  // Get the most recently added studied text
-  const lastStudiedText = studied.length > 0 ? studied[0] : null;
+  // Get the most recently added studied text from context
+  const lastStudiedText = dashboard.state.studiedTexts.length > 0 ? dashboard.state.studiedTexts[0] : null;
+
+  // Use context stats with fallback to API stats
+  const displayProgress = {
+    points: dashboard.state.stats.points || progress.points,
+    streakDays: dashboard.state.stats.streakDays || progress.streakDays,
+    lastStudied: progress.lastStudied,
+  };
 
   // Get daily goal from stats
   const dailyGoal = stats?.activeGoals?.find(
@@ -109,7 +118,7 @@ export function DashboardClient() {
       </section>
 
       {/* Stats Row */}
-      <StatsSection progress={progress} levelInfo={levelInfo} lastStudiedText={lastStudiedText} />
+      <StatsSection progress={displayProgress} levelInfo={levelInfo} lastStudiedText={lastStudiedText} />
 
       {/* Main Content Grid */}
       <section className="grid gap-6 lg:grid-cols-3">
@@ -161,12 +170,12 @@ export function DashboardClient() {
 
       {/* Studied Texts Section */}
       <StudyHistorySection
-        studied={studied}
+        studied={dashboard.state.studiedTexts.length > 0 ? dashboard.state.studiedTexts : studied}
         studiedLoading={studiedLoading}
         studiedHasMore={studiedHasMore}
         loadingMore={loadingMore}
         onLoadMore={() => void loadMoreStudied()}
-        totalCount={totalCount}
+        totalCount={dashboard.state.totalCount || totalCount}
       />
 
       {/* Focus Selection */}
