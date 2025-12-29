@@ -69,9 +69,136 @@ model FlashcardReview {
   @@index([flashcardId])
 }
 
+// ==================== GAMIFICATION MODELS ====================
+
+model User {
+  id        String   @id @default(cuid())
+  userKey   String   @unique // localStorage identifier until auth exists
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  streak        Streak?
+  points        Points[]
+  level         Level?
+  goals         Goal[]
+  studySessions StudySession[]
+  studiedTexts  StudiedText[]
+
+  @@index([userKey])
+}
+
+model Streak {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  currentStreak Int       @default(0)
+  longestStreak Int       @default(0)
+  lastStudyDate DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Points {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  action   PointAction
+  points   Int
+  metadata Json? // Optional: store context like { ref: "Genesis 1:1" }
+
+  earnedAt DateTime @default(now())
+
+  @@index([userId, earnedAt])
+  @@index([userId, action])
+}
+
+enum PointAction {
+  STUDY_TEXT // Reading a text
+  COMPLETE_FLASHCARD // Reviewing a flashcard
+  STREAK_BONUS // Daily streak bonus
+  GOAL_COMPLETED // Completing a goal
+  LEVEL_UP // Leveling up bonus
+  FIRST_STUDY_TODAY // First study of the day
+}
+
+model Level {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  currentLevel Int @default(1)
+  totalPoints  Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Goal {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type     GoalType
+  target   Int // e.g., 5 texts, 10 flashcards
+  progress Int        @default(0)
+  period   GoalPeriod
+
+  startDate   DateTime  @default(now())
+  endDate     DateTime?
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, period])
+  @@index([userId, completedAt])
+}
+
+enum GoalType {
+  TEXTS_STUDIED
+  FLASHCARDS_REVIEWED
+  STUDY_MINUTES
+  STREAK_DAYS
+}
+
+enum GoalPeriod {
+  DAILY
+  WEEKLY
+  MONTHLY
+  CUSTOM
+}
+
+model StudySession {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  date     DateTime @db.Date // Just the date, no time
+  duration Int      @default(0) // Minutes studied
+
+  textsRead          Int @default(0)
+  flashcardsReviewed Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, date])
+  @@index([userId, date])
+}
+
 model StudiedText {
-  id      String @id @default(cuid())
-  userKey String // simple identifier (e.g. from localStorage) until auth exists
+  id      String  @id @default(cuid())
+  userKey String // Keep for backward compatibility
+  userId  String?
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   // Sefaria reference
   ref   String
@@ -86,4 +213,5 @@ model StudiedText {
 
   @@unique([userKey, ref])
   @@index([userKey, createdAt])
+  @@index([userId, createdAt])
 }

@@ -29,6 +29,36 @@ export type Flashcard = $Result.DefaultSelection<Prisma.$FlashcardPayload>
  */
 export type FlashcardReview = $Result.DefaultSelection<Prisma.$FlashcardReviewPayload>
 /**
+ * Model User
+ * 
+ */
+export type User = $Result.DefaultSelection<Prisma.$UserPayload>
+/**
+ * Model Streak
+ * 
+ */
+export type Streak = $Result.DefaultSelection<Prisma.$StreakPayload>
+/**
+ * Model Points
+ * 
+ */
+export type Points = $Result.DefaultSelection<Prisma.$PointsPayload>
+/**
+ * Model Level
+ * 
+ */
+export type Level = $Result.DefaultSelection<Prisma.$LevelPayload>
+/**
+ * Model Goal
+ * 
+ */
+export type Goal = $Result.DefaultSelection<Prisma.$GoalPayload>
+/**
+ * Model StudySession
+ * 
+ */
+export type StudySession = $Result.DefaultSelection<Prisma.$StudySessionPayload>
+/**
  * Model StudiedText
  * 
  */
@@ -56,6 +86,38 @@ export const Grade: {
 
 export type Grade = (typeof Grade)[keyof typeof Grade]
 
+
+export const PointAction: {
+  STUDY_TEXT: 'STUDY_TEXT',
+  COMPLETE_FLASHCARD: 'COMPLETE_FLASHCARD',
+  STREAK_BONUS: 'STREAK_BONUS',
+  GOAL_COMPLETED: 'GOAL_COMPLETED',
+  LEVEL_UP: 'LEVEL_UP',
+  FIRST_STUDY_TODAY: 'FIRST_STUDY_TODAY'
+};
+
+export type PointAction = (typeof PointAction)[keyof typeof PointAction]
+
+
+export const GoalType: {
+  TEXTS_STUDIED: 'TEXTS_STUDIED',
+  FLASHCARDS_REVIEWED: 'FLASHCARDS_REVIEWED',
+  STUDY_MINUTES: 'STUDY_MINUTES',
+  STREAK_DAYS: 'STREAK_DAYS'
+};
+
+export type GoalType = (typeof GoalType)[keyof typeof GoalType]
+
+
+export const GoalPeriod: {
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY',
+  MONTHLY: 'MONTHLY',
+  CUSTOM: 'CUSTOM'
+};
+
+export type GoalPeriod = (typeof GoalPeriod)[keyof typeof GoalPeriod]
+
 }
 
 export type PortionType = $Enums.PortionType
@@ -65,6 +127,18 @@ export const PortionType: typeof $Enums.PortionType
 export type Grade = $Enums.Grade
 
 export const Grade: typeof $Enums.Grade
+
+export type PointAction = $Enums.PointAction
+
+export const PointAction: typeof $Enums.PointAction
+
+export type GoalType = $Enums.GoalType
+
+export const GoalType: typeof $Enums.GoalType
+
+export type GoalPeriod = $Enums.GoalPeriod
+
+export const GoalPeriod: typeof $Enums.GoalPeriod
 
 /**
  * ##  Prisma Client ʲˢ
@@ -213,6 +287,66 @@ export class PrismaClient<
     * ```
     */
   get flashcardReview(): Prisma.FlashcardReviewDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.user`: Exposes CRUD operations for the **User** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Users
+    * const users = await prisma.user.findMany()
+    * ```
+    */
+  get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.streak`: Exposes CRUD operations for the **Streak** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Streaks
+    * const streaks = await prisma.streak.findMany()
+    * ```
+    */
+  get streak(): Prisma.StreakDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.points`: Exposes CRUD operations for the **Points** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Points
+    * const points = await prisma.points.findMany()
+    * ```
+    */
+  get points(): Prisma.PointsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.level`: Exposes CRUD operations for the **Level** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Levels
+    * const levels = await prisma.level.findMany()
+    * ```
+    */
+  get level(): Prisma.LevelDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.goal`: Exposes CRUD operations for the **Goal** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Goals
+    * const goals = await prisma.goal.findMany()
+    * ```
+    */
+  get goal(): Prisma.GoalDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.studySession`: Exposes CRUD operations for the **StudySession** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StudySessions
+    * const studySessions = await prisma.studySession.findMany()
+    * ```
+    */
+  get studySession(): Prisma.StudySessionDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.studiedText`: Exposes CRUD operations for the **StudiedText** model.
@@ -667,6 +801,12 @@ export namespace Prisma {
     Post: 'Post',
     Flashcard: 'Flashcard',
     FlashcardReview: 'FlashcardReview',
+    User: 'User',
+    Streak: 'Streak',
+    Points: 'Points',
+    Level: 'Level',
+    Goal: 'Goal',
+    StudySession: 'StudySession',
     StudiedText: 'StudiedText'
   };
 
@@ -686,7 +826,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "post" | "flashcard" | "flashcardReview" | "studiedText"
+      modelProps: "post" | "flashcard" | "flashcardReview" | "user" | "streak" | "points" | "level" | "goal" | "studySession" | "studiedText"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -912,6 +1052,450 @@ export namespace Prisma {
           }
         }
       }
+      User: {
+        payload: Prisma.$UserPayload<ExtArgs>
+        fields: Prisma.UserFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>
+          }
+          findFirst: {
+            args: Prisma.UserFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>
+          }
+          findMany: {
+            args: Prisma.UserFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>[]
+          }
+          create: {
+            args: Prisma.UserCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>
+          }
+          createMany: {
+            args: Prisma.UserCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>[]
+          }
+          delete: {
+            args: Prisma.UserDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>
+          }
+          update: {
+            args: Prisma.UserUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>[]
+          }
+          upsert: {
+            args: Prisma.UserUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>
+          }
+          aggregate: {
+            args: Prisma.UserAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUser>
+          }
+          groupBy: {
+            args: Prisma.UserGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserCountArgs<ExtArgs>
+            result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      Streak: {
+        payload: Prisma.$StreakPayload<ExtArgs>
+        fields: Prisma.StreakFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StreakFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StreakPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StreakFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StreakPayload>
+          }
+          findFirst: {
+            args: Prisma.StreakFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StreakPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StreakFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StreakPayload>
+          }
+          findMany: {
+            args: Prisma.StreakFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StreakPayload>[]
+          }
+          create: {
+            args: Prisma.StreakCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StreakPayload>
+          }
+          createMany: {
+            args: Prisma.StreakCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.StreakCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StreakPayload>[]
+          }
+          delete: {
+            args: Prisma.StreakDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StreakPayload>
+          }
+          update: {
+            args: Prisma.StreakUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StreakPayload>
+          }
+          deleteMany: {
+            args: Prisma.StreakDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StreakUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.StreakUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StreakPayload>[]
+          }
+          upsert: {
+            args: Prisma.StreakUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StreakPayload>
+          }
+          aggregate: {
+            args: Prisma.StreakAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStreak>
+          }
+          groupBy: {
+            args: Prisma.StreakGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StreakGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StreakCountArgs<ExtArgs>
+            result: $Utils.Optional<StreakCountAggregateOutputType> | number
+          }
+        }
+      }
+      Points: {
+        payload: Prisma.$PointsPayload<ExtArgs>
+        fields: Prisma.PointsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PointsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PointsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PointsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PointsPayload>
+          }
+          findFirst: {
+            args: Prisma.PointsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PointsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PointsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PointsPayload>
+          }
+          findMany: {
+            args: Prisma.PointsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PointsPayload>[]
+          }
+          create: {
+            args: Prisma.PointsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PointsPayload>
+          }
+          createMany: {
+            args: Prisma.PointsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PointsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PointsPayload>[]
+          }
+          delete: {
+            args: Prisma.PointsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PointsPayload>
+          }
+          update: {
+            args: Prisma.PointsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PointsPayload>
+          }
+          deleteMany: {
+            args: Prisma.PointsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PointsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PointsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PointsPayload>[]
+          }
+          upsert: {
+            args: Prisma.PointsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PointsPayload>
+          }
+          aggregate: {
+            args: Prisma.PointsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePoints>
+          }
+          groupBy: {
+            args: Prisma.PointsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PointsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PointsCountArgs<ExtArgs>
+            result: $Utils.Optional<PointsCountAggregateOutputType> | number
+          }
+        }
+      }
+      Level: {
+        payload: Prisma.$LevelPayload<ExtArgs>
+        fields: Prisma.LevelFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LevelFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LevelPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LevelFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LevelPayload>
+          }
+          findFirst: {
+            args: Prisma.LevelFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LevelPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LevelFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LevelPayload>
+          }
+          findMany: {
+            args: Prisma.LevelFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LevelPayload>[]
+          }
+          create: {
+            args: Prisma.LevelCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LevelPayload>
+          }
+          createMany: {
+            args: Prisma.LevelCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LevelCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LevelPayload>[]
+          }
+          delete: {
+            args: Prisma.LevelDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LevelPayload>
+          }
+          update: {
+            args: Prisma.LevelUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LevelPayload>
+          }
+          deleteMany: {
+            args: Prisma.LevelDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LevelUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.LevelUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LevelPayload>[]
+          }
+          upsert: {
+            args: Prisma.LevelUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LevelPayload>
+          }
+          aggregate: {
+            args: Prisma.LevelAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLevel>
+          }
+          groupBy: {
+            args: Prisma.LevelGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LevelGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LevelCountArgs<ExtArgs>
+            result: $Utils.Optional<LevelCountAggregateOutputType> | number
+          }
+        }
+      }
+      Goal: {
+        payload: Prisma.$GoalPayload<ExtArgs>
+        fields: Prisma.GoalFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GoalFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GoalFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalPayload>
+          }
+          findFirst: {
+            args: Prisma.GoalFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GoalFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalPayload>
+          }
+          findMany: {
+            args: Prisma.GoalFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalPayload>[]
+          }
+          create: {
+            args: Prisma.GoalCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalPayload>
+          }
+          createMany: {
+            args: Prisma.GoalCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GoalCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalPayload>[]
+          }
+          delete: {
+            args: Prisma.GoalDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalPayload>
+          }
+          update: {
+            args: Prisma.GoalUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalPayload>
+          }
+          deleteMany: {
+            args: Prisma.GoalDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GoalUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GoalUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalPayload>[]
+          }
+          upsert: {
+            args: Prisma.GoalUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalPayload>
+          }
+          aggregate: {
+            args: Prisma.GoalAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGoal>
+          }
+          groupBy: {
+            args: Prisma.GoalGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GoalGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GoalCountArgs<ExtArgs>
+            result: $Utils.Optional<GoalCountAggregateOutputType> | number
+          }
+        }
+      }
+      StudySession: {
+        payload: Prisma.$StudySessionPayload<ExtArgs>
+        fields: Prisma.StudySessionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StudySessionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudySessionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StudySessionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudySessionPayload>
+          }
+          findFirst: {
+            args: Prisma.StudySessionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudySessionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StudySessionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudySessionPayload>
+          }
+          findMany: {
+            args: Prisma.StudySessionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudySessionPayload>[]
+          }
+          create: {
+            args: Prisma.StudySessionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudySessionPayload>
+          }
+          createMany: {
+            args: Prisma.StudySessionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.StudySessionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudySessionPayload>[]
+          }
+          delete: {
+            args: Prisma.StudySessionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudySessionPayload>
+          }
+          update: {
+            args: Prisma.StudySessionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudySessionPayload>
+          }
+          deleteMany: {
+            args: Prisma.StudySessionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StudySessionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.StudySessionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudySessionPayload>[]
+          }
+          upsert: {
+            args: Prisma.StudySessionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudySessionPayload>
+          }
+          aggregate: {
+            args: Prisma.StudySessionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStudySession>
+          }
+          groupBy: {
+            args: Prisma.StudySessionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StudySessionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StudySessionCountArgs<ExtArgs>
+            result: $Utils.Optional<StudySessionCountAggregateOutputType> | number
+          }
+        }
+      }
       StudiedText: {
         payload: Prisma.$StudiedTextPayload<ExtArgs>
         fields: Prisma.StudiedTextFieldRefs
@@ -1085,6 +1669,12 @@ export namespace Prisma {
     post?: PostOmit
     flashcard?: FlashcardOmit
     flashcardReview?: FlashcardReviewOmit
+    user?: UserOmit
+    streak?: StreakOmit
+    points?: PointsOmit
+    level?: LevelOmit
+    goal?: GoalOmit
+    studySession?: StudySessionOmit
     studiedText?: StudiedTextOmit
   }
 
@@ -1189,6 +1779,64 @@ export namespace Prisma {
    */
   export type FlashcardCountOutputTypeCountReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FlashcardReviewWhereInput
+  }
+
+
+  /**
+   * Count Type UserCountOutputType
+   */
+
+  export type UserCountOutputType = {
+    points: number
+    goals: number
+    studySessions: number
+    studiedTexts: number
+  }
+
+  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    points?: boolean | UserCountOutputTypeCountPointsArgs
+    goals?: boolean | UserCountOutputTypeCountGoalsArgs
+    studySessions?: boolean | UserCountOutputTypeCountStudySessionsArgs
+    studiedTexts?: boolean | UserCountOutputTypeCountStudiedTextsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserCountOutputType
+     */
+    select?: UserCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPointsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PointsWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountGoalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GoalWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountStudySessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudySessionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountStudiedTextsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudiedTextWhereInput
   }
 
 
@@ -4474,6 +5122,6838 @@ export namespace Prisma {
 
 
   /**
+   * Model User
+   */
+
+  export type AggregateUser = {
+    _count: UserCountAggregateOutputType | null
+    _min: UserMinAggregateOutputType | null
+    _max: UserMaxAggregateOutputType | null
+  }
+
+  export type UserMinAggregateOutputType = {
+    id: string | null
+    userKey: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserMaxAggregateOutputType = {
+    id: string | null
+    userKey: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserCountAggregateOutputType = {
+    id: number
+    userKey: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UserMinAggregateInputType = {
+    id?: true
+    userKey?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserMaxAggregateInputType = {
+    id?: true
+    userKey?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserCountAggregateInputType = {
+    id?: true
+    userKey?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UserAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which User to aggregate.
+     */
+    where?: UserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Users to fetch.
+     */
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Users.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Users
+    **/
+    _count?: true | UserCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserMaxAggregateInputType
+  }
+
+  export type GetUserAggregateType<T extends UserAggregateArgs> = {
+        [P in keyof T & keyof AggregateUser]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUser[P]>
+      : GetScalarType<T[P], AggregateUser[P]>
+  }
+
+
+
+
+  export type UserGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithAggregationInput | UserOrderByWithAggregationInput[]
+    by: UserScalarFieldEnum[] | UserScalarFieldEnum
+    having?: UserScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserCountAggregateInputType | true
+    _min?: UserMinAggregateInputType
+    _max?: UserMaxAggregateInputType
+  }
+
+  export type UserGroupByOutputType = {
+    id: string
+    userKey: string
+    createdAt: Date
+    updatedAt: Date
+    _count: UserCountAggregateOutputType | null
+    _min: UserMinAggregateOutputType | null
+    _max: UserMaxAggregateOutputType | null
+  }
+
+  type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserGroupByOutputType[P]>
+            : GetScalarType<T[P], UserGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userKey?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    streak?: boolean | User$streakArgs<ExtArgs>
+    points?: boolean | User$pointsArgs<ExtArgs>
+    level?: boolean | User$levelArgs<ExtArgs>
+    goals?: boolean | User$goalsArgs<ExtArgs>
+    studySessions?: boolean | User$studySessionsArgs<ExtArgs>
+    studiedTexts?: boolean | User$studiedTextsArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["user"]>
+
+  export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userKey?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["user"]>
+
+  export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userKey?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["user"]>
+
+  export type UserSelectScalar = {
+    id?: boolean
+    userKey?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userKey" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    streak?: boolean | User$streakArgs<ExtArgs>
+    points?: boolean | User$pointsArgs<ExtArgs>
+    level?: boolean | User$levelArgs<ExtArgs>
+    goals?: boolean | User$goalsArgs<ExtArgs>
+    studySessions?: boolean | User$studySessionsArgs<ExtArgs>
+    studiedTexts?: boolean | User$studiedTextsArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "User"
+    objects: {
+      streak: Prisma.$StreakPayload<ExtArgs> | null
+      points: Prisma.$PointsPayload<ExtArgs>[]
+      level: Prisma.$LevelPayload<ExtArgs> | null
+      goals: Prisma.$GoalPayload<ExtArgs>[]
+      studySessions: Prisma.$StudySessionPayload<ExtArgs>[]
+      studiedTexts: Prisma.$StudiedTextPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userKey: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["user"]>
+    composites: {}
+  }
+
+  type UserGetPayload<S extends boolean | null | undefined | UserDefaultArgs> = $Result.GetResult<Prisma.$UserPayload, S>
+
+  type UserCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserCountAggregateInputType | true
+    }
+
+  export interface UserDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['User'], meta: { name: 'User' } }
+    /**
+     * Find zero or one User that matches the filter.
+     * @param {UserFindUniqueArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserFindUniqueArgs>(args: SelectSubset<T, UserFindUniqueArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one User that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserFindUniqueOrThrowArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserFindUniqueOrThrowArgs>(args: SelectSubset<T, UserFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first User that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFindFirstArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserFindFirstArgs>(args?: SelectSubset<T, UserFindFirstArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first User that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFindFirstOrThrowArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserFindFirstOrThrowArgs>(args?: SelectSubset<T, UserFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Users that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Users
+     * const users = await prisma.user.findMany()
+     * 
+     * // Get first 10 Users
+     * const users = await prisma.user.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userWithIdOnly = await prisma.user.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserFindManyArgs>(args?: SelectSubset<T, UserFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a User.
+     * @param {UserCreateArgs} args - Arguments to create a User.
+     * @example
+     * // Create one User
+     * const User = await prisma.user.create({
+     *   data: {
+     *     // ... data to create a User
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserCreateArgs>(args: SelectSubset<T, UserCreateArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Users.
+     * @param {UserCreateManyArgs} args - Arguments to create many Users.
+     * @example
+     * // Create many Users
+     * const user = await prisma.user.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserCreateManyArgs>(args?: SelectSubset<T, UserCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Users and returns the data saved in the database.
+     * @param {UserCreateManyAndReturnArgs} args - Arguments to create many Users.
+     * @example
+     * // Create many Users
+     * const user = await prisma.user.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Users and only return the `id`
+     * const userWithIdOnly = await prisma.user.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserCreateManyAndReturnArgs>(args?: SelectSubset<T, UserCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a User.
+     * @param {UserDeleteArgs} args - Arguments to delete one User.
+     * @example
+     * // Delete one User
+     * const User = await prisma.user.delete({
+     *   where: {
+     *     // ... filter to delete one User
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserDeleteArgs>(args: SelectSubset<T, UserDeleteArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one User.
+     * @param {UserUpdateArgs} args - Arguments to update one User.
+     * @example
+     * // Update one User
+     * const user = await prisma.user.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserUpdateArgs>(args: SelectSubset<T, UserUpdateArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Users.
+     * @param {UserDeleteManyArgs} args - Arguments to filter Users to delete.
+     * @example
+     * // Delete a few Users
+     * const { count } = await prisma.user.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserDeleteManyArgs>(args?: SelectSubset<T, UserDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Users.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Users
+     * const user = await prisma.user.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserUpdateManyArgs>(args: SelectSubset<T, UserUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Users and returns the data updated in the database.
+     * @param {UserUpdateManyAndReturnArgs} args - Arguments to update many Users.
+     * @example
+     * // Update many Users
+     * const user = await prisma.user.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Users and only return the `id`
+     * const userWithIdOnly = await prisma.user.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserUpdateManyAndReturnArgs>(args: SelectSubset<T, UserUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one User.
+     * @param {UserUpsertArgs} args - Arguments to update or create a User.
+     * @example
+     * // Update or create a User
+     * const user = await prisma.user.upsert({
+     *   create: {
+     *     // ... data to create a User
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the User we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserUpsertArgs>(args: SelectSubset<T, UserUpsertArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Users.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserCountArgs} args - Arguments to filter Users to count.
+     * @example
+     * // Count the number of Users
+     * const count = await prisma.user.count({
+     *   where: {
+     *     // ... the filter for the Users we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserCountArgs>(
+      args?: Subset<T, UserCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a User.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserAggregateArgs>(args: Subset<T, UserAggregateArgs>): Prisma.PrismaPromise<GetUserAggregateType<T>>
+
+    /**
+     * Group by User.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserGroupByArgs['orderBy'] }
+        : { orderBy?: UserGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the User model
+   */
+  readonly fields: UserFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for User.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    streak<T extends User$streakArgs<ExtArgs> = {}>(args?: Subset<T, User$streakArgs<ExtArgs>>): Prisma__StreakClient<$Result.GetResult<Prisma.$StreakPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    points<T extends User$pointsArgs<ExtArgs> = {}>(args?: Subset<T, User$pointsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PointsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    level<T extends User$levelArgs<ExtArgs> = {}>(args?: Subset<T, User$levelArgs<ExtArgs>>): Prisma__LevelClient<$Result.GetResult<Prisma.$LevelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    goals<T extends User$goalsArgs<ExtArgs> = {}>(args?: Subset<T, User$goalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    studySessions<T extends User$studySessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$studySessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudySessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    studiedTexts<T extends User$studiedTextsArgs<ExtArgs> = {}>(args?: Subset<T, User$studiedTextsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudiedTextPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the User model
+   */
+  interface UserFieldRefs {
+    readonly id: FieldRef<"User", 'String'>
+    readonly userKey: FieldRef<"User", 'String'>
+    readonly createdAt: FieldRef<"User", 'DateTime'>
+    readonly updatedAt: FieldRef<"User", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * User findUnique
+   */
+  export type UserFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * Filter, which User to fetch.
+     */
+    where: UserWhereUniqueInput
+  }
+
+  /**
+   * User findUniqueOrThrow
+   */
+  export type UserFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * Filter, which User to fetch.
+     */
+    where: UserWhereUniqueInput
+  }
+
+  /**
+   * User findFirst
+   */
+  export type UserFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * Filter, which User to fetch.
+     */
+    where?: UserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Users to fetch.
+     */
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Users.
+     */
+    cursor?: UserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Users.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Users.
+     */
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * User findFirstOrThrow
+   */
+  export type UserFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * Filter, which User to fetch.
+     */
+    where?: UserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Users to fetch.
+     */
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Users.
+     */
+    cursor?: UserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Users.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Users.
+     */
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * User findMany
+   */
+  export type UserFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * Filter, which Users to fetch.
+     */
+    where?: UserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Users to fetch.
+     */
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Users.
+     */
+    cursor?: UserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Users.
+     */
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * User create
+   */
+  export type UserCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * The data needed to create a User.
+     */
+    data: XOR<UserCreateInput, UserUncheckedCreateInput>
+  }
+
+  /**
+   * User createMany
+   */
+  export type UserCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Users.
+     */
+    data: UserCreateManyInput | UserCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * User createManyAndReturn
+   */
+  export type UserCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * The data used to create many Users.
+     */
+    data: UserCreateManyInput | UserCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * User update
+   */
+  export type UserUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * The data needed to update a User.
+     */
+    data: XOR<UserUpdateInput, UserUncheckedUpdateInput>
+    /**
+     * Choose, which User to update.
+     */
+    where: UserWhereUniqueInput
+  }
+
+  /**
+   * User updateMany
+   */
+  export type UserUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Users.
+     */
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyInput>
+    /**
+     * Filter which Users to update
+     */
+    where?: UserWhereInput
+    /**
+     * Limit how many Users to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * User updateManyAndReturn
+   */
+  export type UserUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * The data used to update Users.
+     */
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyInput>
+    /**
+     * Filter which Users to update
+     */
+    where?: UserWhereInput
+    /**
+     * Limit how many Users to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * User upsert
+   */
+  export type UserUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * The filter to search for the User to update in case it exists.
+     */
+    where: UserWhereUniqueInput
+    /**
+     * In case the User found by the `where` argument doesn't exist, create a new User with this data.
+     */
+    create: XOR<UserCreateInput, UserUncheckedCreateInput>
+    /**
+     * In case the User was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserUpdateInput, UserUncheckedUpdateInput>
+  }
+
+  /**
+   * User delete
+   */
+  export type UserDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * Filter which User to delete.
+     */
+    where: UserWhereUniqueInput
+  }
+
+  /**
+   * User deleteMany
+   */
+  export type UserDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Users to delete
+     */
+    where?: UserWhereInput
+    /**
+     * Limit how many Users to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * User.streak
+   */
+  export type User$streakArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Streak
+     */
+    select?: StreakSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Streak
+     */
+    omit?: StreakOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StreakInclude<ExtArgs> | null
+    where?: StreakWhereInput
+  }
+
+  /**
+   * User.points
+   */
+  export type User$pointsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Points
+     */
+    select?: PointsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Points
+     */
+    omit?: PointsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PointsInclude<ExtArgs> | null
+    where?: PointsWhereInput
+    orderBy?: PointsOrderByWithRelationInput | PointsOrderByWithRelationInput[]
+    cursor?: PointsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PointsScalarFieldEnum | PointsScalarFieldEnum[]
+  }
+
+  /**
+   * User.level
+   */
+  export type User$levelArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Level
+     */
+    select?: LevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Level
+     */
+    omit?: LevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LevelInclude<ExtArgs> | null
+    where?: LevelWhereInput
+  }
+
+  /**
+   * User.goals
+   */
+  export type User$goalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Goal
+     */
+    select?: GoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Goal
+     */
+    omit?: GoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalInclude<ExtArgs> | null
+    where?: GoalWhereInput
+    orderBy?: GoalOrderByWithRelationInput | GoalOrderByWithRelationInput[]
+    cursor?: GoalWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GoalScalarFieldEnum | GoalScalarFieldEnum[]
+  }
+
+  /**
+   * User.studySessions
+   */
+  export type User$studySessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudySession
+     */
+    select?: StudySessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudySession
+     */
+    omit?: StudySessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudySessionInclude<ExtArgs> | null
+    where?: StudySessionWhereInput
+    orderBy?: StudySessionOrderByWithRelationInput | StudySessionOrderByWithRelationInput[]
+    cursor?: StudySessionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudySessionScalarFieldEnum | StudySessionScalarFieldEnum[]
+  }
+
+  /**
+   * User.studiedTexts
+   */
+  export type User$studiedTextsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudiedText
+     */
+    select?: StudiedTextSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudiedText
+     */
+    omit?: StudiedTextOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudiedTextInclude<ExtArgs> | null
+    where?: StudiedTextWhereInput
+    orderBy?: StudiedTextOrderByWithRelationInput | StudiedTextOrderByWithRelationInput[]
+    cursor?: StudiedTextWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudiedTextScalarFieldEnum | StudiedTextScalarFieldEnum[]
+  }
+
+  /**
+   * User without action
+   */
+  export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Streak
+   */
+
+  export type AggregateStreak = {
+    _count: StreakCountAggregateOutputType | null
+    _avg: StreakAvgAggregateOutputType | null
+    _sum: StreakSumAggregateOutputType | null
+    _min: StreakMinAggregateOutputType | null
+    _max: StreakMaxAggregateOutputType | null
+  }
+
+  export type StreakAvgAggregateOutputType = {
+    currentStreak: number | null
+    longestStreak: number | null
+  }
+
+  export type StreakSumAggregateOutputType = {
+    currentStreak: number | null
+    longestStreak: number | null
+  }
+
+  export type StreakMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    currentStreak: number | null
+    longestStreak: number | null
+    lastStudyDate: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type StreakMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    currentStreak: number | null
+    longestStreak: number | null
+    lastStudyDate: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type StreakCountAggregateOutputType = {
+    id: number
+    userId: number
+    currentStreak: number
+    longestStreak: number
+    lastStudyDate: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type StreakAvgAggregateInputType = {
+    currentStreak?: true
+    longestStreak?: true
+  }
+
+  export type StreakSumAggregateInputType = {
+    currentStreak?: true
+    longestStreak?: true
+  }
+
+  export type StreakMinAggregateInputType = {
+    id?: true
+    userId?: true
+    currentStreak?: true
+    longestStreak?: true
+    lastStudyDate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type StreakMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    currentStreak?: true
+    longestStreak?: true
+    lastStudyDate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type StreakCountAggregateInputType = {
+    id?: true
+    userId?: true
+    currentStreak?: true
+    longestStreak?: true
+    lastStudyDate?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type StreakAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Streak to aggregate.
+     */
+    where?: StreakWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Streaks to fetch.
+     */
+    orderBy?: StreakOrderByWithRelationInput | StreakOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StreakWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Streaks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Streaks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Streaks
+    **/
+    _count?: true | StreakCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: StreakAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: StreakSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StreakMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StreakMaxAggregateInputType
+  }
+
+  export type GetStreakAggregateType<T extends StreakAggregateArgs> = {
+        [P in keyof T & keyof AggregateStreak]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStreak[P]>
+      : GetScalarType<T[P], AggregateStreak[P]>
+  }
+
+
+
+
+  export type StreakGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StreakWhereInput
+    orderBy?: StreakOrderByWithAggregationInput | StreakOrderByWithAggregationInput[]
+    by: StreakScalarFieldEnum[] | StreakScalarFieldEnum
+    having?: StreakScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StreakCountAggregateInputType | true
+    _avg?: StreakAvgAggregateInputType
+    _sum?: StreakSumAggregateInputType
+    _min?: StreakMinAggregateInputType
+    _max?: StreakMaxAggregateInputType
+  }
+
+  export type StreakGroupByOutputType = {
+    id: string
+    userId: string
+    currentStreak: number
+    longestStreak: number
+    lastStudyDate: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: StreakCountAggregateOutputType | null
+    _avg: StreakAvgAggregateOutputType | null
+    _sum: StreakSumAggregateOutputType | null
+    _min: StreakMinAggregateOutputType | null
+    _max: StreakMaxAggregateOutputType | null
+  }
+
+  type GetStreakGroupByPayload<T extends StreakGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StreakGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StreakGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StreakGroupByOutputType[P]>
+            : GetScalarType<T[P], StreakGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StreakSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    currentStreak?: boolean
+    longestStreak?: boolean
+    lastStudyDate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["streak"]>
+
+  export type StreakSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    currentStreak?: boolean
+    longestStreak?: boolean
+    lastStudyDate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["streak"]>
+
+  export type StreakSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    currentStreak?: boolean
+    longestStreak?: boolean
+    lastStudyDate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["streak"]>
+
+  export type StreakSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    currentStreak?: boolean
+    longestStreak?: boolean
+    lastStudyDate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type StreakOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "currentStreak" | "longestStreak" | "lastStudyDate" | "createdAt" | "updatedAt", ExtArgs["result"]["streak"]>
+  export type StreakInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type StreakIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type StreakIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $StreakPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Streak"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      currentStreak: number
+      longestStreak: number
+      lastStudyDate: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["streak"]>
+    composites: {}
+  }
+
+  type StreakGetPayload<S extends boolean | null | undefined | StreakDefaultArgs> = $Result.GetResult<Prisma.$StreakPayload, S>
+
+  type StreakCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StreakFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StreakCountAggregateInputType | true
+    }
+
+  export interface StreakDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Streak'], meta: { name: 'Streak' } }
+    /**
+     * Find zero or one Streak that matches the filter.
+     * @param {StreakFindUniqueArgs} args - Arguments to find a Streak
+     * @example
+     * // Get one Streak
+     * const streak = await prisma.streak.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StreakFindUniqueArgs>(args: SelectSubset<T, StreakFindUniqueArgs<ExtArgs>>): Prisma__StreakClient<$Result.GetResult<Prisma.$StreakPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Streak that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StreakFindUniqueOrThrowArgs} args - Arguments to find a Streak
+     * @example
+     * // Get one Streak
+     * const streak = await prisma.streak.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StreakFindUniqueOrThrowArgs>(args: SelectSubset<T, StreakFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StreakClient<$Result.GetResult<Prisma.$StreakPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Streak that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StreakFindFirstArgs} args - Arguments to find a Streak
+     * @example
+     * // Get one Streak
+     * const streak = await prisma.streak.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StreakFindFirstArgs>(args?: SelectSubset<T, StreakFindFirstArgs<ExtArgs>>): Prisma__StreakClient<$Result.GetResult<Prisma.$StreakPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Streak that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StreakFindFirstOrThrowArgs} args - Arguments to find a Streak
+     * @example
+     * // Get one Streak
+     * const streak = await prisma.streak.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StreakFindFirstOrThrowArgs>(args?: SelectSubset<T, StreakFindFirstOrThrowArgs<ExtArgs>>): Prisma__StreakClient<$Result.GetResult<Prisma.$StreakPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Streaks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StreakFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Streaks
+     * const streaks = await prisma.streak.findMany()
+     * 
+     * // Get first 10 Streaks
+     * const streaks = await prisma.streak.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const streakWithIdOnly = await prisma.streak.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StreakFindManyArgs>(args?: SelectSubset<T, StreakFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StreakPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Streak.
+     * @param {StreakCreateArgs} args - Arguments to create a Streak.
+     * @example
+     * // Create one Streak
+     * const Streak = await prisma.streak.create({
+     *   data: {
+     *     // ... data to create a Streak
+     *   }
+     * })
+     * 
+     */
+    create<T extends StreakCreateArgs>(args: SelectSubset<T, StreakCreateArgs<ExtArgs>>): Prisma__StreakClient<$Result.GetResult<Prisma.$StreakPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Streaks.
+     * @param {StreakCreateManyArgs} args - Arguments to create many Streaks.
+     * @example
+     * // Create many Streaks
+     * const streak = await prisma.streak.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StreakCreateManyArgs>(args?: SelectSubset<T, StreakCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Streaks and returns the data saved in the database.
+     * @param {StreakCreateManyAndReturnArgs} args - Arguments to create many Streaks.
+     * @example
+     * // Create many Streaks
+     * const streak = await prisma.streak.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Streaks and only return the `id`
+     * const streakWithIdOnly = await prisma.streak.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends StreakCreateManyAndReturnArgs>(args?: SelectSubset<T, StreakCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StreakPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Streak.
+     * @param {StreakDeleteArgs} args - Arguments to delete one Streak.
+     * @example
+     * // Delete one Streak
+     * const Streak = await prisma.streak.delete({
+     *   where: {
+     *     // ... filter to delete one Streak
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StreakDeleteArgs>(args: SelectSubset<T, StreakDeleteArgs<ExtArgs>>): Prisma__StreakClient<$Result.GetResult<Prisma.$StreakPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Streak.
+     * @param {StreakUpdateArgs} args - Arguments to update one Streak.
+     * @example
+     * // Update one Streak
+     * const streak = await prisma.streak.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StreakUpdateArgs>(args: SelectSubset<T, StreakUpdateArgs<ExtArgs>>): Prisma__StreakClient<$Result.GetResult<Prisma.$StreakPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Streaks.
+     * @param {StreakDeleteManyArgs} args - Arguments to filter Streaks to delete.
+     * @example
+     * // Delete a few Streaks
+     * const { count } = await prisma.streak.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StreakDeleteManyArgs>(args?: SelectSubset<T, StreakDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Streaks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StreakUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Streaks
+     * const streak = await prisma.streak.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StreakUpdateManyArgs>(args: SelectSubset<T, StreakUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Streaks and returns the data updated in the database.
+     * @param {StreakUpdateManyAndReturnArgs} args - Arguments to update many Streaks.
+     * @example
+     * // Update many Streaks
+     * const streak = await prisma.streak.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Streaks and only return the `id`
+     * const streakWithIdOnly = await prisma.streak.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends StreakUpdateManyAndReturnArgs>(args: SelectSubset<T, StreakUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StreakPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Streak.
+     * @param {StreakUpsertArgs} args - Arguments to update or create a Streak.
+     * @example
+     * // Update or create a Streak
+     * const streak = await prisma.streak.upsert({
+     *   create: {
+     *     // ... data to create a Streak
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Streak we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StreakUpsertArgs>(args: SelectSubset<T, StreakUpsertArgs<ExtArgs>>): Prisma__StreakClient<$Result.GetResult<Prisma.$StreakPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Streaks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StreakCountArgs} args - Arguments to filter Streaks to count.
+     * @example
+     * // Count the number of Streaks
+     * const count = await prisma.streak.count({
+     *   where: {
+     *     // ... the filter for the Streaks we want to count
+     *   }
+     * })
+    **/
+    count<T extends StreakCountArgs>(
+      args?: Subset<T, StreakCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StreakCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Streak.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StreakAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StreakAggregateArgs>(args: Subset<T, StreakAggregateArgs>): Prisma.PrismaPromise<GetStreakAggregateType<T>>
+
+    /**
+     * Group by Streak.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StreakGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StreakGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StreakGroupByArgs['orderBy'] }
+        : { orderBy?: StreakGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StreakGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStreakGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Streak model
+   */
+  readonly fields: StreakFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Streak.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StreakClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Streak model
+   */
+  interface StreakFieldRefs {
+    readonly id: FieldRef<"Streak", 'String'>
+    readonly userId: FieldRef<"Streak", 'String'>
+    readonly currentStreak: FieldRef<"Streak", 'Int'>
+    readonly longestStreak: FieldRef<"Streak", 'Int'>
+    readonly lastStudyDate: FieldRef<"Streak", 'DateTime'>
+    readonly createdAt: FieldRef<"Streak", 'DateTime'>
+    readonly updatedAt: FieldRef<"Streak", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Streak findUnique
+   */
+  export type StreakFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Streak
+     */
+    select?: StreakSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Streak
+     */
+    omit?: StreakOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StreakInclude<ExtArgs> | null
+    /**
+     * Filter, which Streak to fetch.
+     */
+    where: StreakWhereUniqueInput
+  }
+
+  /**
+   * Streak findUniqueOrThrow
+   */
+  export type StreakFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Streak
+     */
+    select?: StreakSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Streak
+     */
+    omit?: StreakOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StreakInclude<ExtArgs> | null
+    /**
+     * Filter, which Streak to fetch.
+     */
+    where: StreakWhereUniqueInput
+  }
+
+  /**
+   * Streak findFirst
+   */
+  export type StreakFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Streak
+     */
+    select?: StreakSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Streak
+     */
+    omit?: StreakOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StreakInclude<ExtArgs> | null
+    /**
+     * Filter, which Streak to fetch.
+     */
+    where?: StreakWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Streaks to fetch.
+     */
+    orderBy?: StreakOrderByWithRelationInput | StreakOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Streaks.
+     */
+    cursor?: StreakWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Streaks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Streaks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Streaks.
+     */
+    distinct?: StreakScalarFieldEnum | StreakScalarFieldEnum[]
+  }
+
+  /**
+   * Streak findFirstOrThrow
+   */
+  export type StreakFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Streak
+     */
+    select?: StreakSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Streak
+     */
+    omit?: StreakOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StreakInclude<ExtArgs> | null
+    /**
+     * Filter, which Streak to fetch.
+     */
+    where?: StreakWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Streaks to fetch.
+     */
+    orderBy?: StreakOrderByWithRelationInput | StreakOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Streaks.
+     */
+    cursor?: StreakWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Streaks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Streaks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Streaks.
+     */
+    distinct?: StreakScalarFieldEnum | StreakScalarFieldEnum[]
+  }
+
+  /**
+   * Streak findMany
+   */
+  export type StreakFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Streak
+     */
+    select?: StreakSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Streak
+     */
+    omit?: StreakOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StreakInclude<ExtArgs> | null
+    /**
+     * Filter, which Streaks to fetch.
+     */
+    where?: StreakWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Streaks to fetch.
+     */
+    orderBy?: StreakOrderByWithRelationInput | StreakOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Streaks.
+     */
+    cursor?: StreakWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Streaks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Streaks.
+     */
+    skip?: number
+    distinct?: StreakScalarFieldEnum | StreakScalarFieldEnum[]
+  }
+
+  /**
+   * Streak create
+   */
+  export type StreakCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Streak
+     */
+    select?: StreakSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Streak
+     */
+    omit?: StreakOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StreakInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Streak.
+     */
+    data: XOR<StreakCreateInput, StreakUncheckedCreateInput>
+  }
+
+  /**
+   * Streak createMany
+   */
+  export type StreakCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Streaks.
+     */
+    data: StreakCreateManyInput | StreakCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Streak createManyAndReturn
+   */
+  export type StreakCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Streak
+     */
+    select?: StreakSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Streak
+     */
+    omit?: StreakOmit<ExtArgs> | null
+    /**
+     * The data used to create many Streaks.
+     */
+    data: StreakCreateManyInput | StreakCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StreakIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Streak update
+   */
+  export type StreakUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Streak
+     */
+    select?: StreakSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Streak
+     */
+    omit?: StreakOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StreakInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Streak.
+     */
+    data: XOR<StreakUpdateInput, StreakUncheckedUpdateInput>
+    /**
+     * Choose, which Streak to update.
+     */
+    where: StreakWhereUniqueInput
+  }
+
+  /**
+   * Streak updateMany
+   */
+  export type StreakUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Streaks.
+     */
+    data: XOR<StreakUpdateManyMutationInput, StreakUncheckedUpdateManyInput>
+    /**
+     * Filter which Streaks to update
+     */
+    where?: StreakWhereInput
+    /**
+     * Limit how many Streaks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Streak updateManyAndReturn
+   */
+  export type StreakUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Streak
+     */
+    select?: StreakSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Streak
+     */
+    omit?: StreakOmit<ExtArgs> | null
+    /**
+     * The data used to update Streaks.
+     */
+    data: XOR<StreakUpdateManyMutationInput, StreakUncheckedUpdateManyInput>
+    /**
+     * Filter which Streaks to update
+     */
+    where?: StreakWhereInput
+    /**
+     * Limit how many Streaks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StreakIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Streak upsert
+   */
+  export type StreakUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Streak
+     */
+    select?: StreakSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Streak
+     */
+    omit?: StreakOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StreakInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Streak to update in case it exists.
+     */
+    where: StreakWhereUniqueInput
+    /**
+     * In case the Streak found by the `where` argument doesn't exist, create a new Streak with this data.
+     */
+    create: XOR<StreakCreateInput, StreakUncheckedCreateInput>
+    /**
+     * In case the Streak was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StreakUpdateInput, StreakUncheckedUpdateInput>
+  }
+
+  /**
+   * Streak delete
+   */
+  export type StreakDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Streak
+     */
+    select?: StreakSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Streak
+     */
+    omit?: StreakOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StreakInclude<ExtArgs> | null
+    /**
+     * Filter which Streak to delete.
+     */
+    where: StreakWhereUniqueInput
+  }
+
+  /**
+   * Streak deleteMany
+   */
+  export type StreakDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Streaks to delete
+     */
+    where?: StreakWhereInput
+    /**
+     * Limit how many Streaks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Streak without action
+   */
+  export type StreakDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Streak
+     */
+    select?: StreakSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Streak
+     */
+    omit?: StreakOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StreakInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Points
+   */
+
+  export type AggregatePoints = {
+    _count: PointsCountAggregateOutputType | null
+    _avg: PointsAvgAggregateOutputType | null
+    _sum: PointsSumAggregateOutputType | null
+    _min: PointsMinAggregateOutputType | null
+    _max: PointsMaxAggregateOutputType | null
+  }
+
+  export type PointsAvgAggregateOutputType = {
+    points: number | null
+  }
+
+  export type PointsSumAggregateOutputType = {
+    points: number | null
+  }
+
+  export type PointsMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    action: $Enums.PointAction | null
+    points: number | null
+    earnedAt: Date | null
+  }
+
+  export type PointsMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    action: $Enums.PointAction | null
+    points: number | null
+    earnedAt: Date | null
+  }
+
+  export type PointsCountAggregateOutputType = {
+    id: number
+    userId: number
+    action: number
+    points: number
+    metadata: number
+    earnedAt: number
+    _all: number
+  }
+
+
+  export type PointsAvgAggregateInputType = {
+    points?: true
+  }
+
+  export type PointsSumAggregateInputType = {
+    points?: true
+  }
+
+  export type PointsMinAggregateInputType = {
+    id?: true
+    userId?: true
+    action?: true
+    points?: true
+    earnedAt?: true
+  }
+
+  export type PointsMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    action?: true
+    points?: true
+    earnedAt?: true
+  }
+
+  export type PointsCountAggregateInputType = {
+    id?: true
+    userId?: true
+    action?: true
+    points?: true
+    metadata?: true
+    earnedAt?: true
+    _all?: true
+  }
+
+  export type PointsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Points to aggregate.
+     */
+    where?: PointsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Points to fetch.
+     */
+    orderBy?: PointsOrderByWithRelationInput | PointsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PointsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Points from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Points.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Points
+    **/
+    _count?: true | PointsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PointsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PointsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PointsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PointsMaxAggregateInputType
+  }
+
+  export type GetPointsAggregateType<T extends PointsAggregateArgs> = {
+        [P in keyof T & keyof AggregatePoints]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePoints[P]>
+      : GetScalarType<T[P], AggregatePoints[P]>
+  }
+
+
+
+
+  export type PointsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PointsWhereInput
+    orderBy?: PointsOrderByWithAggregationInput | PointsOrderByWithAggregationInput[]
+    by: PointsScalarFieldEnum[] | PointsScalarFieldEnum
+    having?: PointsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PointsCountAggregateInputType | true
+    _avg?: PointsAvgAggregateInputType
+    _sum?: PointsSumAggregateInputType
+    _min?: PointsMinAggregateInputType
+    _max?: PointsMaxAggregateInputType
+  }
+
+  export type PointsGroupByOutputType = {
+    id: string
+    userId: string
+    action: $Enums.PointAction
+    points: number
+    metadata: JsonValue | null
+    earnedAt: Date
+    _count: PointsCountAggregateOutputType | null
+    _avg: PointsAvgAggregateOutputType | null
+    _sum: PointsSumAggregateOutputType | null
+    _min: PointsMinAggregateOutputType | null
+    _max: PointsMaxAggregateOutputType | null
+  }
+
+  type GetPointsGroupByPayload<T extends PointsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PointsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PointsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PointsGroupByOutputType[P]>
+            : GetScalarType<T[P], PointsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PointsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    action?: boolean
+    points?: boolean
+    metadata?: boolean
+    earnedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["points"]>
+
+  export type PointsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    action?: boolean
+    points?: boolean
+    metadata?: boolean
+    earnedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["points"]>
+
+  export type PointsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    action?: boolean
+    points?: boolean
+    metadata?: boolean
+    earnedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["points"]>
+
+  export type PointsSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    action?: boolean
+    points?: boolean
+    metadata?: boolean
+    earnedAt?: boolean
+  }
+
+  export type PointsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "action" | "points" | "metadata" | "earnedAt", ExtArgs["result"]["points"]>
+  export type PointsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type PointsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type PointsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $PointsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Points"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      action: $Enums.PointAction
+      points: number
+      metadata: Prisma.JsonValue | null
+      earnedAt: Date
+    }, ExtArgs["result"]["points"]>
+    composites: {}
+  }
+
+  type PointsGetPayload<S extends boolean | null | undefined | PointsDefaultArgs> = $Result.GetResult<Prisma.$PointsPayload, S>
+
+  type PointsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PointsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PointsCountAggregateInputType | true
+    }
+
+  export interface PointsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Points'], meta: { name: 'Points' } }
+    /**
+     * Find zero or one Points that matches the filter.
+     * @param {PointsFindUniqueArgs} args - Arguments to find a Points
+     * @example
+     * // Get one Points
+     * const points = await prisma.points.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PointsFindUniqueArgs>(args: SelectSubset<T, PointsFindUniqueArgs<ExtArgs>>): Prisma__PointsClient<$Result.GetResult<Prisma.$PointsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Points that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PointsFindUniqueOrThrowArgs} args - Arguments to find a Points
+     * @example
+     * // Get one Points
+     * const points = await prisma.points.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PointsFindUniqueOrThrowArgs>(args: SelectSubset<T, PointsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PointsClient<$Result.GetResult<Prisma.$PointsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Points that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PointsFindFirstArgs} args - Arguments to find a Points
+     * @example
+     * // Get one Points
+     * const points = await prisma.points.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PointsFindFirstArgs>(args?: SelectSubset<T, PointsFindFirstArgs<ExtArgs>>): Prisma__PointsClient<$Result.GetResult<Prisma.$PointsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Points that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PointsFindFirstOrThrowArgs} args - Arguments to find a Points
+     * @example
+     * // Get one Points
+     * const points = await prisma.points.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PointsFindFirstOrThrowArgs>(args?: SelectSubset<T, PointsFindFirstOrThrowArgs<ExtArgs>>): Prisma__PointsClient<$Result.GetResult<Prisma.$PointsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Points that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PointsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Points
+     * const points = await prisma.points.findMany()
+     * 
+     * // Get first 10 Points
+     * const points = await prisma.points.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pointsWithIdOnly = await prisma.points.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PointsFindManyArgs>(args?: SelectSubset<T, PointsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PointsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Points.
+     * @param {PointsCreateArgs} args - Arguments to create a Points.
+     * @example
+     * // Create one Points
+     * const Points = await prisma.points.create({
+     *   data: {
+     *     // ... data to create a Points
+     *   }
+     * })
+     * 
+     */
+    create<T extends PointsCreateArgs>(args: SelectSubset<T, PointsCreateArgs<ExtArgs>>): Prisma__PointsClient<$Result.GetResult<Prisma.$PointsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Points.
+     * @param {PointsCreateManyArgs} args - Arguments to create many Points.
+     * @example
+     * // Create many Points
+     * const points = await prisma.points.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PointsCreateManyArgs>(args?: SelectSubset<T, PointsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Points and returns the data saved in the database.
+     * @param {PointsCreateManyAndReturnArgs} args - Arguments to create many Points.
+     * @example
+     * // Create many Points
+     * const points = await prisma.points.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Points and only return the `id`
+     * const pointsWithIdOnly = await prisma.points.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PointsCreateManyAndReturnArgs>(args?: SelectSubset<T, PointsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PointsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Points.
+     * @param {PointsDeleteArgs} args - Arguments to delete one Points.
+     * @example
+     * // Delete one Points
+     * const Points = await prisma.points.delete({
+     *   where: {
+     *     // ... filter to delete one Points
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PointsDeleteArgs>(args: SelectSubset<T, PointsDeleteArgs<ExtArgs>>): Prisma__PointsClient<$Result.GetResult<Prisma.$PointsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Points.
+     * @param {PointsUpdateArgs} args - Arguments to update one Points.
+     * @example
+     * // Update one Points
+     * const points = await prisma.points.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PointsUpdateArgs>(args: SelectSubset<T, PointsUpdateArgs<ExtArgs>>): Prisma__PointsClient<$Result.GetResult<Prisma.$PointsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Points.
+     * @param {PointsDeleteManyArgs} args - Arguments to filter Points to delete.
+     * @example
+     * // Delete a few Points
+     * const { count } = await prisma.points.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PointsDeleteManyArgs>(args?: SelectSubset<T, PointsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Points.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PointsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Points
+     * const points = await prisma.points.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PointsUpdateManyArgs>(args: SelectSubset<T, PointsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Points and returns the data updated in the database.
+     * @param {PointsUpdateManyAndReturnArgs} args - Arguments to update many Points.
+     * @example
+     * // Update many Points
+     * const points = await prisma.points.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Points and only return the `id`
+     * const pointsWithIdOnly = await prisma.points.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PointsUpdateManyAndReturnArgs>(args: SelectSubset<T, PointsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PointsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Points.
+     * @param {PointsUpsertArgs} args - Arguments to update or create a Points.
+     * @example
+     * // Update or create a Points
+     * const points = await prisma.points.upsert({
+     *   create: {
+     *     // ... data to create a Points
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Points we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PointsUpsertArgs>(args: SelectSubset<T, PointsUpsertArgs<ExtArgs>>): Prisma__PointsClient<$Result.GetResult<Prisma.$PointsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Points.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PointsCountArgs} args - Arguments to filter Points to count.
+     * @example
+     * // Count the number of Points
+     * const count = await prisma.points.count({
+     *   where: {
+     *     // ... the filter for the Points we want to count
+     *   }
+     * })
+    **/
+    count<T extends PointsCountArgs>(
+      args?: Subset<T, PointsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PointsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Points.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PointsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PointsAggregateArgs>(args: Subset<T, PointsAggregateArgs>): Prisma.PrismaPromise<GetPointsAggregateType<T>>
+
+    /**
+     * Group by Points.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PointsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PointsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PointsGroupByArgs['orderBy'] }
+        : { orderBy?: PointsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PointsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPointsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Points model
+   */
+  readonly fields: PointsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Points.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PointsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Points model
+   */
+  interface PointsFieldRefs {
+    readonly id: FieldRef<"Points", 'String'>
+    readonly userId: FieldRef<"Points", 'String'>
+    readonly action: FieldRef<"Points", 'PointAction'>
+    readonly points: FieldRef<"Points", 'Int'>
+    readonly metadata: FieldRef<"Points", 'Json'>
+    readonly earnedAt: FieldRef<"Points", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Points findUnique
+   */
+  export type PointsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Points
+     */
+    select?: PointsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Points
+     */
+    omit?: PointsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PointsInclude<ExtArgs> | null
+    /**
+     * Filter, which Points to fetch.
+     */
+    where: PointsWhereUniqueInput
+  }
+
+  /**
+   * Points findUniqueOrThrow
+   */
+  export type PointsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Points
+     */
+    select?: PointsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Points
+     */
+    omit?: PointsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PointsInclude<ExtArgs> | null
+    /**
+     * Filter, which Points to fetch.
+     */
+    where: PointsWhereUniqueInput
+  }
+
+  /**
+   * Points findFirst
+   */
+  export type PointsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Points
+     */
+    select?: PointsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Points
+     */
+    omit?: PointsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PointsInclude<ExtArgs> | null
+    /**
+     * Filter, which Points to fetch.
+     */
+    where?: PointsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Points to fetch.
+     */
+    orderBy?: PointsOrderByWithRelationInput | PointsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Points.
+     */
+    cursor?: PointsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Points from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Points.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Points.
+     */
+    distinct?: PointsScalarFieldEnum | PointsScalarFieldEnum[]
+  }
+
+  /**
+   * Points findFirstOrThrow
+   */
+  export type PointsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Points
+     */
+    select?: PointsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Points
+     */
+    omit?: PointsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PointsInclude<ExtArgs> | null
+    /**
+     * Filter, which Points to fetch.
+     */
+    where?: PointsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Points to fetch.
+     */
+    orderBy?: PointsOrderByWithRelationInput | PointsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Points.
+     */
+    cursor?: PointsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Points from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Points.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Points.
+     */
+    distinct?: PointsScalarFieldEnum | PointsScalarFieldEnum[]
+  }
+
+  /**
+   * Points findMany
+   */
+  export type PointsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Points
+     */
+    select?: PointsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Points
+     */
+    omit?: PointsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PointsInclude<ExtArgs> | null
+    /**
+     * Filter, which Points to fetch.
+     */
+    where?: PointsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Points to fetch.
+     */
+    orderBy?: PointsOrderByWithRelationInput | PointsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Points.
+     */
+    cursor?: PointsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Points from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Points.
+     */
+    skip?: number
+    distinct?: PointsScalarFieldEnum | PointsScalarFieldEnum[]
+  }
+
+  /**
+   * Points create
+   */
+  export type PointsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Points
+     */
+    select?: PointsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Points
+     */
+    omit?: PointsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PointsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Points.
+     */
+    data: XOR<PointsCreateInput, PointsUncheckedCreateInput>
+  }
+
+  /**
+   * Points createMany
+   */
+  export type PointsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Points.
+     */
+    data: PointsCreateManyInput | PointsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Points createManyAndReturn
+   */
+  export type PointsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Points
+     */
+    select?: PointsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Points
+     */
+    omit?: PointsOmit<ExtArgs> | null
+    /**
+     * The data used to create many Points.
+     */
+    data: PointsCreateManyInput | PointsCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PointsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Points update
+   */
+  export type PointsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Points
+     */
+    select?: PointsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Points
+     */
+    omit?: PointsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PointsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Points.
+     */
+    data: XOR<PointsUpdateInput, PointsUncheckedUpdateInput>
+    /**
+     * Choose, which Points to update.
+     */
+    where: PointsWhereUniqueInput
+  }
+
+  /**
+   * Points updateMany
+   */
+  export type PointsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Points.
+     */
+    data: XOR<PointsUpdateManyMutationInput, PointsUncheckedUpdateManyInput>
+    /**
+     * Filter which Points to update
+     */
+    where?: PointsWhereInput
+    /**
+     * Limit how many Points to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Points updateManyAndReturn
+   */
+  export type PointsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Points
+     */
+    select?: PointsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Points
+     */
+    omit?: PointsOmit<ExtArgs> | null
+    /**
+     * The data used to update Points.
+     */
+    data: XOR<PointsUpdateManyMutationInput, PointsUncheckedUpdateManyInput>
+    /**
+     * Filter which Points to update
+     */
+    where?: PointsWhereInput
+    /**
+     * Limit how many Points to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PointsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Points upsert
+   */
+  export type PointsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Points
+     */
+    select?: PointsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Points
+     */
+    omit?: PointsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PointsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Points to update in case it exists.
+     */
+    where: PointsWhereUniqueInput
+    /**
+     * In case the Points found by the `where` argument doesn't exist, create a new Points with this data.
+     */
+    create: XOR<PointsCreateInput, PointsUncheckedCreateInput>
+    /**
+     * In case the Points was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PointsUpdateInput, PointsUncheckedUpdateInput>
+  }
+
+  /**
+   * Points delete
+   */
+  export type PointsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Points
+     */
+    select?: PointsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Points
+     */
+    omit?: PointsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PointsInclude<ExtArgs> | null
+    /**
+     * Filter which Points to delete.
+     */
+    where: PointsWhereUniqueInput
+  }
+
+  /**
+   * Points deleteMany
+   */
+  export type PointsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Points to delete
+     */
+    where?: PointsWhereInput
+    /**
+     * Limit how many Points to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Points without action
+   */
+  export type PointsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Points
+     */
+    select?: PointsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Points
+     */
+    omit?: PointsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PointsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Level
+   */
+
+  export type AggregateLevel = {
+    _count: LevelCountAggregateOutputType | null
+    _avg: LevelAvgAggregateOutputType | null
+    _sum: LevelSumAggregateOutputType | null
+    _min: LevelMinAggregateOutputType | null
+    _max: LevelMaxAggregateOutputType | null
+  }
+
+  export type LevelAvgAggregateOutputType = {
+    currentLevel: number | null
+    totalPoints: number | null
+  }
+
+  export type LevelSumAggregateOutputType = {
+    currentLevel: number | null
+    totalPoints: number | null
+  }
+
+  export type LevelMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    currentLevel: number | null
+    totalPoints: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type LevelMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    currentLevel: number | null
+    totalPoints: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type LevelCountAggregateOutputType = {
+    id: number
+    userId: number
+    currentLevel: number
+    totalPoints: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type LevelAvgAggregateInputType = {
+    currentLevel?: true
+    totalPoints?: true
+  }
+
+  export type LevelSumAggregateInputType = {
+    currentLevel?: true
+    totalPoints?: true
+  }
+
+  export type LevelMinAggregateInputType = {
+    id?: true
+    userId?: true
+    currentLevel?: true
+    totalPoints?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type LevelMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    currentLevel?: true
+    totalPoints?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type LevelCountAggregateInputType = {
+    id?: true
+    userId?: true
+    currentLevel?: true
+    totalPoints?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type LevelAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Level to aggregate.
+     */
+    where?: LevelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Levels to fetch.
+     */
+    orderBy?: LevelOrderByWithRelationInput | LevelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LevelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Levels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Levels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Levels
+    **/
+    _count?: true | LevelCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: LevelAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: LevelSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LevelMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LevelMaxAggregateInputType
+  }
+
+  export type GetLevelAggregateType<T extends LevelAggregateArgs> = {
+        [P in keyof T & keyof AggregateLevel]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLevel[P]>
+      : GetScalarType<T[P], AggregateLevel[P]>
+  }
+
+
+
+
+  export type LevelGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LevelWhereInput
+    orderBy?: LevelOrderByWithAggregationInput | LevelOrderByWithAggregationInput[]
+    by: LevelScalarFieldEnum[] | LevelScalarFieldEnum
+    having?: LevelScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LevelCountAggregateInputType | true
+    _avg?: LevelAvgAggregateInputType
+    _sum?: LevelSumAggregateInputType
+    _min?: LevelMinAggregateInputType
+    _max?: LevelMaxAggregateInputType
+  }
+
+  export type LevelGroupByOutputType = {
+    id: string
+    userId: string
+    currentLevel: number
+    totalPoints: number
+    createdAt: Date
+    updatedAt: Date
+    _count: LevelCountAggregateOutputType | null
+    _avg: LevelAvgAggregateOutputType | null
+    _sum: LevelSumAggregateOutputType | null
+    _min: LevelMinAggregateOutputType | null
+    _max: LevelMaxAggregateOutputType | null
+  }
+
+  type GetLevelGroupByPayload<T extends LevelGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LevelGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LevelGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LevelGroupByOutputType[P]>
+            : GetScalarType<T[P], LevelGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LevelSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    currentLevel?: boolean
+    totalPoints?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["level"]>
+
+  export type LevelSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    currentLevel?: boolean
+    totalPoints?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["level"]>
+
+  export type LevelSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    currentLevel?: boolean
+    totalPoints?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["level"]>
+
+  export type LevelSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    currentLevel?: boolean
+    totalPoints?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type LevelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "currentLevel" | "totalPoints" | "createdAt" | "updatedAt", ExtArgs["result"]["level"]>
+  export type LevelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type LevelIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type LevelIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $LevelPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Level"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      currentLevel: number
+      totalPoints: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["level"]>
+    composites: {}
+  }
+
+  type LevelGetPayload<S extends boolean | null | undefined | LevelDefaultArgs> = $Result.GetResult<Prisma.$LevelPayload, S>
+
+  type LevelCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LevelFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LevelCountAggregateInputType | true
+    }
+
+  export interface LevelDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Level'], meta: { name: 'Level' } }
+    /**
+     * Find zero or one Level that matches the filter.
+     * @param {LevelFindUniqueArgs} args - Arguments to find a Level
+     * @example
+     * // Get one Level
+     * const level = await prisma.level.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LevelFindUniqueArgs>(args: SelectSubset<T, LevelFindUniqueArgs<ExtArgs>>): Prisma__LevelClient<$Result.GetResult<Prisma.$LevelPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Level that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {LevelFindUniqueOrThrowArgs} args - Arguments to find a Level
+     * @example
+     * // Get one Level
+     * const level = await prisma.level.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LevelFindUniqueOrThrowArgs>(args: SelectSubset<T, LevelFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LevelClient<$Result.GetResult<Prisma.$LevelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Level that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LevelFindFirstArgs} args - Arguments to find a Level
+     * @example
+     * // Get one Level
+     * const level = await prisma.level.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LevelFindFirstArgs>(args?: SelectSubset<T, LevelFindFirstArgs<ExtArgs>>): Prisma__LevelClient<$Result.GetResult<Prisma.$LevelPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Level that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LevelFindFirstOrThrowArgs} args - Arguments to find a Level
+     * @example
+     * // Get one Level
+     * const level = await prisma.level.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LevelFindFirstOrThrowArgs>(args?: SelectSubset<T, LevelFindFirstOrThrowArgs<ExtArgs>>): Prisma__LevelClient<$Result.GetResult<Prisma.$LevelPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Levels that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LevelFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Levels
+     * const levels = await prisma.level.findMany()
+     * 
+     * // Get first 10 Levels
+     * const levels = await prisma.level.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const levelWithIdOnly = await prisma.level.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends LevelFindManyArgs>(args?: SelectSubset<T, LevelFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LevelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Level.
+     * @param {LevelCreateArgs} args - Arguments to create a Level.
+     * @example
+     * // Create one Level
+     * const Level = await prisma.level.create({
+     *   data: {
+     *     // ... data to create a Level
+     *   }
+     * })
+     * 
+     */
+    create<T extends LevelCreateArgs>(args: SelectSubset<T, LevelCreateArgs<ExtArgs>>): Prisma__LevelClient<$Result.GetResult<Prisma.$LevelPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Levels.
+     * @param {LevelCreateManyArgs} args - Arguments to create many Levels.
+     * @example
+     * // Create many Levels
+     * const level = await prisma.level.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LevelCreateManyArgs>(args?: SelectSubset<T, LevelCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Levels and returns the data saved in the database.
+     * @param {LevelCreateManyAndReturnArgs} args - Arguments to create many Levels.
+     * @example
+     * // Create many Levels
+     * const level = await prisma.level.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Levels and only return the `id`
+     * const levelWithIdOnly = await prisma.level.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LevelCreateManyAndReturnArgs>(args?: SelectSubset<T, LevelCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LevelPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Level.
+     * @param {LevelDeleteArgs} args - Arguments to delete one Level.
+     * @example
+     * // Delete one Level
+     * const Level = await prisma.level.delete({
+     *   where: {
+     *     // ... filter to delete one Level
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LevelDeleteArgs>(args: SelectSubset<T, LevelDeleteArgs<ExtArgs>>): Prisma__LevelClient<$Result.GetResult<Prisma.$LevelPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Level.
+     * @param {LevelUpdateArgs} args - Arguments to update one Level.
+     * @example
+     * // Update one Level
+     * const level = await prisma.level.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LevelUpdateArgs>(args: SelectSubset<T, LevelUpdateArgs<ExtArgs>>): Prisma__LevelClient<$Result.GetResult<Prisma.$LevelPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Levels.
+     * @param {LevelDeleteManyArgs} args - Arguments to filter Levels to delete.
+     * @example
+     * // Delete a few Levels
+     * const { count } = await prisma.level.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LevelDeleteManyArgs>(args?: SelectSubset<T, LevelDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Levels.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LevelUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Levels
+     * const level = await prisma.level.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LevelUpdateManyArgs>(args: SelectSubset<T, LevelUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Levels and returns the data updated in the database.
+     * @param {LevelUpdateManyAndReturnArgs} args - Arguments to update many Levels.
+     * @example
+     * // Update many Levels
+     * const level = await prisma.level.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Levels and only return the `id`
+     * const levelWithIdOnly = await prisma.level.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends LevelUpdateManyAndReturnArgs>(args: SelectSubset<T, LevelUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LevelPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Level.
+     * @param {LevelUpsertArgs} args - Arguments to update or create a Level.
+     * @example
+     * // Update or create a Level
+     * const level = await prisma.level.upsert({
+     *   create: {
+     *     // ... data to create a Level
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Level we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LevelUpsertArgs>(args: SelectSubset<T, LevelUpsertArgs<ExtArgs>>): Prisma__LevelClient<$Result.GetResult<Prisma.$LevelPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Levels.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LevelCountArgs} args - Arguments to filter Levels to count.
+     * @example
+     * // Count the number of Levels
+     * const count = await prisma.level.count({
+     *   where: {
+     *     // ... the filter for the Levels we want to count
+     *   }
+     * })
+    **/
+    count<T extends LevelCountArgs>(
+      args?: Subset<T, LevelCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LevelCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Level.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LevelAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LevelAggregateArgs>(args: Subset<T, LevelAggregateArgs>): Prisma.PrismaPromise<GetLevelAggregateType<T>>
+
+    /**
+     * Group by Level.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LevelGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LevelGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LevelGroupByArgs['orderBy'] }
+        : { orderBy?: LevelGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LevelGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLevelGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Level model
+   */
+  readonly fields: LevelFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Level.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LevelClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Level model
+   */
+  interface LevelFieldRefs {
+    readonly id: FieldRef<"Level", 'String'>
+    readonly userId: FieldRef<"Level", 'String'>
+    readonly currentLevel: FieldRef<"Level", 'Int'>
+    readonly totalPoints: FieldRef<"Level", 'Int'>
+    readonly createdAt: FieldRef<"Level", 'DateTime'>
+    readonly updatedAt: FieldRef<"Level", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Level findUnique
+   */
+  export type LevelFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Level
+     */
+    select?: LevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Level
+     */
+    omit?: LevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LevelInclude<ExtArgs> | null
+    /**
+     * Filter, which Level to fetch.
+     */
+    where: LevelWhereUniqueInput
+  }
+
+  /**
+   * Level findUniqueOrThrow
+   */
+  export type LevelFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Level
+     */
+    select?: LevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Level
+     */
+    omit?: LevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LevelInclude<ExtArgs> | null
+    /**
+     * Filter, which Level to fetch.
+     */
+    where: LevelWhereUniqueInput
+  }
+
+  /**
+   * Level findFirst
+   */
+  export type LevelFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Level
+     */
+    select?: LevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Level
+     */
+    omit?: LevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LevelInclude<ExtArgs> | null
+    /**
+     * Filter, which Level to fetch.
+     */
+    where?: LevelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Levels to fetch.
+     */
+    orderBy?: LevelOrderByWithRelationInput | LevelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Levels.
+     */
+    cursor?: LevelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Levels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Levels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Levels.
+     */
+    distinct?: LevelScalarFieldEnum | LevelScalarFieldEnum[]
+  }
+
+  /**
+   * Level findFirstOrThrow
+   */
+  export type LevelFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Level
+     */
+    select?: LevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Level
+     */
+    omit?: LevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LevelInclude<ExtArgs> | null
+    /**
+     * Filter, which Level to fetch.
+     */
+    where?: LevelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Levels to fetch.
+     */
+    orderBy?: LevelOrderByWithRelationInput | LevelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Levels.
+     */
+    cursor?: LevelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Levels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Levels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Levels.
+     */
+    distinct?: LevelScalarFieldEnum | LevelScalarFieldEnum[]
+  }
+
+  /**
+   * Level findMany
+   */
+  export type LevelFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Level
+     */
+    select?: LevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Level
+     */
+    omit?: LevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LevelInclude<ExtArgs> | null
+    /**
+     * Filter, which Levels to fetch.
+     */
+    where?: LevelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Levels to fetch.
+     */
+    orderBy?: LevelOrderByWithRelationInput | LevelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Levels.
+     */
+    cursor?: LevelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Levels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Levels.
+     */
+    skip?: number
+    distinct?: LevelScalarFieldEnum | LevelScalarFieldEnum[]
+  }
+
+  /**
+   * Level create
+   */
+  export type LevelCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Level
+     */
+    select?: LevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Level
+     */
+    omit?: LevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LevelInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Level.
+     */
+    data: XOR<LevelCreateInput, LevelUncheckedCreateInput>
+  }
+
+  /**
+   * Level createMany
+   */
+  export type LevelCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Levels.
+     */
+    data: LevelCreateManyInput | LevelCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Level createManyAndReturn
+   */
+  export type LevelCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Level
+     */
+    select?: LevelSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Level
+     */
+    omit?: LevelOmit<ExtArgs> | null
+    /**
+     * The data used to create many Levels.
+     */
+    data: LevelCreateManyInput | LevelCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LevelIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Level update
+   */
+  export type LevelUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Level
+     */
+    select?: LevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Level
+     */
+    omit?: LevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LevelInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Level.
+     */
+    data: XOR<LevelUpdateInput, LevelUncheckedUpdateInput>
+    /**
+     * Choose, which Level to update.
+     */
+    where: LevelWhereUniqueInput
+  }
+
+  /**
+   * Level updateMany
+   */
+  export type LevelUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Levels.
+     */
+    data: XOR<LevelUpdateManyMutationInput, LevelUncheckedUpdateManyInput>
+    /**
+     * Filter which Levels to update
+     */
+    where?: LevelWhereInput
+    /**
+     * Limit how many Levels to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Level updateManyAndReturn
+   */
+  export type LevelUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Level
+     */
+    select?: LevelSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Level
+     */
+    omit?: LevelOmit<ExtArgs> | null
+    /**
+     * The data used to update Levels.
+     */
+    data: XOR<LevelUpdateManyMutationInput, LevelUncheckedUpdateManyInput>
+    /**
+     * Filter which Levels to update
+     */
+    where?: LevelWhereInput
+    /**
+     * Limit how many Levels to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LevelIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Level upsert
+   */
+  export type LevelUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Level
+     */
+    select?: LevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Level
+     */
+    omit?: LevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LevelInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Level to update in case it exists.
+     */
+    where: LevelWhereUniqueInput
+    /**
+     * In case the Level found by the `where` argument doesn't exist, create a new Level with this data.
+     */
+    create: XOR<LevelCreateInput, LevelUncheckedCreateInput>
+    /**
+     * In case the Level was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LevelUpdateInput, LevelUncheckedUpdateInput>
+  }
+
+  /**
+   * Level delete
+   */
+  export type LevelDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Level
+     */
+    select?: LevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Level
+     */
+    omit?: LevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LevelInclude<ExtArgs> | null
+    /**
+     * Filter which Level to delete.
+     */
+    where: LevelWhereUniqueInput
+  }
+
+  /**
+   * Level deleteMany
+   */
+  export type LevelDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Levels to delete
+     */
+    where?: LevelWhereInput
+    /**
+     * Limit how many Levels to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Level without action
+   */
+  export type LevelDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Level
+     */
+    select?: LevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Level
+     */
+    omit?: LevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LevelInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Goal
+   */
+
+  export type AggregateGoal = {
+    _count: GoalCountAggregateOutputType | null
+    _avg: GoalAvgAggregateOutputType | null
+    _sum: GoalSumAggregateOutputType | null
+    _min: GoalMinAggregateOutputType | null
+    _max: GoalMaxAggregateOutputType | null
+  }
+
+  export type GoalAvgAggregateOutputType = {
+    target: number | null
+    progress: number | null
+  }
+
+  export type GoalSumAggregateOutputType = {
+    target: number | null
+    progress: number | null
+  }
+
+  export type GoalMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    type: $Enums.GoalType | null
+    target: number | null
+    progress: number | null
+    period: $Enums.GoalPeriod | null
+    startDate: Date | null
+    endDate: Date | null
+    completedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GoalMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    type: $Enums.GoalType | null
+    target: number | null
+    progress: number | null
+    period: $Enums.GoalPeriod | null
+    startDate: Date | null
+    endDate: Date | null
+    completedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GoalCountAggregateOutputType = {
+    id: number
+    userId: number
+    type: number
+    target: number
+    progress: number
+    period: number
+    startDate: number
+    endDate: number
+    completedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type GoalAvgAggregateInputType = {
+    target?: true
+    progress?: true
+  }
+
+  export type GoalSumAggregateInputType = {
+    target?: true
+    progress?: true
+  }
+
+  export type GoalMinAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    target?: true
+    progress?: true
+    period?: true
+    startDate?: true
+    endDate?: true
+    completedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GoalMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    target?: true
+    progress?: true
+    period?: true
+    startDate?: true
+    endDate?: true
+    completedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GoalCountAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    target?: true
+    progress?: true
+    period?: true
+    startDate?: true
+    endDate?: true
+    completedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type GoalAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Goal to aggregate.
+     */
+    where?: GoalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Goals to fetch.
+     */
+    orderBy?: GoalOrderByWithRelationInput | GoalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GoalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Goals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Goals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Goals
+    **/
+    _count?: true | GoalCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: GoalAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: GoalSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GoalMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GoalMaxAggregateInputType
+  }
+
+  export type GetGoalAggregateType<T extends GoalAggregateArgs> = {
+        [P in keyof T & keyof AggregateGoal]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGoal[P]>
+      : GetScalarType<T[P], AggregateGoal[P]>
+  }
+
+
+
+
+  export type GoalGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GoalWhereInput
+    orderBy?: GoalOrderByWithAggregationInput | GoalOrderByWithAggregationInput[]
+    by: GoalScalarFieldEnum[] | GoalScalarFieldEnum
+    having?: GoalScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GoalCountAggregateInputType | true
+    _avg?: GoalAvgAggregateInputType
+    _sum?: GoalSumAggregateInputType
+    _min?: GoalMinAggregateInputType
+    _max?: GoalMaxAggregateInputType
+  }
+
+  export type GoalGroupByOutputType = {
+    id: string
+    userId: string
+    type: $Enums.GoalType
+    target: number
+    progress: number
+    period: $Enums.GoalPeriod
+    startDate: Date
+    endDate: Date | null
+    completedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: GoalCountAggregateOutputType | null
+    _avg: GoalAvgAggregateOutputType | null
+    _sum: GoalSumAggregateOutputType | null
+    _min: GoalMinAggregateOutputType | null
+    _max: GoalMaxAggregateOutputType | null
+  }
+
+  type GetGoalGroupByPayload<T extends GoalGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GoalGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GoalGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GoalGroupByOutputType[P]>
+            : GetScalarType<T[P], GoalGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GoalSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    target?: boolean
+    progress?: boolean
+    period?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["goal"]>
+
+  export type GoalSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    target?: boolean
+    progress?: boolean
+    period?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["goal"]>
+
+  export type GoalSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    target?: boolean
+    progress?: boolean
+    period?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["goal"]>
+
+  export type GoalSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    target?: boolean
+    progress?: boolean
+    period?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type GoalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "type" | "target" | "progress" | "period" | "startDate" | "endDate" | "completedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["goal"]>
+  export type GoalInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type GoalIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type GoalIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $GoalPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Goal"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      type: $Enums.GoalType
+      target: number
+      progress: number
+      period: $Enums.GoalPeriod
+      startDate: Date
+      endDate: Date | null
+      completedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["goal"]>
+    composites: {}
+  }
+
+  type GoalGetPayload<S extends boolean | null | undefined | GoalDefaultArgs> = $Result.GetResult<Prisma.$GoalPayload, S>
+
+  type GoalCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GoalFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GoalCountAggregateInputType | true
+    }
+
+  export interface GoalDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Goal'], meta: { name: 'Goal' } }
+    /**
+     * Find zero or one Goal that matches the filter.
+     * @param {GoalFindUniqueArgs} args - Arguments to find a Goal
+     * @example
+     * // Get one Goal
+     * const goal = await prisma.goal.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GoalFindUniqueArgs>(args: SelectSubset<T, GoalFindUniqueArgs<ExtArgs>>): Prisma__GoalClient<$Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Goal that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GoalFindUniqueOrThrowArgs} args - Arguments to find a Goal
+     * @example
+     * // Get one Goal
+     * const goal = await prisma.goal.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GoalFindUniqueOrThrowArgs>(args: SelectSubset<T, GoalFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GoalClient<$Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Goal that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoalFindFirstArgs} args - Arguments to find a Goal
+     * @example
+     * // Get one Goal
+     * const goal = await prisma.goal.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GoalFindFirstArgs>(args?: SelectSubset<T, GoalFindFirstArgs<ExtArgs>>): Prisma__GoalClient<$Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Goal that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoalFindFirstOrThrowArgs} args - Arguments to find a Goal
+     * @example
+     * // Get one Goal
+     * const goal = await prisma.goal.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GoalFindFirstOrThrowArgs>(args?: SelectSubset<T, GoalFindFirstOrThrowArgs<ExtArgs>>): Prisma__GoalClient<$Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Goals that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoalFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Goals
+     * const goals = await prisma.goal.findMany()
+     * 
+     * // Get first 10 Goals
+     * const goals = await prisma.goal.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const goalWithIdOnly = await prisma.goal.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GoalFindManyArgs>(args?: SelectSubset<T, GoalFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Goal.
+     * @param {GoalCreateArgs} args - Arguments to create a Goal.
+     * @example
+     * // Create one Goal
+     * const Goal = await prisma.goal.create({
+     *   data: {
+     *     // ... data to create a Goal
+     *   }
+     * })
+     * 
+     */
+    create<T extends GoalCreateArgs>(args: SelectSubset<T, GoalCreateArgs<ExtArgs>>): Prisma__GoalClient<$Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Goals.
+     * @param {GoalCreateManyArgs} args - Arguments to create many Goals.
+     * @example
+     * // Create many Goals
+     * const goal = await prisma.goal.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GoalCreateManyArgs>(args?: SelectSubset<T, GoalCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Goals and returns the data saved in the database.
+     * @param {GoalCreateManyAndReturnArgs} args - Arguments to create many Goals.
+     * @example
+     * // Create many Goals
+     * const goal = await prisma.goal.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Goals and only return the `id`
+     * const goalWithIdOnly = await prisma.goal.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GoalCreateManyAndReturnArgs>(args?: SelectSubset<T, GoalCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Goal.
+     * @param {GoalDeleteArgs} args - Arguments to delete one Goal.
+     * @example
+     * // Delete one Goal
+     * const Goal = await prisma.goal.delete({
+     *   where: {
+     *     // ... filter to delete one Goal
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GoalDeleteArgs>(args: SelectSubset<T, GoalDeleteArgs<ExtArgs>>): Prisma__GoalClient<$Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Goal.
+     * @param {GoalUpdateArgs} args - Arguments to update one Goal.
+     * @example
+     * // Update one Goal
+     * const goal = await prisma.goal.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GoalUpdateArgs>(args: SelectSubset<T, GoalUpdateArgs<ExtArgs>>): Prisma__GoalClient<$Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Goals.
+     * @param {GoalDeleteManyArgs} args - Arguments to filter Goals to delete.
+     * @example
+     * // Delete a few Goals
+     * const { count } = await prisma.goal.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GoalDeleteManyArgs>(args?: SelectSubset<T, GoalDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Goals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoalUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Goals
+     * const goal = await prisma.goal.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GoalUpdateManyArgs>(args: SelectSubset<T, GoalUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Goals and returns the data updated in the database.
+     * @param {GoalUpdateManyAndReturnArgs} args - Arguments to update many Goals.
+     * @example
+     * // Update many Goals
+     * const goal = await prisma.goal.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Goals and only return the `id`
+     * const goalWithIdOnly = await prisma.goal.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GoalUpdateManyAndReturnArgs>(args: SelectSubset<T, GoalUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Goal.
+     * @param {GoalUpsertArgs} args - Arguments to update or create a Goal.
+     * @example
+     * // Update or create a Goal
+     * const goal = await prisma.goal.upsert({
+     *   create: {
+     *     // ... data to create a Goal
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Goal we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GoalUpsertArgs>(args: SelectSubset<T, GoalUpsertArgs<ExtArgs>>): Prisma__GoalClient<$Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Goals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoalCountArgs} args - Arguments to filter Goals to count.
+     * @example
+     * // Count the number of Goals
+     * const count = await prisma.goal.count({
+     *   where: {
+     *     // ... the filter for the Goals we want to count
+     *   }
+     * })
+    **/
+    count<T extends GoalCountArgs>(
+      args?: Subset<T, GoalCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GoalCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Goal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoalAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GoalAggregateArgs>(args: Subset<T, GoalAggregateArgs>): Prisma.PrismaPromise<GetGoalAggregateType<T>>
+
+    /**
+     * Group by Goal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoalGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GoalGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GoalGroupByArgs['orderBy'] }
+        : { orderBy?: GoalGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GoalGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGoalGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Goal model
+   */
+  readonly fields: GoalFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Goal.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GoalClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Goal model
+   */
+  interface GoalFieldRefs {
+    readonly id: FieldRef<"Goal", 'String'>
+    readonly userId: FieldRef<"Goal", 'String'>
+    readonly type: FieldRef<"Goal", 'GoalType'>
+    readonly target: FieldRef<"Goal", 'Int'>
+    readonly progress: FieldRef<"Goal", 'Int'>
+    readonly period: FieldRef<"Goal", 'GoalPeriod'>
+    readonly startDate: FieldRef<"Goal", 'DateTime'>
+    readonly endDate: FieldRef<"Goal", 'DateTime'>
+    readonly completedAt: FieldRef<"Goal", 'DateTime'>
+    readonly createdAt: FieldRef<"Goal", 'DateTime'>
+    readonly updatedAt: FieldRef<"Goal", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Goal findUnique
+   */
+  export type GoalFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Goal
+     */
+    select?: GoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Goal
+     */
+    omit?: GoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalInclude<ExtArgs> | null
+    /**
+     * Filter, which Goal to fetch.
+     */
+    where: GoalWhereUniqueInput
+  }
+
+  /**
+   * Goal findUniqueOrThrow
+   */
+  export type GoalFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Goal
+     */
+    select?: GoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Goal
+     */
+    omit?: GoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalInclude<ExtArgs> | null
+    /**
+     * Filter, which Goal to fetch.
+     */
+    where: GoalWhereUniqueInput
+  }
+
+  /**
+   * Goal findFirst
+   */
+  export type GoalFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Goal
+     */
+    select?: GoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Goal
+     */
+    omit?: GoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalInclude<ExtArgs> | null
+    /**
+     * Filter, which Goal to fetch.
+     */
+    where?: GoalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Goals to fetch.
+     */
+    orderBy?: GoalOrderByWithRelationInput | GoalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Goals.
+     */
+    cursor?: GoalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Goals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Goals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Goals.
+     */
+    distinct?: GoalScalarFieldEnum | GoalScalarFieldEnum[]
+  }
+
+  /**
+   * Goal findFirstOrThrow
+   */
+  export type GoalFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Goal
+     */
+    select?: GoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Goal
+     */
+    omit?: GoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalInclude<ExtArgs> | null
+    /**
+     * Filter, which Goal to fetch.
+     */
+    where?: GoalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Goals to fetch.
+     */
+    orderBy?: GoalOrderByWithRelationInput | GoalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Goals.
+     */
+    cursor?: GoalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Goals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Goals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Goals.
+     */
+    distinct?: GoalScalarFieldEnum | GoalScalarFieldEnum[]
+  }
+
+  /**
+   * Goal findMany
+   */
+  export type GoalFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Goal
+     */
+    select?: GoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Goal
+     */
+    omit?: GoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalInclude<ExtArgs> | null
+    /**
+     * Filter, which Goals to fetch.
+     */
+    where?: GoalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Goals to fetch.
+     */
+    orderBy?: GoalOrderByWithRelationInput | GoalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Goals.
+     */
+    cursor?: GoalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Goals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Goals.
+     */
+    skip?: number
+    distinct?: GoalScalarFieldEnum | GoalScalarFieldEnum[]
+  }
+
+  /**
+   * Goal create
+   */
+  export type GoalCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Goal
+     */
+    select?: GoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Goal
+     */
+    omit?: GoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Goal.
+     */
+    data: XOR<GoalCreateInput, GoalUncheckedCreateInput>
+  }
+
+  /**
+   * Goal createMany
+   */
+  export type GoalCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Goals.
+     */
+    data: GoalCreateManyInput | GoalCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Goal createManyAndReturn
+   */
+  export type GoalCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Goal
+     */
+    select?: GoalSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Goal
+     */
+    omit?: GoalOmit<ExtArgs> | null
+    /**
+     * The data used to create many Goals.
+     */
+    data: GoalCreateManyInput | GoalCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Goal update
+   */
+  export type GoalUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Goal
+     */
+    select?: GoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Goal
+     */
+    omit?: GoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Goal.
+     */
+    data: XOR<GoalUpdateInput, GoalUncheckedUpdateInput>
+    /**
+     * Choose, which Goal to update.
+     */
+    where: GoalWhereUniqueInput
+  }
+
+  /**
+   * Goal updateMany
+   */
+  export type GoalUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Goals.
+     */
+    data: XOR<GoalUpdateManyMutationInput, GoalUncheckedUpdateManyInput>
+    /**
+     * Filter which Goals to update
+     */
+    where?: GoalWhereInput
+    /**
+     * Limit how many Goals to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Goal updateManyAndReturn
+   */
+  export type GoalUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Goal
+     */
+    select?: GoalSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Goal
+     */
+    omit?: GoalOmit<ExtArgs> | null
+    /**
+     * The data used to update Goals.
+     */
+    data: XOR<GoalUpdateManyMutationInput, GoalUncheckedUpdateManyInput>
+    /**
+     * Filter which Goals to update
+     */
+    where?: GoalWhereInput
+    /**
+     * Limit how many Goals to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Goal upsert
+   */
+  export type GoalUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Goal
+     */
+    select?: GoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Goal
+     */
+    omit?: GoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Goal to update in case it exists.
+     */
+    where: GoalWhereUniqueInput
+    /**
+     * In case the Goal found by the `where` argument doesn't exist, create a new Goal with this data.
+     */
+    create: XOR<GoalCreateInput, GoalUncheckedCreateInput>
+    /**
+     * In case the Goal was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GoalUpdateInput, GoalUncheckedUpdateInput>
+  }
+
+  /**
+   * Goal delete
+   */
+  export type GoalDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Goal
+     */
+    select?: GoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Goal
+     */
+    omit?: GoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalInclude<ExtArgs> | null
+    /**
+     * Filter which Goal to delete.
+     */
+    where: GoalWhereUniqueInput
+  }
+
+  /**
+   * Goal deleteMany
+   */
+  export type GoalDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Goals to delete
+     */
+    where?: GoalWhereInput
+    /**
+     * Limit how many Goals to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Goal without action
+   */
+  export type GoalDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Goal
+     */
+    select?: GoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Goal
+     */
+    omit?: GoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model StudySession
+   */
+
+  export type AggregateStudySession = {
+    _count: StudySessionCountAggregateOutputType | null
+    _avg: StudySessionAvgAggregateOutputType | null
+    _sum: StudySessionSumAggregateOutputType | null
+    _min: StudySessionMinAggregateOutputType | null
+    _max: StudySessionMaxAggregateOutputType | null
+  }
+
+  export type StudySessionAvgAggregateOutputType = {
+    duration: number | null
+    textsRead: number | null
+    flashcardsReviewed: number | null
+  }
+
+  export type StudySessionSumAggregateOutputType = {
+    duration: number | null
+    textsRead: number | null
+    flashcardsReviewed: number | null
+  }
+
+  export type StudySessionMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    date: Date | null
+    duration: number | null
+    textsRead: number | null
+    flashcardsReviewed: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type StudySessionMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    date: Date | null
+    duration: number | null
+    textsRead: number | null
+    flashcardsReviewed: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type StudySessionCountAggregateOutputType = {
+    id: number
+    userId: number
+    date: number
+    duration: number
+    textsRead: number
+    flashcardsReviewed: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type StudySessionAvgAggregateInputType = {
+    duration?: true
+    textsRead?: true
+    flashcardsReviewed?: true
+  }
+
+  export type StudySessionSumAggregateInputType = {
+    duration?: true
+    textsRead?: true
+    flashcardsReviewed?: true
+  }
+
+  export type StudySessionMinAggregateInputType = {
+    id?: true
+    userId?: true
+    date?: true
+    duration?: true
+    textsRead?: true
+    flashcardsReviewed?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type StudySessionMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    date?: true
+    duration?: true
+    textsRead?: true
+    flashcardsReviewed?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type StudySessionCountAggregateInputType = {
+    id?: true
+    userId?: true
+    date?: true
+    duration?: true
+    textsRead?: true
+    flashcardsReviewed?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type StudySessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StudySession to aggregate.
+     */
+    where?: StudySessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudySessions to fetch.
+     */
+    orderBy?: StudySessionOrderByWithRelationInput | StudySessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StudySessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudySessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudySessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StudySessions
+    **/
+    _count?: true | StudySessionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: StudySessionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: StudySessionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StudySessionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StudySessionMaxAggregateInputType
+  }
+
+  export type GetStudySessionAggregateType<T extends StudySessionAggregateArgs> = {
+        [P in keyof T & keyof AggregateStudySession]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStudySession[P]>
+      : GetScalarType<T[P], AggregateStudySession[P]>
+  }
+
+
+
+
+  export type StudySessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudySessionWhereInput
+    orderBy?: StudySessionOrderByWithAggregationInput | StudySessionOrderByWithAggregationInput[]
+    by: StudySessionScalarFieldEnum[] | StudySessionScalarFieldEnum
+    having?: StudySessionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StudySessionCountAggregateInputType | true
+    _avg?: StudySessionAvgAggregateInputType
+    _sum?: StudySessionSumAggregateInputType
+    _min?: StudySessionMinAggregateInputType
+    _max?: StudySessionMaxAggregateInputType
+  }
+
+  export type StudySessionGroupByOutputType = {
+    id: string
+    userId: string
+    date: Date
+    duration: number
+    textsRead: number
+    flashcardsReviewed: number
+    createdAt: Date
+    updatedAt: Date
+    _count: StudySessionCountAggregateOutputType | null
+    _avg: StudySessionAvgAggregateOutputType | null
+    _sum: StudySessionSumAggregateOutputType | null
+    _min: StudySessionMinAggregateOutputType | null
+    _max: StudySessionMaxAggregateOutputType | null
+  }
+
+  type GetStudySessionGroupByPayload<T extends StudySessionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StudySessionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StudySessionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StudySessionGroupByOutputType[P]>
+            : GetScalarType<T[P], StudySessionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StudySessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    date?: boolean
+    duration?: boolean
+    textsRead?: boolean
+    flashcardsReviewed?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["studySession"]>
+
+  export type StudySessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    date?: boolean
+    duration?: boolean
+    textsRead?: boolean
+    flashcardsReviewed?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["studySession"]>
+
+  export type StudySessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    date?: boolean
+    duration?: boolean
+    textsRead?: boolean
+    flashcardsReviewed?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["studySession"]>
+
+  export type StudySessionSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    date?: boolean
+    duration?: boolean
+    textsRead?: boolean
+    flashcardsReviewed?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type StudySessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "date" | "duration" | "textsRead" | "flashcardsReviewed" | "createdAt" | "updatedAt", ExtArgs["result"]["studySession"]>
+  export type StudySessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type StudySessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type StudySessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $StudySessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StudySession"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      date: Date
+      duration: number
+      textsRead: number
+      flashcardsReviewed: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["studySession"]>
+    composites: {}
+  }
+
+  type StudySessionGetPayload<S extends boolean | null | undefined | StudySessionDefaultArgs> = $Result.GetResult<Prisma.$StudySessionPayload, S>
+
+  type StudySessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StudySessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StudySessionCountAggregateInputType | true
+    }
+
+  export interface StudySessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StudySession'], meta: { name: 'StudySession' } }
+    /**
+     * Find zero or one StudySession that matches the filter.
+     * @param {StudySessionFindUniqueArgs} args - Arguments to find a StudySession
+     * @example
+     * // Get one StudySession
+     * const studySession = await prisma.studySession.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StudySessionFindUniqueArgs>(args: SelectSubset<T, StudySessionFindUniqueArgs<ExtArgs>>): Prisma__StudySessionClient<$Result.GetResult<Prisma.$StudySessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StudySession that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StudySessionFindUniqueOrThrowArgs} args - Arguments to find a StudySession
+     * @example
+     * // Get one StudySession
+     * const studySession = await prisma.studySession.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StudySessionFindUniqueOrThrowArgs>(args: SelectSubset<T, StudySessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StudySessionClient<$Result.GetResult<Prisma.$StudySessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StudySession that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudySessionFindFirstArgs} args - Arguments to find a StudySession
+     * @example
+     * // Get one StudySession
+     * const studySession = await prisma.studySession.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StudySessionFindFirstArgs>(args?: SelectSubset<T, StudySessionFindFirstArgs<ExtArgs>>): Prisma__StudySessionClient<$Result.GetResult<Prisma.$StudySessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StudySession that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudySessionFindFirstOrThrowArgs} args - Arguments to find a StudySession
+     * @example
+     * // Get one StudySession
+     * const studySession = await prisma.studySession.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StudySessionFindFirstOrThrowArgs>(args?: SelectSubset<T, StudySessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__StudySessionClient<$Result.GetResult<Prisma.$StudySessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StudySessions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudySessionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StudySessions
+     * const studySessions = await prisma.studySession.findMany()
+     * 
+     * // Get first 10 StudySessions
+     * const studySessions = await prisma.studySession.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const studySessionWithIdOnly = await prisma.studySession.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StudySessionFindManyArgs>(args?: SelectSubset<T, StudySessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudySessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StudySession.
+     * @param {StudySessionCreateArgs} args - Arguments to create a StudySession.
+     * @example
+     * // Create one StudySession
+     * const StudySession = await prisma.studySession.create({
+     *   data: {
+     *     // ... data to create a StudySession
+     *   }
+     * })
+     * 
+     */
+    create<T extends StudySessionCreateArgs>(args: SelectSubset<T, StudySessionCreateArgs<ExtArgs>>): Prisma__StudySessionClient<$Result.GetResult<Prisma.$StudySessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StudySessions.
+     * @param {StudySessionCreateManyArgs} args - Arguments to create many StudySessions.
+     * @example
+     * // Create many StudySessions
+     * const studySession = await prisma.studySession.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StudySessionCreateManyArgs>(args?: SelectSubset<T, StudySessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many StudySessions and returns the data saved in the database.
+     * @param {StudySessionCreateManyAndReturnArgs} args - Arguments to create many StudySessions.
+     * @example
+     * // Create many StudySessions
+     * const studySession = await prisma.studySession.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many StudySessions and only return the `id`
+     * const studySessionWithIdOnly = await prisma.studySession.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends StudySessionCreateManyAndReturnArgs>(args?: SelectSubset<T, StudySessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudySessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a StudySession.
+     * @param {StudySessionDeleteArgs} args - Arguments to delete one StudySession.
+     * @example
+     * // Delete one StudySession
+     * const StudySession = await prisma.studySession.delete({
+     *   where: {
+     *     // ... filter to delete one StudySession
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StudySessionDeleteArgs>(args: SelectSubset<T, StudySessionDeleteArgs<ExtArgs>>): Prisma__StudySessionClient<$Result.GetResult<Prisma.$StudySessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StudySession.
+     * @param {StudySessionUpdateArgs} args - Arguments to update one StudySession.
+     * @example
+     * // Update one StudySession
+     * const studySession = await prisma.studySession.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StudySessionUpdateArgs>(args: SelectSubset<T, StudySessionUpdateArgs<ExtArgs>>): Prisma__StudySessionClient<$Result.GetResult<Prisma.$StudySessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StudySessions.
+     * @param {StudySessionDeleteManyArgs} args - Arguments to filter StudySessions to delete.
+     * @example
+     * // Delete a few StudySessions
+     * const { count } = await prisma.studySession.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StudySessionDeleteManyArgs>(args?: SelectSubset<T, StudySessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StudySessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudySessionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StudySessions
+     * const studySession = await prisma.studySession.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StudySessionUpdateManyArgs>(args: SelectSubset<T, StudySessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StudySessions and returns the data updated in the database.
+     * @param {StudySessionUpdateManyAndReturnArgs} args - Arguments to update many StudySessions.
+     * @example
+     * // Update many StudySessions
+     * const studySession = await prisma.studySession.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more StudySessions and only return the `id`
+     * const studySessionWithIdOnly = await prisma.studySession.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends StudySessionUpdateManyAndReturnArgs>(args: SelectSubset<T, StudySessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudySessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one StudySession.
+     * @param {StudySessionUpsertArgs} args - Arguments to update or create a StudySession.
+     * @example
+     * // Update or create a StudySession
+     * const studySession = await prisma.studySession.upsert({
+     *   create: {
+     *     // ... data to create a StudySession
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StudySession we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StudySessionUpsertArgs>(args: SelectSubset<T, StudySessionUpsertArgs<ExtArgs>>): Prisma__StudySessionClient<$Result.GetResult<Prisma.$StudySessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StudySessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudySessionCountArgs} args - Arguments to filter StudySessions to count.
+     * @example
+     * // Count the number of StudySessions
+     * const count = await prisma.studySession.count({
+     *   where: {
+     *     // ... the filter for the StudySessions we want to count
+     *   }
+     * })
+    **/
+    count<T extends StudySessionCountArgs>(
+      args?: Subset<T, StudySessionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StudySessionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StudySession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudySessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StudySessionAggregateArgs>(args: Subset<T, StudySessionAggregateArgs>): Prisma.PrismaPromise<GetStudySessionAggregateType<T>>
+
+    /**
+     * Group by StudySession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudySessionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StudySessionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StudySessionGroupByArgs['orderBy'] }
+        : { orderBy?: StudySessionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StudySessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStudySessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StudySession model
+   */
+  readonly fields: StudySessionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StudySession.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StudySessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StudySession model
+   */
+  interface StudySessionFieldRefs {
+    readonly id: FieldRef<"StudySession", 'String'>
+    readonly userId: FieldRef<"StudySession", 'String'>
+    readonly date: FieldRef<"StudySession", 'DateTime'>
+    readonly duration: FieldRef<"StudySession", 'Int'>
+    readonly textsRead: FieldRef<"StudySession", 'Int'>
+    readonly flashcardsReviewed: FieldRef<"StudySession", 'Int'>
+    readonly createdAt: FieldRef<"StudySession", 'DateTime'>
+    readonly updatedAt: FieldRef<"StudySession", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StudySession findUnique
+   */
+  export type StudySessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudySession
+     */
+    select?: StudySessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudySession
+     */
+    omit?: StudySessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudySessionInclude<ExtArgs> | null
+    /**
+     * Filter, which StudySession to fetch.
+     */
+    where: StudySessionWhereUniqueInput
+  }
+
+  /**
+   * StudySession findUniqueOrThrow
+   */
+  export type StudySessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudySession
+     */
+    select?: StudySessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudySession
+     */
+    omit?: StudySessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudySessionInclude<ExtArgs> | null
+    /**
+     * Filter, which StudySession to fetch.
+     */
+    where: StudySessionWhereUniqueInput
+  }
+
+  /**
+   * StudySession findFirst
+   */
+  export type StudySessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudySession
+     */
+    select?: StudySessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudySession
+     */
+    omit?: StudySessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudySessionInclude<ExtArgs> | null
+    /**
+     * Filter, which StudySession to fetch.
+     */
+    where?: StudySessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudySessions to fetch.
+     */
+    orderBy?: StudySessionOrderByWithRelationInput | StudySessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StudySessions.
+     */
+    cursor?: StudySessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudySessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudySessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StudySessions.
+     */
+    distinct?: StudySessionScalarFieldEnum | StudySessionScalarFieldEnum[]
+  }
+
+  /**
+   * StudySession findFirstOrThrow
+   */
+  export type StudySessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudySession
+     */
+    select?: StudySessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudySession
+     */
+    omit?: StudySessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudySessionInclude<ExtArgs> | null
+    /**
+     * Filter, which StudySession to fetch.
+     */
+    where?: StudySessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudySessions to fetch.
+     */
+    orderBy?: StudySessionOrderByWithRelationInput | StudySessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StudySessions.
+     */
+    cursor?: StudySessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudySessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudySessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StudySessions.
+     */
+    distinct?: StudySessionScalarFieldEnum | StudySessionScalarFieldEnum[]
+  }
+
+  /**
+   * StudySession findMany
+   */
+  export type StudySessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudySession
+     */
+    select?: StudySessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudySession
+     */
+    omit?: StudySessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudySessionInclude<ExtArgs> | null
+    /**
+     * Filter, which StudySessions to fetch.
+     */
+    where?: StudySessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudySessions to fetch.
+     */
+    orderBy?: StudySessionOrderByWithRelationInput | StudySessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StudySessions.
+     */
+    cursor?: StudySessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudySessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudySessions.
+     */
+    skip?: number
+    distinct?: StudySessionScalarFieldEnum | StudySessionScalarFieldEnum[]
+  }
+
+  /**
+   * StudySession create
+   */
+  export type StudySessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudySession
+     */
+    select?: StudySessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudySession
+     */
+    omit?: StudySessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudySessionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a StudySession.
+     */
+    data: XOR<StudySessionCreateInput, StudySessionUncheckedCreateInput>
+  }
+
+  /**
+   * StudySession createMany
+   */
+  export type StudySessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StudySessions.
+     */
+    data: StudySessionCreateManyInput | StudySessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StudySession createManyAndReturn
+   */
+  export type StudySessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudySession
+     */
+    select?: StudySessionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudySession
+     */
+    omit?: StudySessionOmit<ExtArgs> | null
+    /**
+     * The data used to create many StudySessions.
+     */
+    data: StudySessionCreateManyInput | StudySessionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudySessionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StudySession update
+   */
+  export type StudySessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudySession
+     */
+    select?: StudySessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudySession
+     */
+    omit?: StudySessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudySessionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a StudySession.
+     */
+    data: XOR<StudySessionUpdateInput, StudySessionUncheckedUpdateInput>
+    /**
+     * Choose, which StudySession to update.
+     */
+    where: StudySessionWhereUniqueInput
+  }
+
+  /**
+   * StudySession updateMany
+   */
+  export type StudySessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StudySessions.
+     */
+    data: XOR<StudySessionUpdateManyMutationInput, StudySessionUncheckedUpdateManyInput>
+    /**
+     * Filter which StudySessions to update
+     */
+    where?: StudySessionWhereInput
+    /**
+     * Limit how many StudySessions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StudySession updateManyAndReturn
+   */
+  export type StudySessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudySession
+     */
+    select?: StudySessionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudySession
+     */
+    omit?: StudySessionOmit<ExtArgs> | null
+    /**
+     * The data used to update StudySessions.
+     */
+    data: XOR<StudySessionUpdateManyMutationInput, StudySessionUncheckedUpdateManyInput>
+    /**
+     * Filter which StudySessions to update
+     */
+    where?: StudySessionWhereInput
+    /**
+     * Limit how many StudySessions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudySessionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StudySession upsert
+   */
+  export type StudySessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudySession
+     */
+    select?: StudySessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudySession
+     */
+    omit?: StudySessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudySessionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the StudySession to update in case it exists.
+     */
+    where: StudySessionWhereUniqueInput
+    /**
+     * In case the StudySession found by the `where` argument doesn't exist, create a new StudySession with this data.
+     */
+    create: XOR<StudySessionCreateInput, StudySessionUncheckedCreateInput>
+    /**
+     * In case the StudySession was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StudySessionUpdateInput, StudySessionUncheckedUpdateInput>
+  }
+
+  /**
+   * StudySession delete
+   */
+  export type StudySessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudySession
+     */
+    select?: StudySessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudySession
+     */
+    omit?: StudySessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudySessionInclude<ExtArgs> | null
+    /**
+     * Filter which StudySession to delete.
+     */
+    where: StudySessionWhereUniqueInput
+  }
+
+  /**
+   * StudySession deleteMany
+   */
+  export type StudySessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StudySessions to delete
+     */
+    where?: StudySessionWhereInput
+    /**
+     * Limit how many StudySessions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StudySession without action
+   */
+  export type StudySessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudySession
+     */
+    select?: StudySessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudySession
+     */
+    omit?: StudySessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudySessionInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model StudiedText
    */
 
@@ -4486,6 +11966,7 @@ export namespace Prisma {
   export type StudiedTextMinAggregateOutputType = {
     id: string | null
     userKey: string | null
+    userId: string | null
     ref: string | null
     heRef: string | null
     url: string | null
@@ -4497,6 +11978,7 @@ export namespace Prisma {
   export type StudiedTextMaxAggregateOutputType = {
     id: string | null
     userKey: string | null
+    userId: string | null
     ref: string | null
     heRef: string | null
     url: string | null
@@ -4508,6 +11990,7 @@ export namespace Prisma {
   export type StudiedTextCountAggregateOutputType = {
     id: number
     userKey: number
+    userId: number
     ref: number
     heRef: number
     url: number
@@ -4521,6 +12004,7 @@ export namespace Prisma {
   export type StudiedTextMinAggregateInputType = {
     id?: true
     userKey?: true
+    userId?: true
     ref?: true
     heRef?: true
     url?: true
@@ -4532,6 +12016,7 @@ export namespace Prisma {
   export type StudiedTextMaxAggregateInputType = {
     id?: true
     userKey?: true
+    userId?: true
     ref?: true
     heRef?: true
     url?: true
@@ -4543,6 +12028,7 @@ export namespace Prisma {
   export type StudiedTextCountAggregateInputType = {
     id?: true
     userKey?: true
+    userId?: true
     ref?: true
     heRef?: true
     url?: true
@@ -4627,6 +12113,7 @@ export namespace Prisma {
   export type StudiedTextGroupByOutputType = {
     id: string
     userKey: string
+    userId: string | null
     ref: string
     heRef: string | null
     url: string | null
@@ -4655,39 +12142,46 @@ export namespace Prisma {
   export type StudiedTextSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userKey?: boolean
+    userId?: boolean
     ref?: boolean
     heRef?: boolean
     url?: boolean
     title?: boolean
     snippet?: boolean
     createdAt?: boolean
+    user?: boolean | StudiedText$userArgs<ExtArgs>
   }, ExtArgs["result"]["studiedText"]>
 
   export type StudiedTextSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userKey?: boolean
+    userId?: boolean
     ref?: boolean
     heRef?: boolean
     url?: boolean
     title?: boolean
     snippet?: boolean
     createdAt?: boolean
+    user?: boolean | StudiedText$userArgs<ExtArgs>
   }, ExtArgs["result"]["studiedText"]>
 
   export type StudiedTextSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userKey?: boolean
+    userId?: boolean
     ref?: boolean
     heRef?: boolean
     url?: boolean
     title?: boolean
     snippet?: boolean
     createdAt?: boolean
+    user?: boolean | StudiedText$userArgs<ExtArgs>
   }, ExtArgs["result"]["studiedText"]>
 
   export type StudiedTextSelectScalar = {
     id?: boolean
     userKey?: boolean
+    userId?: boolean
     ref?: boolean
     heRef?: boolean
     url?: boolean
@@ -4696,14 +12190,26 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type StudiedTextOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userKey" | "ref" | "heRef" | "url" | "title" | "snippet" | "createdAt", ExtArgs["result"]["studiedText"]>
+  export type StudiedTextOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userKey" | "userId" | "ref" | "heRef" | "url" | "title" | "snippet" | "createdAt", ExtArgs["result"]["studiedText"]>
+  export type StudiedTextInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | StudiedText$userArgs<ExtArgs>
+  }
+  export type StudiedTextIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | StudiedText$userArgs<ExtArgs>
+  }
+  export type StudiedTextIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | StudiedText$userArgs<ExtArgs>
+  }
 
   export type $StudiedTextPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "StudiedText"
-    objects: {}
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs> | null
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       userKey: string
+      userId: string | null
       ref: string
       heRef: string | null
       url: string | null
@@ -5104,6 +12610,7 @@ export namespace Prisma {
    */
   export interface Prisma__StudiedTextClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends StudiedText$userArgs<ExtArgs> = {}>(args?: Subset<T, StudiedText$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5135,6 +12642,7 @@ export namespace Prisma {
   interface StudiedTextFieldRefs {
     readonly id: FieldRef<"StudiedText", 'String'>
     readonly userKey: FieldRef<"StudiedText", 'String'>
+    readonly userId: FieldRef<"StudiedText", 'String'>
     readonly ref: FieldRef<"StudiedText", 'String'>
     readonly heRef: FieldRef<"StudiedText", 'String'>
     readonly url: FieldRef<"StudiedText", 'String'>
@@ -5158,6 +12666,10 @@ export namespace Prisma {
      */
     omit?: StudiedTextOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudiedTextInclude<ExtArgs> | null
+    /**
      * Filter, which StudiedText to fetch.
      */
     where: StudiedTextWhereUniqueInput
@@ -5176,6 +12688,10 @@ export namespace Prisma {
      */
     omit?: StudiedTextOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudiedTextInclude<ExtArgs> | null
+    /**
      * Filter, which StudiedText to fetch.
      */
     where: StudiedTextWhereUniqueInput
@@ -5193,6 +12709,10 @@ export namespace Prisma {
      * Omit specific fields from the StudiedText
      */
     omit?: StudiedTextOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudiedTextInclude<ExtArgs> | null
     /**
      * Filter, which StudiedText to fetch.
      */
@@ -5242,6 +12762,10 @@ export namespace Prisma {
      */
     omit?: StudiedTextOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudiedTextInclude<ExtArgs> | null
+    /**
      * Filter, which StudiedText to fetch.
      */
     where?: StudiedTextWhereInput
@@ -5290,6 +12814,10 @@ export namespace Prisma {
      */
     omit?: StudiedTextOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudiedTextInclude<ExtArgs> | null
+    /**
      * Filter, which StudiedTexts to fetch.
      */
     where?: StudiedTextWhereInput
@@ -5333,6 +12861,10 @@ export namespace Prisma {
      */
     omit?: StudiedTextOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudiedTextInclude<ExtArgs> | null
+    /**
      * The data needed to create a StudiedText.
      */
     data: XOR<StudiedTextCreateInput, StudiedTextUncheckedCreateInput>
@@ -5366,6 +12898,10 @@ export namespace Prisma {
      */
     data: StudiedTextCreateManyInput | StudiedTextCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudiedTextIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -5380,6 +12916,10 @@ export namespace Prisma {
      * Omit specific fields from the StudiedText
      */
     omit?: StudiedTextOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudiedTextInclude<ExtArgs> | null
     /**
      * The data needed to update a StudiedText.
      */
@@ -5432,6 +12972,10 @@ export namespace Prisma {
      * Limit how many StudiedTexts to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudiedTextIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -5446,6 +12990,10 @@ export namespace Prisma {
      * Omit specific fields from the StudiedText
      */
     omit?: StudiedTextOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudiedTextInclude<ExtArgs> | null
     /**
      * The filter to search for the StudiedText to update in case it exists.
      */
@@ -5473,6 +13021,10 @@ export namespace Prisma {
      */
     omit?: StudiedTextOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudiedTextInclude<ExtArgs> | null
+    /**
      * Filter which StudiedText to delete.
      */
     where: StudiedTextWhereUniqueInput
@@ -5493,6 +13045,25 @@ export namespace Prisma {
   }
 
   /**
+   * StudiedText.user
+   */
+  export type StudiedText$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
    * StudiedText without action
    */
   export type StudiedTextDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5504,6 +13075,10 @@ export namespace Prisma {
      * Omit specific fields from the StudiedText
      */
     omit?: StudiedTextOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudiedTextInclude<ExtArgs> | null
   }
 
 
@@ -5560,9 +13135,88 @@ export namespace Prisma {
   export type FlashcardReviewScalarFieldEnum = (typeof FlashcardReviewScalarFieldEnum)[keyof typeof FlashcardReviewScalarFieldEnum]
 
 
+  export const UserScalarFieldEnum: {
+    id: 'id',
+    userKey: 'userKey',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+  export const StreakScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    currentStreak: 'currentStreak',
+    longestStreak: 'longestStreak',
+    lastStudyDate: 'lastStudyDate',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type StreakScalarFieldEnum = (typeof StreakScalarFieldEnum)[keyof typeof StreakScalarFieldEnum]
+
+
+  export const PointsScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    action: 'action',
+    points: 'points',
+    metadata: 'metadata',
+    earnedAt: 'earnedAt'
+  };
+
+  export type PointsScalarFieldEnum = (typeof PointsScalarFieldEnum)[keyof typeof PointsScalarFieldEnum]
+
+
+  export const LevelScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    currentLevel: 'currentLevel',
+    totalPoints: 'totalPoints',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type LevelScalarFieldEnum = (typeof LevelScalarFieldEnum)[keyof typeof LevelScalarFieldEnum]
+
+
+  export const GoalScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    type: 'type',
+    target: 'target',
+    progress: 'progress',
+    period: 'period',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    completedAt: 'completedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type GoalScalarFieldEnum = (typeof GoalScalarFieldEnum)[keyof typeof GoalScalarFieldEnum]
+
+
+  export const StudySessionScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    date: 'date',
+    duration: 'duration',
+    textsRead: 'textsRead',
+    flashcardsReviewed: 'flashcardsReviewed',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type StudySessionScalarFieldEnum = (typeof StudySessionScalarFieldEnum)[keyof typeof StudySessionScalarFieldEnum]
+
+
   export const StudiedTextScalarFieldEnum: {
     id: 'id',
     userKey: 'userKey',
+    userId: 'userId',
     ref: 'ref',
     heRef: 'heRef',
     url: 'url',
@@ -5582,6 +13236,14 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
@@ -5596,6 +13258,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -5684,6 +13355,62 @@ export namespace Prisma {
    * Reference to a field of type 'Grade[]'
    */
   export type ListEnumGradeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Grade[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PointAction'
+   */
+  export type EnumPointActionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PointAction'>
+    
+
+
+  /**
+   * Reference to a field of type 'PointAction[]'
+   */
+  export type ListEnumPointActionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PointAction[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'GoalType'
+   */
+  export type EnumGoalTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GoalType'>
+    
+
+
+  /**
+   * Reference to a field of type 'GoalType[]'
+   */
+  export type ListEnumGoalTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GoalType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'GoalPeriod'
+   */
+  export type EnumGoalPeriodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GoalPeriod'>
+    
+
+
+  /**
+   * Reference to a field of type 'GoalPeriod[]'
+   */
+  export type ListEnumGoalPeriodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GoalPeriod[]'>
     
   /**
    * Deep Input Types
@@ -5886,29 +13613,449 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"FlashcardReview"> | Date | string
   }
 
+  export type UserWhereInput = {
+    AND?: UserWhereInput | UserWhereInput[]
+    OR?: UserWhereInput[]
+    NOT?: UserWhereInput | UserWhereInput[]
+    id?: StringFilter<"User"> | string
+    userKey?: StringFilter<"User"> | string
+    createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
+    streak?: XOR<StreakNullableScalarRelationFilter, StreakWhereInput> | null
+    points?: PointsListRelationFilter
+    level?: XOR<LevelNullableScalarRelationFilter, LevelWhereInput> | null
+    goals?: GoalListRelationFilter
+    studySessions?: StudySessionListRelationFilter
+    studiedTexts?: StudiedTextListRelationFilter
+  }
+
+  export type UserOrderByWithRelationInput = {
+    id?: SortOrder
+    userKey?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    streak?: StreakOrderByWithRelationInput
+    points?: PointsOrderByRelationAggregateInput
+    level?: LevelOrderByWithRelationInput
+    goals?: GoalOrderByRelationAggregateInput
+    studySessions?: StudySessionOrderByRelationAggregateInput
+    studiedTexts?: StudiedTextOrderByRelationAggregateInput
+  }
+
+  export type UserWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userKey?: string
+    AND?: UserWhereInput | UserWhereInput[]
+    OR?: UserWhereInput[]
+    NOT?: UserWhereInput | UserWhereInput[]
+    createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
+    streak?: XOR<StreakNullableScalarRelationFilter, StreakWhereInput> | null
+    points?: PointsListRelationFilter
+    level?: XOR<LevelNullableScalarRelationFilter, LevelWhereInput> | null
+    goals?: GoalListRelationFilter
+    studySessions?: StudySessionListRelationFilter
+    studiedTexts?: StudiedTextListRelationFilter
+  }, "id" | "userKey">
+
+  export type UserOrderByWithAggregationInput = {
+    id?: SortOrder
+    userKey?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UserCountOrderByAggregateInput
+    _max?: UserMaxOrderByAggregateInput
+    _min?: UserMinOrderByAggregateInput
+  }
+
+  export type UserScalarWhereWithAggregatesInput = {
+    AND?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
+    OR?: UserScalarWhereWithAggregatesInput[]
+    NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"User"> | string
+    userKey?: StringWithAggregatesFilter<"User"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+  }
+
+  export type StreakWhereInput = {
+    AND?: StreakWhereInput | StreakWhereInput[]
+    OR?: StreakWhereInput[]
+    NOT?: StreakWhereInput | StreakWhereInput[]
+    id?: StringFilter<"Streak"> | string
+    userId?: StringFilter<"Streak"> | string
+    currentStreak?: IntFilter<"Streak"> | number
+    longestStreak?: IntFilter<"Streak"> | number
+    lastStudyDate?: DateTimeNullableFilter<"Streak"> | Date | string | null
+    createdAt?: DateTimeFilter<"Streak"> | Date | string
+    updatedAt?: DateTimeFilter<"Streak"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type StreakOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    currentStreak?: SortOrder
+    longestStreak?: SortOrder
+    lastStudyDate?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type StreakWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId?: string
+    AND?: StreakWhereInput | StreakWhereInput[]
+    OR?: StreakWhereInput[]
+    NOT?: StreakWhereInput | StreakWhereInput[]
+    currentStreak?: IntFilter<"Streak"> | number
+    longestStreak?: IntFilter<"Streak"> | number
+    lastStudyDate?: DateTimeNullableFilter<"Streak"> | Date | string | null
+    createdAt?: DateTimeFilter<"Streak"> | Date | string
+    updatedAt?: DateTimeFilter<"Streak"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId">
+
+  export type StreakOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    currentStreak?: SortOrder
+    longestStreak?: SortOrder
+    lastStudyDate?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: StreakCountOrderByAggregateInput
+    _avg?: StreakAvgOrderByAggregateInput
+    _max?: StreakMaxOrderByAggregateInput
+    _min?: StreakMinOrderByAggregateInput
+    _sum?: StreakSumOrderByAggregateInput
+  }
+
+  export type StreakScalarWhereWithAggregatesInput = {
+    AND?: StreakScalarWhereWithAggregatesInput | StreakScalarWhereWithAggregatesInput[]
+    OR?: StreakScalarWhereWithAggregatesInput[]
+    NOT?: StreakScalarWhereWithAggregatesInput | StreakScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Streak"> | string
+    userId?: StringWithAggregatesFilter<"Streak"> | string
+    currentStreak?: IntWithAggregatesFilter<"Streak"> | number
+    longestStreak?: IntWithAggregatesFilter<"Streak"> | number
+    lastStudyDate?: DateTimeNullableWithAggregatesFilter<"Streak"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Streak"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Streak"> | Date | string
+  }
+
+  export type PointsWhereInput = {
+    AND?: PointsWhereInput | PointsWhereInput[]
+    OR?: PointsWhereInput[]
+    NOT?: PointsWhereInput | PointsWhereInput[]
+    id?: StringFilter<"Points"> | string
+    userId?: StringFilter<"Points"> | string
+    action?: EnumPointActionFilter<"Points"> | $Enums.PointAction
+    points?: IntFilter<"Points"> | number
+    metadata?: JsonNullableFilter<"Points">
+    earnedAt?: DateTimeFilter<"Points"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type PointsOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    action?: SortOrder
+    points?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    earnedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type PointsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PointsWhereInput | PointsWhereInput[]
+    OR?: PointsWhereInput[]
+    NOT?: PointsWhereInput | PointsWhereInput[]
+    userId?: StringFilter<"Points"> | string
+    action?: EnumPointActionFilter<"Points"> | $Enums.PointAction
+    points?: IntFilter<"Points"> | number
+    metadata?: JsonNullableFilter<"Points">
+    earnedAt?: DateTimeFilter<"Points"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type PointsOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    action?: SortOrder
+    points?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    earnedAt?: SortOrder
+    _count?: PointsCountOrderByAggregateInput
+    _avg?: PointsAvgOrderByAggregateInput
+    _max?: PointsMaxOrderByAggregateInput
+    _min?: PointsMinOrderByAggregateInput
+    _sum?: PointsSumOrderByAggregateInput
+  }
+
+  export type PointsScalarWhereWithAggregatesInput = {
+    AND?: PointsScalarWhereWithAggregatesInput | PointsScalarWhereWithAggregatesInput[]
+    OR?: PointsScalarWhereWithAggregatesInput[]
+    NOT?: PointsScalarWhereWithAggregatesInput | PointsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Points"> | string
+    userId?: StringWithAggregatesFilter<"Points"> | string
+    action?: EnumPointActionWithAggregatesFilter<"Points"> | $Enums.PointAction
+    points?: IntWithAggregatesFilter<"Points"> | number
+    metadata?: JsonNullableWithAggregatesFilter<"Points">
+    earnedAt?: DateTimeWithAggregatesFilter<"Points"> | Date | string
+  }
+
+  export type LevelWhereInput = {
+    AND?: LevelWhereInput | LevelWhereInput[]
+    OR?: LevelWhereInput[]
+    NOT?: LevelWhereInput | LevelWhereInput[]
+    id?: StringFilter<"Level"> | string
+    userId?: StringFilter<"Level"> | string
+    currentLevel?: IntFilter<"Level"> | number
+    totalPoints?: IntFilter<"Level"> | number
+    createdAt?: DateTimeFilter<"Level"> | Date | string
+    updatedAt?: DateTimeFilter<"Level"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type LevelOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    currentLevel?: SortOrder
+    totalPoints?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type LevelWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId?: string
+    AND?: LevelWhereInput | LevelWhereInput[]
+    OR?: LevelWhereInput[]
+    NOT?: LevelWhereInput | LevelWhereInput[]
+    currentLevel?: IntFilter<"Level"> | number
+    totalPoints?: IntFilter<"Level"> | number
+    createdAt?: DateTimeFilter<"Level"> | Date | string
+    updatedAt?: DateTimeFilter<"Level"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId">
+
+  export type LevelOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    currentLevel?: SortOrder
+    totalPoints?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: LevelCountOrderByAggregateInput
+    _avg?: LevelAvgOrderByAggregateInput
+    _max?: LevelMaxOrderByAggregateInput
+    _min?: LevelMinOrderByAggregateInput
+    _sum?: LevelSumOrderByAggregateInput
+  }
+
+  export type LevelScalarWhereWithAggregatesInput = {
+    AND?: LevelScalarWhereWithAggregatesInput | LevelScalarWhereWithAggregatesInput[]
+    OR?: LevelScalarWhereWithAggregatesInput[]
+    NOT?: LevelScalarWhereWithAggregatesInput | LevelScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Level"> | string
+    userId?: StringWithAggregatesFilter<"Level"> | string
+    currentLevel?: IntWithAggregatesFilter<"Level"> | number
+    totalPoints?: IntWithAggregatesFilter<"Level"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Level"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Level"> | Date | string
+  }
+
+  export type GoalWhereInput = {
+    AND?: GoalWhereInput | GoalWhereInput[]
+    OR?: GoalWhereInput[]
+    NOT?: GoalWhereInput | GoalWhereInput[]
+    id?: StringFilter<"Goal"> | string
+    userId?: StringFilter<"Goal"> | string
+    type?: EnumGoalTypeFilter<"Goal"> | $Enums.GoalType
+    target?: IntFilter<"Goal"> | number
+    progress?: IntFilter<"Goal"> | number
+    period?: EnumGoalPeriodFilter<"Goal"> | $Enums.GoalPeriod
+    startDate?: DateTimeFilter<"Goal"> | Date | string
+    endDate?: DateTimeNullableFilter<"Goal"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"Goal"> | Date | string | null
+    createdAt?: DateTimeFilter<"Goal"> | Date | string
+    updatedAt?: DateTimeFilter<"Goal"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type GoalOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    target?: SortOrder
+    progress?: SortOrder
+    period?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type GoalWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: GoalWhereInput | GoalWhereInput[]
+    OR?: GoalWhereInput[]
+    NOT?: GoalWhereInput | GoalWhereInput[]
+    userId?: StringFilter<"Goal"> | string
+    type?: EnumGoalTypeFilter<"Goal"> | $Enums.GoalType
+    target?: IntFilter<"Goal"> | number
+    progress?: IntFilter<"Goal"> | number
+    period?: EnumGoalPeriodFilter<"Goal"> | $Enums.GoalPeriod
+    startDate?: DateTimeFilter<"Goal"> | Date | string
+    endDate?: DateTimeNullableFilter<"Goal"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"Goal"> | Date | string | null
+    createdAt?: DateTimeFilter<"Goal"> | Date | string
+    updatedAt?: DateTimeFilter<"Goal"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type GoalOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    target?: SortOrder
+    progress?: SortOrder
+    period?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: GoalCountOrderByAggregateInput
+    _avg?: GoalAvgOrderByAggregateInput
+    _max?: GoalMaxOrderByAggregateInput
+    _min?: GoalMinOrderByAggregateInput
+    _sum?: GoalSumOrderByAggregateInput
+  }
+
+  export type GoalScalarWhereWithAggregatesInput = {
+    AND?: GoalScalarWhereWithAggregatesInput | GoalScalarWhereWithAggregatesInput[]
+    OR?: GoalScalarWhereWithAggregatesInput[]
+    NOT?: GoalScalarWhereWithAggregatesInput | GoalScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Goal"> | string
+    userId?: StringWithAggregatesFilter<"Goal"> | string
+    type?: EnumGoalTypeWithAggregatesFilter<"Goal"> | $Enums.GoalType
+    target?: IntWithAggregatesFilter<"Goal"> | number
+    progress?: IntWithAggregatesFilter<"Goal"> | number
+    period?: EnumGoalPeriodWithAggregatesFilter<"Goal"> | $Enums.GoalPeriod
+    startDate?: DateTimeWithAggregatesFilter<"Goal"> | Date | string
+    endDate?: DateTimeNullableWithAggregatesFilter<"Goal"> | Date | string | null
+    completedAt?: DateTimeNullableWithAggregatesFilter<"Goal"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Goal"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Goal"> | Date | string
+  }
+
+  export type StudySessionWhereInput = {
+    AND?: StudySessionWhereInput | StudySessionWhereInput[]
+    OR?: StudySessionWhereInput[]
+    NOT?: StudySessionWhereInput | StudySessionWhereInput[]
+    id?: StringFilter<"StudySession"> | string
+    userId?: StringFilter<"StudySession"> | string
+    date?: DateTimeFilter<"StudySession"> | Date | string
+    duration?: IntFilter<"StudySession"> | number
+    textsRead?: IntFilter<"StudySession"> | number
+    flashcardsReviewed?: IntFilter<"StudySession"> | number
+    createdAt?: DateTimeFilter<"StudySession"> | Date | string
+    updatedAt?: DateTimeFilter<"StudySession"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type StudySessionOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    date?: SortOrder
+    duration?: SortOrder
+    textsRead?: SortOrder
+    flashcardsReviewed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type StudySessionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_date?: StudySessionUserIdDateCompoundUniqueInput
+    AND?: StudySessionWhereInput | StudySessionWhereInput[]
+    OR?: StudySessionWhereInput[]
+    NOT?: StudySessionWhereInput | StudySessionWhereInput[]
+    userId?: StringFilter<"StudySession"> | string
+    date?: DateTimeFilter<"StudySession"> | Date | string
+    duration?: IntFilter<"StudySession"> | number
+    textsRead?: IntFilter<"StudySession"> | number
+    flashcardsReviewed?: IntFilter<"StudySession"> | number
+    createdAt?: DateTimeFilter<"StudySession"> | Date | string
+    updatedAt?: DateTimeFilter<"StudySession"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId_date">
+
+  export type StudySessionOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    date?: SortOrder
+    duration?: SortOrder
+    textsRead?: SortOrder
+    flashcardsReviewed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: StudySessionCountOrderByAggregateInput
+    _avg?: StudySessionAvgOrderByAggregateInput
+    _max?: StudySessionMaxOrderByAggregateInput
+    _min?: StudySessionMinOrderByAggregateInput
+    _sum?: StudySessionSumOrderByAggregateInput
+  }
+
+  export type StudySessionScalarWhereWithAggregatesInput = {
+    AND?: StudySessionScalarWhereWithAggregatesInput | StudySessionScalarWhereWithAggregatesInput[]
+    OR?: StudySessionScalarWhereWithAggregatesInput[]
+    NOT?: StudySessionScalarWhereWithAggregatesInput | StudySessionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"StudySession"> | string
+    userId?: StringWithAggregatesFilter<"StudySession"> | string
+    date?: DateTimeWithAggregatesFilter<"StudySession"> | Date | string
+    duration?: IntWithAggregatesFilter<"StudySession"> | number
+    textsRead?: IntWithAggregatesFilter<"StudySession"> | number
+    flashcardsReviewed?: IntWithAggregatesFilter<"StudySession"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"StudySession"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"StudySession"> | Date | string
+  }
+
   export type StudiedTextWhereInput = {
     AND?: StudiedTextWhereInput | StudiedTextWhereInput[]
     OR?: StudiedTextWhereInput[]
     NOT?: StudiedTextWhereInput | StudiedTextWhereInput[]
     id?: StringFilter<"StudiedText"> | string
     userKey?: StringFilter<"StudiedText"> | string
+    userId?: StringNullableFilter<"StudiedText"> | string | null
     ref?: StringFilter<"StudiedText"> | string
     heRef?: StringNullableFilter<"StudiedText"> | string | null
     url?: StringNullableFilter<"StudiedText"> | string | null
     title?: StringNullableFilter<"StudiedText"> | string | null
     snippet?: StringNullableFilter<"StudiedText"> | string | null
     createdAt?: DateTimeFilter<"StudiedText"> | Date | string
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }
 
   export type StudiedTextOrderByWithRelationInput = {
     id?: SortOrder
     userKey?: SortOrder
+    userId?: SortOrderInput | SortOrder
     ref?: SortOrder
     heRef?: SortOrderInput | SortOrder
     url?: SortOrderInput | SortOrder
     title?: SortOrderInput | SortOrder
     snippet?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    user?: UserOrderByWithRelationInput
   }
 
   export type StudiedTextWhereUniqueInput = Prisma.AtLeast<{
@@ -5918,17 +14065,20 @@ export namespace Prisma {
     OR?: StudiedTextWhereInput[]
     NOT?: StudiedTextWhereInput | StudiedTextWhereInput[]
     userKey?: StringFilter<"StudiedText"> | string
+    userId?: StringNullableFilter<"StudiedText"> | string | null
     ref?: StringFilter<"StudiedText"> | string
     heRef?: StringNullableFilter<"StudiedText"> | string | null
     url?: StringNullableFilter<"StudiedText"> | string | null
     title?: StringNullableFilter<"StudiedText"> | string | null
     snippet?: StringNullableFilter<"StudiedText"> | string | null
     createdAt?: DateTimeFilter<"StudiedText"> | Date | string
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }, "id" | "userKey_ref">
 
   export type StudiedTextOrderByWithAggregationInput = {
     id?: SortOrder
     userKey?: SortOrder
+    userId?: SortOrderInput | SortOrder
     ref?: SortOrder
     heRef?: SortOrderInput | SortOrder
     url?: SortOrderInput | SortOrder
@@ -5946,6 +14096,7 @@ export namespace Prisma {
     NOT?: StudiedTextScalarWhereWithAggregatesInput | StudiedTextScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"StudiedText"> | string
     userKey?: StringWithAggregatesFilter<"StudiedText"> | string
+    userId?: StringNullableWithAggregatesFilter<"StudiedText"> | string | null
     ref?: StringWithAggregatesFilter<"StudiedText"> | string
     heRef?: StringNullableWithAggregatesFilter<"StudiedText"> | string | null
     url?: StringNullableWithAggregatesFilter<"StudiedText"> | string | null
@@ -6164,6 +14315,445 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UserCreateInput = {
+    id?: string
+    userKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    streak?: StreakCreateNestedOneWithoutUserInput
+    points?: PointsCreateNestedManyWithoutUserInput
+    level?: LevelCreateNestedOneWithoutUserInput
+    goals?: GoalCreateNestedManyWithoutUserInput
+    studySessions?: StudySessionCreateNestedManyWithoutUserInput
+    studiedTexts?: StudiedTextCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateInput = {
+    id?: string
+    userKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    streak?: StreakUncheckedCreateNestedOneWithoutUserInput
+    points?: PointsUncheckedCreateNestedManyWithoutUserInput
+    level?: LevelUncheckedCreateNestedOneWithoutUserInput
+    goals?: GoalUncheckedCreateNestedManyWithoutUserInput
+    studySessions?: StudySessionUncheckedCreateNestedManyWithoutUserInput
+    studiedTexts?: StudiedTextUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    streak?: StreakUpdateOneWithoutUserNestedInput
+    points?: PointsUpdateManyWithoutUserNestedInput
+    level?: LevelUpdateOneWithoutUserNestedInput
+    goals?: GoalUpdateManyWithoutUserNestedInput
+    studySessions?: StudySessionUpdateManyWithoutUserNestedInput
+    studiedTexts?: StudiedTextUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    streak?: StreakUncheckedUpdateOneWithoutUserNestedInput
+    points?: PointsUncheckedUpdateManyWithoutUserNestedInput
+    level?: LevelUncheckedUpdateOneWithoutUserNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutUserNestedInput
+    studySessions?: StudySessionUncheckedUpdateManyWithoutUserNestedInput
+    studiedTexts?: StudiedTextUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateManyInput = {
+    id?: string
+    userKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StreakCreateInput = {
+    id?: string
+    currentStreak?: number
+    longestStreak?: number
+    lastStudyDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutStreakInput
+  }
+
+  export type StreakUncheckedCreateInput = {
+    id?: string
+    userId: string
+    currentStreak?: number
+    longestStreak?: number
+    lastStudyDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StreakUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    currentStreak?: IntFieldUpdateOperationsInput | number
+    longestStreak?: IntFieldUpdateOperationsInput | number
+    lastStudyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutStreakNestedInput
+  }
+
+  export type StreakUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    currentStreak?: IntFieldUpdateOperationsInput | number
+    longestStreak?: IntFieldUpdateOperationsInput | number
+    lastStudyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StreakCreateManyInput = {
+    id?: string
+    userId: string
+    currentStreak?: number
+    longestStreak?: number
+    lastStudyDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StreakUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    currentStreak?: IntFieldUpdateOperationsInput | number
+    longestStreak?: IntFieldUpdateOperationsInput | number
+    lastStudyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StreakUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    currentStreak?: IntFieldUpdateOperationsInput | number
+    longestStreak?: IntFieldUpdateOperationsInput | number
+    lastStudyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PointsCreateInput = {
+    id?: string
+    action: $Enums.PointAction
+    points: number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    earnedAt?: Date | string
+    user: UserCreateNestedOneWithoutPointsInput
+  }
+
+  export type PointsUncheckedCreateInput = {
+    id?: string
+    userId: string
+    action: $Enums.PointAction
+    points: number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    earnedAt?: Date | string
+  }
+
+  export type PointsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    action?: EnumPointActionFieldUpdateOperationsInput | $Enums.PointAction
+    points?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    earnedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPointsNestedInput
+  }
+
+  export type PointsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    action?: EnumPointActionFieldUpdateOperationsInput | $Enums.PointAction
+    points?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    earnedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PointsCreateManyInput = {
+    id?: string
+    userId: string
+    action: $Enums.PointAction
+    points: number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    earnedAt?: Date | string
+  }
+
+  export type PointsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    action?: EnumPointActionFieldUpdateOperationsInput | $Enums.PointAction
+    points?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    earnedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PointsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    action?: EnumPointActionFieldUpdateOperationsInput | $Enums.PointAction
+    points?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    earnedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LevelCreateInput = {
+    id?: string
+    currentLevel?: number
+    totalPoints?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutLevelInput
+  }
+
+  export type LevelUncheckedCreateInput = {
+    id?: string
+    userId: string
+    currentLevel?: number
+    totalPoints?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LevelUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    currentLevel?: IntFieldUpdateOperationsInput | number
+    totalPoints?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutLevelNestedInput
+  }
+
+  export type LevelUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    currentLevel?: IntFieldUpdateOperationsInput | number
+    totalPoints?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LevelCreateManyInput = {
+    id?: string
+    userId: string
+    currentLevel?: number
+    totalPoints?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LevelUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    currentLevel?: IntFieldUpdateOperationsInput | number
+    totalPoints?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LevelUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    currentLevel?: IntFieldUpdateOperationsInput | number
+    totalPoints?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GoalCreateInput = {
+    id?: string
+    type: $Enums.GoalType
+    target: number
+    progress?: number
+    period: $Enums.GoalPeriod
+    startDate?: Date | string
+    endDate?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutGoalsInput
+  }
+
+  export type GoalUncheckedCreateInput = {
+    id?: string
+    userId: string
+    type: $Enums.GoalType
+    target: number
+    progress?: number
+    period: $Enums.GoalPeriod
+    startDate?: Date | string
+    endDate?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GoalUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumGoalTypeFieldUpdateOperationsInput | $Enums.GoalType
+    target?: IntFieldUpdateOperationsInput | number
+    progress?: IntFieldUpdateOperationsInput | number
+    period?: EnumGoalPeriodFieldUpdateOperationsInput | $Enums.GoalPeriod
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutGoalsNestedInput
+  }
+
+  export type GoalUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: EnumGoalTypeFieldUpdateOperationsInput | $Enums.GoalType
+    target?: IntFieldUpdateOperationsInput | number
+    progress?: IntFieldUpdateOperationsInput | number
+    period?: EnumGoalPeriodFieldUpdateOperationsInput | $Enums.GoalPeriod
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GoalCreateManyInput = {
+    id?: string
+    userId: string
+    type: $Enums.GoalType
+    target: number
+    progress?: number
+    period: $Enums.GoalPeriod
+    startDate?: Date | string
+    endDate?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GoalUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumGoalTypeFieldUpdateOperationsInput | $Enums.GoalType
+    target?: IntFieldUpdateOperationsInput | number
+    progress?: IntFieldUpdateOperationsInput | number
+    period?: EnumGoalPeriodFieldUpdateOperationsInput | $Enums.GoalPeriod
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GoalUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: EnumGoalTypeFieldUpdateOperationsInput | $Enums.GoalType
+    target?: IntFieldUpdateOperationsInput | number
+    progress?: IntFieldUpdateOperationsInput | number
+    period?: EnumGoalPeriodFieldUpdateOperationsInput | $Enums.GoalPeriod
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudySessionCreateInput = {
+    id?: string
+    date: Date | string
+    duration?: number
+    textsRead?: number
+    flashcardsReviewed?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutStudySessionsInput
+  }
+
+  export type StudySessionUncheckedCreateInput = {
+    id?: string
+    userId: string
+    date: Date | string
+    duration?: number
+    textsRead?: number
+    flashcardsReviewed?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudySessionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    duration?: IntFieldUpdateOperationsInput | number
+    textsRead?: IntFieldUpdateOperationsInput | number
+    flashcardsReviewed?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutStudySessionsNestedInput
+  }
+
+  export type StudySessionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    duration?: IntFieldUpdateOperationsInput | number
+    textsRead?: IntFieldUpdateOperationsInput | number
+    flashcardsReviewed?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudySessionCreateManyInput = {
+    id?: string
+    userId: string
+    date: Date | string
+    duration?: number
+    textsRead?: number
+    flashcardsReviewed?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudySessionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    duration?: IntFieldUpdateOperationsInput | number
+    textsRead?: IntFieldUpdateOperationsInput | number
+    flashcardsReviewed?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudySessionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    duration?: IntFieldUpdateOperationsInput | number
+    textsRead?: IntFieldUpdateOperationsInput | number
+    flashcardsReviewed?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StudiedTextCreateInput = {
     id?: string
     userKey: string
@@ -6173,11 +14763,13 @@ export namespace Prisma {
     title?: string | null
     snippet?: string | null
     createdAt?: Date | string
+    user?: UserCreateNestedOneWithoutStudiedTextsInput
   }
 
   export type StudiedTextUncheckedCreateInput = {
     id?: string
     userKey: string
+    userId?: string | null
     ref: string
     heRef?: string | null
     url?: string | null
@@ -6195,11 +14787,13 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     snippet?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutStudiedTextsNestedInput
   }
 
   export type StudiedTextUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     userKey?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     ref?: StringFieldUpdateOperationsInput | string
     heRef?: NullableStringFieldUpdateOperationsInput | string | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
@@ -6211,6 +14805,7 @@ export namespace Prisma {
   export type StudiedTextCreateManyInput = {
     id?: string
     userKey: string
+    userId?: string | null
     ref: string
     heRef?: string | null
     url?: string | null
@@ -6233,6 +14828,7 @@ export namespace Prisma {
   export type StudiedTextUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     userKey?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     ref?: StringFieldUpdateOperationsInput | string
     heRef?: NullableStringFieldUpdateOperationsInput | string | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
@@ -6542,6 +15138,394 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type StreakNullableScalarRelationFilter = {
+    is?: StreakWhereInput | null
+    isNot?: StreakWhereInput | null
+  }
+
+  export type PointsListRelationFilter = {
+    every?: PointsWhereInput
+    some?: PointsWhereInput
+    none?: PointsWhereInput
+  }
+
+  export type LevelNullableScalarRelationFilter = {
+    is?: LevelWhereInput | null
+    isNot?: LevelWhereInput | null
+  }
+
+  export type GoalListRelationFilter = {
+    every?: GoalWhereInput
+    some?: GoalWhereInput
+    none?: GoalWhereInput
+  }
+
+  export type StudySessionListRelationFilter = {
+    every?: StudySessionWhereInput
+    some?: StudySessionWhereInput
+    none?: StudySessionWhereInput
+  }
+
+  export type StudiedTextListRelationFilter = {
+    every?: StudiedTextWhereInput
+    some?: StudiedTextWhereInput
+    none?: StudiedTextWhereInput
+  }
+
+  export type PointsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type GoalOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type StudySessionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type StudiedTextOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserCountOrderByAggregateInput = {
+    id?: SortOrder
+    userKey?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userKey?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserMinOrderByAggregateInput = {
+    id?: SortOrder
+    userKey?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type StreakCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    currentStreak?: SortOrder
+    longestStreak?: SortOrder
+    lastStudyDate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StreakAvgOrderByAggregateInput = {
+    currentStreak?: SortOrder
+    longestStreak?: SortOrder
+  }
+
+  export type StreakMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    currentStreak?: SortOrder
+    longestStreak?: SortOrder
+    lastStudyDate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StreakMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    currentStreak?: SortOrder
+    longestStreak?: SortOrder
+    lastStudyDate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StreakSumOrderByAggregateInput = {
+    currentStreak?: SortOrder
+    longestStreak?: SortOrder
+  }
+
+  export type EnumPointActionFilter<$PrismaModel = never> = {
+    equals?: $Enums.PointAction | EnumPointActionFieldRefInput<$PrismaModel>
+    in?: $Enums.PointAction[] | ListEnumPointActionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PointAction[] | ListEnumPointActionFieldRefInput<$PrismaModel>
+    not?: NestedEnumPointActionFilter<$PrismaModel> | $Enums.PointAction
+  }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type PointsCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    action?: SortOrder
+    points?: SortOrder
+    metadata?: SortOrder
+    earnedAt?: SortOrder
+  }
+
+  export type PointsAvgOrderByAggregateInput = {
+    points?: SortOrder
+  }
+
+  export type PointsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    action?: SortOrder
+    points?: SortOrder
+    earnedAt?: SortOrder
+  }
+
+  export type PointsMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    action?: SortOrder
+    points?: SortOrder
+    earnedAt?: SortOrder
+  }
+
+  export type PointsSumOrderByAggregateInput = {
+    points?: SortOrder
+  }
+
+  export type EnumPointActionWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PointAction | EnumPointActionFieldRefInput<$PrismaModel>
+    in?: $Enums.PointAction[] | ListEnumPointActionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PointAction[] | ListEnumPointActionFieldRefInput<$PrismaModel>
+    not?: NestedEnumPointActionWithAggregatesFilter<$PrismaModel> | $Enums.PointAction
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPointActionFilter<$PrismaModel>
+    _max?: NestedEnumPointActionFilter<$PrismaModel>
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
+  export type LevelCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    currentLevel?: SortOrder
+    totalPoints?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LevelAvgOrderByAggregateInput = {
+    currentLevel?: SortOrder
+    totalPoints?: SortOrder
+  }
+
+  export type LevelMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    currentLevel?: SortOrder
+    totalPoints?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LevelMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    currentLevel?: SortOrder
+    totalPoints?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LevelSumOrderByAggregateInput = {
+    currentLevel?: SortOrder
+    totalPoints?: SortOrder
+  }
+
+  export type EnumGoalTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.GoalType | EnumGoalTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.GoalType[] | ListEnumGoalTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GoalType[] | ListEnumGoalTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumGoalTypeFilter<$PrismaModel> | $Enums.GoalType
+  }
+
+  export type EnumGoalPeriodFilter<$PrismaModel = never> = {
+    equals?: $Enums.GoalPeriod | EnumGoalPeriodFieldRefInput<$PrismaModel>
+    in?: $Enums.GoalPeriod[] | ListEnumGoalPeriodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GoalPeriod[] | ListEnumGoalPeriodFieldRefInput<$PrismaModel>
+    not?: NestedEnumGoalPeriodFilter<$PrismaModel> | $Enums.GoalPeriod
+  }
+
+  export type GoalCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    target?: SortOrder
+    progress?: SortOrder
+    period?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    completedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GoalAvgOrderByAggregateInput = {
+    target?: SortOrder
+    progress?: SortOrder
+  }
+
+  export type GoalMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    target?: SortOrder
+    progress?: SortOrder
+    period?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    completedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GoalMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    target?: SortOrder
+    progress?: SortOrder
+    period?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    completedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GoalSumOrderByAggregateInput = {
+    target?: SortOrder
+    progress?: SortOrder
+  }
+
+  export type EnumGoalTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GoalType | EnumGoalTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.GoalType[] | ListEnumGoalTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GoalType[] | ListEnumGoalTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumGoalTypeWithAggregatesFilter<$PrismaModel> | $Enums.GoalType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGoalTypeFilter<$PrismaModel>
+    _max?: NestedEnumGoalTypeFilter<$PrismaModel>
+  }
+
+  export type EnumGoalPeriodWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GoalPeriod | EnumGoalPeriodFieldRefInput<$PrismaModel>
+    in?: $Enums.GoalPeriod[] | ListEnumGoalPeriodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GoalPeriod[] | ListEnumGoalPeriodFieldRefInput<$PrismaModel>
+    not?: NestedEnumGoalPeriodWithAggregatesFilter<$PrismaModel> | $Enums.GoalPeriod
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGoalPeriodFilter<$PrismaModel>
+    _max?: NestedEnumGoalPeriodFilter<$PrismaModel>
+  }
+
+  export type StudySessionUserIdDateCompoundUniqueInput = {
+    userId: string
+    date: Date | string
+  }
+
+  export type StudySessionCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    date?: SortOrder
+    duration?: SortOrder
+    textsRead?: SortOrder
+    flashcardsReviewed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StudySessionAvgOrderByAggregateInput = {
+    duration?: SortOrder
+    textsRead?: SortOrder
+    flashcardsReviewed?: SortOrder
+  }
+
+  export type StudySessionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    date?: SortOrder
+    duration?: SortOrder
+    textsRead?: SortOrder
+    flashcardsReviewed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StudySessionMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    date?: SortOrder
+    duration?: SortOrder
+    textsRead?: SortOrder
+    flashcardsReviewed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StudySessionSumOrderByAggregateInput = {
+    duration?: SortOrder
+    textsRead?: SortOrder
+    flashcardsReviewed?: SortOrder
+  }
+
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -6557,6 +15541,11 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
   export type StudiedTextUserKeyRefCompoundUniqueInput = {
     userKey: string
     ref: string
@@ -6565,6 +15554,7 @@ export namespace Prisma {
   export type StudiedTextCountOrderByAggregateInput = {
     id?: SortOrder
     userKey?: SortOrder
+    userId?: SortOrder
     ref?: SortOrder
     heRef?: SortOrder
     url?: SortOrder
@@ -6576,6 +15566,7 @@ export namespace Prisma {
   export type StudiedTextMaxOrderByAggregateInput = {
     id?: SortOrder
     userKey?: SortOrder
+    userId?: SortOrder
     ref?: SortOrder
     heRef?: SortOrder
     url?: SortOrder
@@ -6587,6 +15578,7 @@ export namespace Prisma {
   export type StudiedTextMinOrderByAggregateInput = {
     id?: SortOrder
     userKey?: SortOrder
+    userId?: SortOrder
     ref?: SortOrder
     heRef?: SortOrder
     url?: SortOrder
@@ -6705,8 +15697,338 @@ export namespace Prisma {
     update?: XOR<XOR<FlashcardUpdateToOneWithWhereWithoutReviewsInput, FlashcardUpdateWithoutReviewsInput>, FlashcardUncheckedUpdateWithoutReviewsInput>
   }
 
+  export type StreakCreateNestedOneWithoutUserInput = {
+    create?: XOR<StreakCreateWithoutUserInput, StreakUncheckedCreateWithoutUserInput>
+    connectOrCreate?: StreakCreateOrConnectWithoutUserInput
+    connect?: StreakWhereUniqueInput
+  }
+
+  export type PointsCreateNestedManyWithoutUserInput = {
+    create?: XOR<PointsCreateWithoutUserInput, PointsUncheckedCreateWithoutUserInput> | PointsCreateWithoutUserInput[] | PointsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PointsCreateOrConnectWithoutUserInput | PointsCreateOrConnectWithoutUserInput[]
+    createMany?: PointsCreateManyUserInputEnvelope
+    connect?: PointsWhereUniqueInput | PointsWhereUniqueInput[]
+  }
+
+  export type LevelCreateNestedOneWithoutUserInput = {
+    create?: XOR<LevelCreateWithoutUserInput, LevelUncheckedCreateWithoutUserInput>
+    connectOrCreate?: LevelCreateOrConnectWithoutUserInput
+    connect?: LevelWhereUniqueInput
+  }
+
+  export type GoalCreateNestedManyWithoutUserInput = {
+    create?: XOR<GoalCreateWithoutUserInput, GoalUncheckedCreateWithoutUserInput> | GoalCreateWithoutUserInput[] | GoalUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: GoalCreateOrConnectWithoutUserInput | GoalCreateOrConnectWithoutUserInput[]
+    createMany?: GoalCreateManyUserInputEnvelope
+    connect?: GoalWhereUniqueInput | GoalWhereUniqueInput[]
+  }
+
+  export type StudySessionCreateNestedManyWithoutUserInput = {
+    create?: XOR<StudySessionCreateWithoutUserInput, StudySessionUncheckedCreateWithoutUserInput> | StudySessionCreateWithoutUserInput[] | StudySessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: StudySessionCreateOrConnectWithoutUserInput | StudySessionCreateOrConnectWithoutUserInput[]
+    createMany?: StudySessionCreateManyUserInputEnvelope
+    connect?: StudySessionWhereUniqueInput | StudySessionWhereUniqueInput[]
+  }
+
+  export type StudiedTextCreateNestedManyWithoutUserInput = {
+    create?: XOR<StudiedTextCreateWithoutUserInput, StudiedTextUncheckedCreateWithoutUserInput> | StudiedTextCreateWithoutUserInput[] | StudiedTextUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: StudiedTextCreateOrConnectWithoutUserInput | StudiedTextCreateOrConnectWithoutUserInput[]
+    createMany?: StudiedTextCreateManyUserInputEnvelope
+    connect?: StudiedTextWhereUniqueInput | StudiedTextWhereUniqueInput[]
+  }
+
+  export type StreakUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<StreakCreateWithoutUserInput, StreakUncheckedCreateWithoutUserInput>
+    connectOrCreate?: StreakCreateOrConnectWithoutUserInput
+    connect?: StreakWhereUniqueInput
+  }
+
+  export type PointsUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<PointsCreateWithoutUserInput, PointsUncheckedCreateWithoutUserInput> | PointsCreateWithoutUserInput[] | PointsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PointsCreateOrConnectWithoutUserInput | PointsCreateOrConnectWithoutUserInput[]
+    createMany?: PointsCreateManyUserInputEnvelope
+    connect?: PointsWhereUniqueInput | PointsWhereUniqueInput[]
+  }
+
+  export type LevelUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<LevelCreateWithoutUserInput, LevelUncheckedCreateWithoutUserInput>
+    connectOrCreate?: LevelCreateOrConnectWithoutUserInput
+    connect?: LevelWhereUniqueInput
+  }
+
+  export type GoalUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<GoalCreateWithoutUserInput, GoalUncheckedCreateWithoutUserInput> | GoalCreateWithoutUserInput[] | GoalUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: GoalCreateOrConnectWithoutUserInput | GoalCreateOrConnectWithoutUserInput[]
+    createMany?: GoalCreateManyUserInputEnvelope
+    connect?: GoalWhereUniqueInput | GoalWhereUniqueInput[]
+  }
+
+  export type StudySessionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<StudySessionCreateWithoutUserInput, StudySessionUncheckedCreateWithoutUserInput> | StudySessionCreateWithoutUserInput[] | StudySessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: StudySessionCreateOrConnectWithoutUserInput | StudySessionCreateOrConnectWithoutUserInput[]
+    createMany?: StudySessionCreateManyUserInputEnvelope
+    connect?: StudySessionWhereUniqueInput | StudySessionWhereUniqueInput[]
+  }
+
+  export type StudiedTextUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<StudiedTextCreateWithoutUserInput, StudiedTextUncheckedCreateWithoutUserInput> | StudiedTextCreateWithoutUserInput[] | StudiedTextUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: StudiedTextCreateOrConnectWithoutUserInput | StudiedTextCreateOrConnectWithoutUserInput[]
+    createMany?: StudiedTextCreateManyUserInputEnvelope
+    connect?: StudiedTextWhereUniqueInput | StudiedTextWhereUniqueInput[]
+  }
+
+  export type StreakUpdateOneWithoutUserNestedInput = {
+    create?: XOR<StreakCreateWithoutUserInput, StreakUncheckedCreateWithoutUserInput>
+    connectOrCreate?: StreakCreateOrConnectWithoutUserInput
+    upsert?: StreakUpsertWithoutUserInput
+    disconnect?: StreakWhereInput | boolean
+    delete?: StreakWhereInput | boolean
+    connect?: StreakWhereUniqueInput
+    update?: XOR<XOR<StreakUpdateToOneWithWhereWithoutUserInput, StreakUpdateWithoutUserInput>, StreakUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PointsUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PointsCreateWithoutUserInput, PointsUncheckedCreateWithoutUserInput> | PointsCreateWithoutUserInput[] | PointsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PointsCreateOrConnectWithoutUserInput | PointsCreateOrConnectWithoutUserInput[]
+    upsert?: PointsUpsertWithWhereUniqueWithoutUserInput | PointsUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PointsCreateManyUserInputEnvelope
+    set?: PointsWhereUniqueInput | PointsWhereUniqueInput[]
+    disconnect?: PointsWhereUniqueInput | PointsWhereUniqueInput[]
+    delete?: PointsWhereUniqueInput | PointsWhereUniqueInput[]
+    connect?: PointsWhereUniqueInput | PointsWhereUniqueInput[]
+    update?: PointsUpdateWithWhereUniqueWithoutUserInput | PointsUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PointsUpdateManyWithWhereWithoutUserInput | PointsUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PointsScalarWhereInput | PointsScalarWhereInput[]
+  }
+
+  export type LevelUpdateOneWithoutUserNestedInput = {
+    create?: XOR<LevelCreateWithoutUserInput, LevelUncheckedCreateWithoutUserInput>
+    connectOrCreate?: LevelCreateOrConnectWithoutUserInput
+    upsert?: LevelUpsertWithoutUserInput
+    disconnect?: LevelWhereInput | boolean
+    delete?: LevelWhereInput | boolean
+    connect?: LevelWhereUniqueInput
+    update?: XOR<XOR<LevelUpdateToOneWithWhereWithoutUserInput, LevelUpdateWithoutUserInput>, LevelUncheckedUpdateWithoutUserInput>
+  }
+
+  export type GoalUpdateManyWithoutUserNestedInput = {
+    create?: XOR<GoalCreateWithoutUserInput, GoalUncheckedCreateWithoutUserInput> | GoalCreateWithoutUserInput[] | GoalUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: GoalCreateOrConnectWithoutUserInput | GoalCreateOrConnectWithoutUserInput[]
+    upsert?: GoalUpsertWithWhereUniqueWithoutUserInput | GoalUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: GoalCreateManyUserInputEnvelope
+    set?: GoalWhereUniqueInput | GoalWhereUniqueInput[]
+    disconnect?: GoalWhereUniqueInput | GoalWhereUniqueInput[]
+    delete?: GoalWhereUniqueInput | GoalWhereUniqueInput[]
+    connect?: GoalWhereUniqueInput | GoalWhereUniqueInput[]
+    update?: GoalUpdateWithWhereUniqueWithoutUserInput | GoalUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: GoalUpdateManyWithWhereWithoutUserInput | GoalUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: GoalScalarWhereInput | GoalScalarWhereInput[]
+  }
+
+  export type StudySessionUpdateManyWithoutUserNestedInput = {
+    create?: XOR<StudySessionCreateWithoutUserInput, StudySessionUncheckedCreateWithoutUserInput> | StudySessionCreateWithoutUserInput[] | StudySessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: StudySessionCreateOrConnectWithoutUserInput | StudySessionCreateOrConnectWithoutUserInput[]
+    upsert?: StudySessionUpsertWithWhereUniqueWithoutUserInput | StudySessionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: StudySessionCreateManyUserInputEnvelope
+    set?: StudySessionWhereUniqueInput | StudySessionWhereUniqueInput[]
+    disconnect?: StudySessionWhereUniqueInput | StudySessionWhereUniqueInput[]
+    delete?: StudySessionWhereUniqueInput | StudySessionWhereUniqueInput[]
+    connect?: StudySessionWhereUniqueInput | StudySessionWhereUniqueInput[]
+    update?: StudySessionUpdateWithWhereUniqueWithoutUserInput | StudySessionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: StudySessionUpdateManyWithWhereWithoutUserInput | StudySessionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: StudySessionScalarWhereInput | StudySessionScalarWhereInput[]
+  }
+
+  export type StudiedTextUpdateManyWithoutUserNestedInput = {
+    create?: XOR<StudiedTextCreateWithoutUserInput, StudiedTextUncheckedCreateWithoutUserInput> | StudiedTextCreateWithoutUserInput[] | StudiedTextUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: StudiedTextCreateOrConnectWithoutUserInput | StudiedTextCreateOrConnectWithoutUserInput[]
+    upsert?: StudiedTextUpsertWithWhereUniqueWithoutUserInput | StudiedTextUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: StudiedTextCreateManyUserInputEnvelope
+    set?: StudiedTextWhereUniqueInput | StudiedTextWhereUniqueInput[]
+    disconnect?: StudiedTextWhereUniqueInput | StudiedTextWhereUniqueInput[]
+    delete?: StudiedTextWhereUniqueInput | StudiedTextWhereUniqueInput[]
+    connect?: StudiedTextWhereUniqueInput | StudiedTextWhereUniqueInput[]
+    update?: StudiedTextUpdateWithWhereUniqueWithoutUserInput | StudiedTextUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: StudiedTextUpdateManyWithWhereWithoutUserInput | StudiedTextUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: StudiedTextScalarWhereInput | StudiedTextScalarWhereInput[]
+  }
+
+  export type StreakUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<StreakCreateWithoutUserInput, StreakUncheckedCreateWithoutUserInput>
+    connectOrCreate?: StreakCreateOrConnectWithoutUserInput
+    upsert?: StreakUpsertWithoutUserInput
+    disconnect?: StreakWhereInput | boolean
+    delete?: StreakWhereInput | boolean
+    connect?: StreakWhereUniqueInput
+    update?: XOR<XOR<StreakUpdateToOneWithWhereWithoutUserInput, StreakUpdateWithoutUserInput>, StreakUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PointsUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PointsCreateWithoutUserInput, PointsUncheckedCreateWithoutUserInput> | PointsCreateWithoutUserInput[] | PointsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PointsCreateOrConnectWithoutUserInput | PointsCreateOrConnectWithoutUserInput[]
+    upsert?: PointsUpsertWithWhereUniqueWithoutUserInput | PointsUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PointsCreateManyUserInputEnvelope
+    set?: PointsWhereUniqueInput | PointsWhereUniqueInput[]
+    disconnect?: PointsWhereUniqueInput | PointsWhereUniqueInput[]
+    delete?: PointsWhereUniqueInput | PointsWhereUniqueInput[]
+    connect?: PointsWhereUniqueInput | PointsWhereUniqueInput[]
+    update?: PointsUpdateWithWhereUniqueWithoutUserInput | PointsUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PointsUpdateManyWithWhereWithoutUserInput | PointsUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PointsScalarWhereInput | PointsScalarWhereInput[]
+  }
+
+  export type LevelUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<LevelCreateWithoutUserInput, LevelUncheckedCreateWithoutUserInput>
+    connectOrCreate?: LevelCreateOrConnectWithoutUserInput
+    upsert?: LevelUpsertWithoutUserInput
+    disconnect?: LevelWhereInput | boolean
+    delete?: LevelWhereInput | boolean
+    connect?: LevelWhereUniqueInput
+    update?: XOR<XOR<LevelUpdateToOneWithWhereWithoutUserInput, LevelUpdateWithoutUserInput>, LevelUncheckedUpdateWithoutUserInput>
+  }
+
+  export type GoalUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<GoalCreateWithoutUserInput, GoalUncheckedCreateWithoutUserInput> | GoalCreateWithoutUserInput[] | GoalUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: GoalCreateOrConnectWithoutUserInput | GoalCreateOrConnectWithoutUserInput[]
+    upsert?: GoalUpsertWithWhereUniqueWithoutUserInput | GoalUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: GoalCreateManyUserInputEnvelope
+    set?: GoalWhereUniqueInput | GoalWhereUniqueInput[]
+    disconnect?: GoalWhereUniqueInput | GoalWhereUniqueInput[]
+    delete?: GoalWhereUniqueInput | GoalWhereUniqueInput[]
+    connect?: GoalWhereUniqueInput | GoalWhereUniqueInput[]
+    update?: GoalUpdateWithWhereUniqueWithoutUserInput | GoalUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: GoalUpdateManyWithWhereWithoutUserInput | GoalUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: GoalScalarWhereInput | GoalScalarWhereInput[]
+  }
+
+  export type StudySessionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<StudySessionCreateWithoutUserInput, StudySessionUncheckedCreateWithoutUserInput> | StudySessionCreateWithoutUserInput[] | StudySessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: StudySessionCreateOrConnectWithoutUserInput | StudySessionCreateOrConnectWithoutUserInput[]
+    upsert?: StudySessionUpsertWithWhereUniqueWithoutUserInput | StudySessionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: StudySessionCreateManyUserInputEnvelope
+    set?: StudySessionWhereUniqueInput | StudySessionWhereUniqueInput[]
+    disconnect?: StudySessionWhereUniqueInput | StudySessionWhereUniqueInput[]
+    delete?: StudySessionWhereUniqueInput | StudySessionWhereUniqueInput[]
+    connect?: StudySessionWhereUniqueInput | StudySessionWhereUniqueInput[]
+    update?: StudySessionUpdateWithWhereUniqueWithoutUserInput | StudySessionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: StudySessionUpdateManyWithWhereWithoutUserInput | StudySessionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: StudySessionScalarWhereInput | StudySessionScalarWhereInput[]
+  }
+
+  export type StudiedTextUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<StudiedTextCreateWithoutUserInput, StudiedTextUncheckedCreateWithoutUserInput> | StudiedTextCreateWithoutUserInput[] | StudiedTextUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: StudiedTextCreateOrConnectWithoutUserInput | StudiedTextCreateOrConnectWithoutUserInput[]
+    upsert?: StudiedTextUpsertWithWhereUniqueWithoutUserInput | StudiedTextUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: StudiedTextCreateManyUserInputEnvelope
+    set?: StudiedTextWhereUniqueInput | StudiedTextWhereUniqueInput[]
+    disconnect?: StudiedTextWhereUniqueInput | StudiedTextWhereUniqueInput[]
+    delete?: StudiedTextWhereUniqueInput | StudiedTextWhereUniqueInput[]
+    connect?: StudiedTextWhereUniqueInput | StudiedTextWhereUniqueInput[]
+    update?: StudiedTextUpdateWithWhereUniqueWithoutUserInput | StudiedTextUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: StudiedTextUpdateManyWithWhereWithoutUserInput | StudiedTextUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: StudiedTextScalarWhereInput | StudiedTextScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutStreakInput = {
+    create?: XOR<UserCreateWithoutStreakInput, UserUncheckedCreateWithoutStreakInput>
+    connectOrCreate?: UserCreateOrConnectWithoutStreakInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutStreakNestedInput = {
+    create?: XOR<UserCreateWithoutStreakInput, UserUncheckedCreateWithoutStreakInput>
+    connectOrCreate?: UserCreateOrConnectWithoutStreakInput
+    upsert?: UserUpsertWithoutStreakInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutStreakInput, UserUpdateWithoutStreakInput>, UserUncheckedUpdateWithoutStreakInput>
+  }
+
+  export type UserCreateNestedOneWithoutPointsInput = {
+    create?: XOR<UserCreateWithoutPointsInput, UserUncheckedCreateWithoutPointsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPointsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumPointActionFieldUpdateOperationsInput = {
+    set?: $Enums.PointAction
+  }
+
+  export type UserUpdateOneRequiredWithoutPointsNestedInput = {
+    create?: XOR<UserCreateWithoutPointsInput, UserUncheckedCreateWithoutPointsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPointsInput
+    upsert?: UserUpsertWithoutPointsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPointsInput, UserUpdateWithoutPointsInput>, UserUncheckedUpdateWithoutPointsInput>
+  }
+
+  export type UserCreateNestedOneWithoutLevelInput = {
+    create?: XOR<UserCreateWithoutLevelInput, UserUncheckedCreateWithoutLevelInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLevelInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutLevelNestedInput = {
+    create?: XOR<UserCreateWithoutLevelInput, UserUncheckedCreateWithoutLevelInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLevelInput
+    upsert?: UserUpsertWithoutLevelInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLevelInput, UserUpdateWithoutLevelInput>, UserUncheckedUpdateWithoutLevelInput>
+  }
+
+  export type UserCreateNestedOneWithoutGoalsInput = {
+    create?: XOR<UserCreateWithoutGoalsInput, UserUncheckedCreateWithoutGoalsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGoalsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumGoalTypeFieldUpdateOperationsInput = {
+    set?: $Enums.GoalType
+  }
+
+  export type EnumGoalPeriodFieldUpdateOperationsInput = {
+    set?: $Enums.GoalPeriod
+  }
+
+  export type UserUpdateOneRequiredWithoutGoalsNestedInput = {
+    create?: XOR<UserCreateWithoutGoalsInput, UserUncheckedCreateWithoutGoalsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGoalsInput
+    upsert?: UserUpsertWithoutGoalsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGoalsInput, UserUpdateWithoutGoalsInput>, UserUncheckedUpdateWithoutGoalsInput>
+  }
+
+  export type UserCreateNestedOneWithoutStudySessionsInput = {
+    create?: XOR<UserCreateWithoutStudySessionsInput, UserUncheckedCreateWithoutStudySessionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutStudySessionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutStudySessionsNestedInput = {
+    create?: XOR<UserCreateWithoutStudySessionsInput, UserUncheckedCreateWithoutStudySessionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutStudySessionsInput
+    upsert?: UserUpsertWithoutStudySessionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutStudySessionsInput, UserUpdateWithoutStudySessionsInput>, UserUncheckedUpdateWithoutStudySessionsInput>
+  }
+
+  export type UserCreateNestedOneWithoutStudiedTextsInput = {
+    create?: XOR<UserCreateWithoutStudiedTextsInput, UserUncheckedCreateWithoutStudiedTextsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutStudiedTextsInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type UserUpdateOneWithoutStudiedTextsNestedInput = {
+    create?: XOR<UserCreateWithoutStudiedTextsInput, UserUncheckedCreateWithoutStudiedTextsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutStudiedTextsInput
+    upsert?: UserUpsertWithoutStudiedTextsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutStudiedTextsInput, UserUpdateWithoutStudiedTextsInput>, UserUncheckedUpdateWithoutStudiedTextsInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -6889,6 +16211,80 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumPointActionFilter<$PrismaModel = never> = {
+    equals?: $Enums.PointAction | EnumPointActionFieldRefInput<$PrismaModel>
+    in?: $Enums.PointAction[] | ListEnumPointActionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PointAction[] | ListEnumPointActionFieldRefInput<$PrismaModel>
+    not?: NestedEnumPointActionFilter<$PrismaModel> | $Enums.PointAction
+  }
+
+  export type NestedEnumPointActionWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PointAction | EnumPointActionFieldRefInput<$PrismaModel>
+    in?: $Enums.PointAction[] | ListEnumPointActionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PointAction[] | ListEnumPointActionFieldRefInput<$PrismaModel>
+    not?: NestedEnumPointActionWithAggregatesFilter<$PrismaModel> | $Enums.PointAction
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPointActionFilter<$PrismaModel>
+    _max?: NestedEnumPointActionFilter<$PrismaModel>
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedEnumGoalTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.GoalType | EnumGoalTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.GoalType[] | ListEnumGoalTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GoalType[] | ListEnumGoalTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumGoalTypeFilter<$PrismaModel> | $Enums.GoalType
+  }
+
+  export type NestedEnumGoalPeriodFilter<$PrismaModel = never> = {
+    equals?: $Enums.GoalPeriod | EnumGoalPeriodFieldRefInput<$PrismaModel>
+    in?: $Enums.GoalPeriod[] | ListEnumGoalPeriodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GoalPeriod[] | ListEnumGoalPeriodFieldRefInput<$PrismaModel>
+    not?: NestedEnumGoalPeriodFilter<$PrismaModel> | $Enums.GoalPeriod
+  }
+
+  export type NestedEnumGoalTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GoalType | EnumGoalTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.GoalType[] | ListEnumGoalTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GoalType[] | ListEnumGoalTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumGoalTypeWithAggregatesFilter<$PrismaModel> | $Enums.GoalType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGoalTypeFilter<$PrismaModel>
+    _max?: NestedEnumGoalTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumGoalPeriodWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GoalPeriod | EnumGoalPeriodFieldRefInput<$PrismaModel>
+    in?: $Enums.GoalPeriod[] | ListEnumGoalPeriodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GoalPeriod[] | ListEnumGoalPeriodFieldRefInput<$PrismaModel>
+    not?: NestedEnumGoalPeriodWithAggregatesFilter<$PrismaModel> | $Enums.GoalPeriod
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGoalPeriodFilter<$PrismaModel>
+    _max?: NestedEnumGoalPeriodFilter<$PrismaModel>
+  }
+
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -7042,6 +16438,736 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type StreakCreateWithoutUserInput = {
+    id?: string
+    currentStreak?: number
+    longestStreak?: number
+    lastStudyDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StreakUncheckedCreateWithoutUserInput = {
+    id?: string
+    currentStreak?: number
+    longestStreak?: number
+    lastStudyDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StreakCreateOrConnectWithoutUserInput = {
+    where: StreakWhereUniqueInput
+    create: XOR<StreakCreateWithoutUserInput, StreakUncheckedCreateWithoutUserInput>
+  }
+
+  export type PointsCreateWithoutUserInput = {
+    id?: string
+    action: $Enums.PointAction
+    points: number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    earnedAt?: Date | string
+  }
+
+  export type PointsUncheckedCreateWithoutUserInput = {
+    id?: string
+    action: $Enums.PointAction
+    points: number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    earnedAt?: Date | string
+  }
+
+  export type PointsCreateOrConnectWithoutUserInput = {
+    where: PointsWhereUniqueInput
+    create: XOR<PointsCreateWithoutUserInput, PointsUncheckedCreateWithoutUserInput>
+  }
+
+  export type PointsCreateManyUserInputEnvelope = {
+    data: PointsCreateManyUserInput | PointsCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type LevelCreateWithoutUserInput = {
+    id?: string
+    currentLevel?: number
+    totalPoints?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LevelUncheckedCreateWithoutUserInput = {
+    id?: string
+    currentLevel?: number
+    totalPoints?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LevelCreateOrConnectWithoutUserInput = {
+    where: LevelWhereUniqueInput
+    create: XOR<LevelCreateWithoutUserInput, LevelUncheckedCreateWithoutUserInput>
+  }
+
+  export type GoalCreateWithoutUserInput = {
+    id?: string
+    type: $Enums.GoalType
+    target: number
+    progress?: number
+    period: $Enums.GoalPeriod
+    startDate?: Date | string
+    endDate?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GoalUncheckedCreateWithoutUserInput = {
+    id?: string
+    type: $Enums.GoalType
+    target: number
+    progress?: number
+    period: $Enums.GoalPeriod
+    startDate?: Date | string
+    endDate?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GoalCreateOrConnectWithoutUserInput = {
+    where: GoalWhereUniqueInput
+    create: XOR<GoalCreateWithoutUserInput, GoalUncheckedCreateWithoutUserInput>
+  }
+
+  export type GoalCreateManyUserInputEnvelope = {
+    data: GoalCreateManyUserInput | GoalCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type StudySessionCreateWithoutUserInput = {
+    id?: string
+    date: Date | string
+    duration?: number
+    textsRead?: number
+    flashcardsReviewed?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudySessionUncheckedCreateWithoutUserInput = {
+    id?: string
+    date: Date | string
+    duration?: number
+    textsRead?: number
+    flashcardsReviewed?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudySessionCreateOrConnectWithoutUserInput = {
+    where: StudySessionWhereUniqueInput
+    create: XOR<StudySessionCreateWithoutUserInput, StudySessionUncheckedCreateWithoutUserInput>
+  }
+
+  export type StudySessionCreateManyUserInputEnvelope = {
+    data: StudySessionCreateManyUserInput | StudySessionCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type StudiedTextCreateWithoutUserInput = {
+    id?: string
+    userKey: string
+    ref: string
+    heRef?: string | null
+    url?: string | null
+    title?: string | null
+    snippet?: string | null
+    createdAt?: Date | string
+  }
+
+  export type StudiedTextUncheckedCreateWithoutUserInput = {
+    id?: string
+    userKey: string
+    ref: string
+    heRef?: string | null
+    url?: string | null
+    title?: string | null
+    snippet?: string | null
+    createdAt?: Date | string
+  }
+
+  export type StudiedTextCreateOrConnectWithoutUserInput = {
+    where: StudiedTextWhereUniqueInput
+    create: XOR<StudiedTextCreateWithoutUserInput, StudiedTextUncheckedCreateWithoutUserInput>
+  }
+
+  export type StudiedTextCreateManyUserInputEnvelope = {
+    data: StudiedTextCreateManyUserInput | StudiedTextCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type StreakUpsertWithoutUserInput = {
+    update: XOR<StreakUpdateWithoutUserInput, StreakUncheckedUpdateWithoutUserInput>
+    create: XOR<StreakCreateWithoutUserInput, StreakUncheckedCreateWithoutUserInput>
+    where?: StreakWhereInput
+  }
+
+  export type StreakUpdateToOneWithWhereWithoutUserInput = {
+    where?: StreakWhereInput
+    data: XOR<StreakUpdateWithoutUserInput, StreakUncheckedUpdateWithoutUserInput>
+  }
+
+  export type StreakUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    currentStreak?: IntFieldUpdateOperationsInput | number
+    longestStreak?: IntFieldUpdateOperationsInput | number
+    lastStudyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StreakUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    currentStreak?: IntFieldUpdateOperationsInput | number
+    longestStreak?: IntFieldUpdateOperationsInput | number
+    lastStudyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PointsUpsertWithWhereUniqueWithoutUserInput = {
+    where: PointsWhereUniqueInput
+    update: XOR<PointsUpdateWithoutUserInput, PointsUncheckedUpdateWithoutUserInput>
+    create: XOR<PointsCreateWithoutUserInput, PointsUncheckedCreateWithoutUserInput>
+  }
+
+  export type PointsUpdateWithWhereUniqueWithoutUserInput = {
+    where: PointsWhereUniqueInput
+    data: XOR<PointsUpdateWithoutUserInput, PointsUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PointsUpdateManyWithWhereWithoutUserInput = {
+    where: PointsScalarWhereInput
+    data: XOR<PointsUpdateManyMutationInput, PointsUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type PointsScalarWhereInput = {
+    AND?: PointsScalarWhereInput | PointsScalarWhereInput[]
+    OR?: PointsScalarWhereInput[]
+    NOT?: PointsScalarWhereInput | PointsScalarWhereInput[]
+    id?: StringFilter<"Points"> | string
+    userId?: StringFilter<"Points"> | string
+    action?: EnumPointActionFilter<"Points"> | $Enums.PointAction
+    points?: IntFilter<"Points"> | number
+    metadata?: JsonNullableFilter<"Points">
+    earnedAt?: DateTimeFilter<"Points"> | Date | string
+  }
+
+  export type LevelUpsertWithoutUserInput = {
+    update: XOR<LevelUpdateWithoutUserInput, LevelUncheckedUpdateWithoutUserInput>
+    create: XOR<LevelCreateWithoutUserInput, LevelUncheckedCreateWithoutUserInput>
+    where?: LevelWhereInput
+  }
+
+  export type LevelUpdateToOneWithWhereWithoutUserInput = {
+    where?: LevelWhereInput
+    data: XOR<LevelUpdateWithoutUserInput, LevelUncheckedUpdateWithoutUserInput>
+  }
+
+  export type LevelUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    currentLevel?: IntFieldUpdateOperationsInput | number
+    totalPoints?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LevelUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    currentLevel?: IntFieldUpdateOperationsInput | number
+    totalPoints?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GoalUpsertWithWhereUniqueWithoutUserInput = {
+    where: GoalWhereUniqueInput
+    update: XOR<GoalUpdateWithoutUserInput, GoalUncheckedUpdateWithoutUserInput>
+    create: XOR<GoalCreateWithoutUserInput, GoalUncheckedCreateWithoutUserInput>
+  }
+
+  export type GoalUpdateWithWhereUniqueWithoutUserInput = {
+    where: GoalWhereUniqueInput
+    data: XOR<GoalUpdateWithoutUserInput, GoalUncheckedUpdateWithoutUserInput>
+  }
+
+  export type GoalUpdateManyWithWhereWithoutUserInput = {
+    where: GoalScalarWhereInput
+    data: XOR<GoalUpdateManyMutationInput, GoalUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type GoalScalarWhereInput = {
+    AND?: GoalScalarWhereInput | GoalScalarWhereInput[]
+    OR?: GoalScalarWhereInput[]
+    NOT?: GoalScalarWhereInput | GoalScalarWhereInput[]
+    id?: StringFilter<"Goal"> | string
+    userId?: StringFilter<"Goal"> | string
+    type?: EnumGoalTypeFilter<"Goal"> | $Enums.GoalType
+    target?: IntFilter<"Goal"> | number
+    progress?: IntFilter<"Goal"> | number
+    period?: EnumGoalPeriodFilter<"Goal"> | $Enums.GoalPeriod
+    startDate?: DateTimeFilter<"Goal"> | Date | string
+    endDate?: DateTimeNullableFilter<"Goal"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"Goal"> | Date | string | null
+    createdAt?: DateTimeFilter<"Goal"> | Date | string
+    updatedAt?: DateTimeFilter<"Goal"> | Date | string
+  }
+
+  export type StudySessionUpsertWithWhereUniqueWithoutUserInput = {
+    where: StudySessionWhereUniqueInput
+    update: XOR<StudySessionUpdateWithoutUserInput, StudySessionUncheckedUpdateWithoutUserInput>
+    create: XOR<StudySessionCreateWithoutUserInput, StudySessionUncheckedCreateWithoutUserInput>
+  }
+
+  export type StudySessionUpdateWithWhereUniqueWithoutUserInput = {
+    where: StudySessionWhereUniqueInput
+    data: XOR<StudySessionUpdateWithoutUserInput, StudySessionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type StudySessionUpdateManyWithWhereWithoutUserInput = {
+    where: StudySessionScalarWhereInput
+    data: XOR<StudySessionUpdateManyMutationInput, StudySessionUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type StudySessionScalarWhereInput = {
+    AND?: StudySessionScalarWhereInput | StudySessionScalarWhereInput[]
+    OR?: StudySessionScalarWhereInput[]
+    NOT?: StudySessionScalarWhereInput | StudySessionScalarWhereInput[]
+    id?: StringFilter<"StudySession"> | string
+    userId?: StringFilter<"StudySession"> | string
+    date?: DateTimeFilter<"StudySession"> | Date | string
+    duration?: IntFilter<"StudySession"> | number
+    textsRead?: IntFilter<"StudySession"> | number
+    flashcardsReviewed?: IntFilter<"StudySession"> | number
+    createdAt?: DateTimeFilter<"StudySession"> | Date | string
+    updatedAt?: DateTimeFilter<"StudySession"> | Date | string
+  }
+
+  export type StudiedTextUpsertWithWhereUniqueWithoutUserInput = {
+    where: StudiedTextWhereUniqueInput
+    update: XOR<StudiedTextUpdateWithoutUserInput, StudiedTextUncheckedUpdateWithoutUserInput>
+    create: XOR<StudiedTextCreateWithoutUserInput, StudiedTextUncheckedCreateWithoutUserInput>
+  }
+
+  export type StudiedTextUpdateWithWhereUniqueWithoutUserInput = {
+    where: StudiedTextWhereUniqueInput
+    data: XOR<StudiedTextUpdateWithoutUserInput, StudiedTextUncheckedUpdateWithoutUserInput>
+  }
+
+  export type StudiedTextUpdateManyWithWhereWithoutUserInput = {
+    where: StudiedTextScalarWhereInput
+    data: XOR<StudiedTextUpdateManyMutationInput, StudiedTextUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type StudiedTextScalarWhereInput = {
+    AND?: StudiedTextScalarWhereInput | StudiedTextScalarWhereInput[]
+    OR?: StudiedTextScalarWhereInput[]
+    NOT?: StudiedTextScalarWhereInput | StudiedTextScalarWhereInput[]
+    id?: StringFilter<"StudiedText"> | string
+    userKey?: StringFilter<"StudiedText"> | string
+    userId?: StringNullableFilter<"StudiedText"> | string | null
+    ref?: StringFilter<"StudiedText"> | string
+    heRef?: StringNullableFilter<"StudiedText"> | string | null
+    url?: StringNullableFilter<"StudiedText"> | string | null
+    title?: StringNullableFilter<"StudiedText"> | string | null
+    snippet?: StringNullableFilter<"StudiedText"> | string | null
+    createdAt?: DateTimeFilter<"StudiedText"> | Date | string
+  }
+
+  export type UserCreateWithoutStreakInput = {
+    id?: string
+    userKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    points?: PointsCreateNestedManyWithoutUserInput
+    level?: LevelCreateNestedOneWithoutUserInput
+    goals?: GoalCreateNestedManyWithoutUserInput
+    studySessions?: StudySessionCreateNestedManyWithoutUserInput
+    studiedTexts?: StudiedTextCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutStreakInput = {
+    id?: string
+    userKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    points?: PointsUncheckedCreateNestedManyWithoutUserInput
+    level?: LevelUncheckedCreateNestedOneWithoutUserInput
+    goals?: GoalUncheckedCreateNestedManyWithoutUserInput
+    studySessions?: StudySessionUncheckedCreateNestedManyWithoutUserInput
+    studiedTexts?: StudiedTextUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutStreakInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutStreakInput, UserUncheckedCreateWithoutStreakInput>
+  }
+
+  export type UserUpsertWithoutStreakInput = {
+    update: XOR<UserUpdateWithoutStreakInput, UserUncheckedUpdateWithoutStreakInput>
+    create: XOR<UserCreateWithoutStreakInput, UserUncheckedCreateWithoutStreakInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutStreakInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutStreakInput, UserUncheckedUpdateWithoutStreakInput>
+  }
+
+  export type UserUpdateWithoutStreakInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    points?: PointsUpdateManyWithoutUserNestedInput
+    level?: LevelUpdateOneWithoutUserNestedInput
+    goals?: GoalUpdateManyWithoutUserNestedInput
+    studySessions?: StudySessionUpdateManyWithoutUserNestedInput
+    studiedTexts?: StudiedTextUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutStreakInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    points?: PointsUncheckedUpdateManyWithoutUserNestedInput
+    level?: LevelUncheckedUpdateOneWithoutUserNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutUserNestedInput
+    studySessions?: StudySessionUncheckedUpdateManyWithoutUserNestedInput
+    studiedTexts?: StudiedTextUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutPointsInput = {
+    id?: string
+    userKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    streak?: StreakCreateNestedOneWithoutUserInput
+    level?: LevelCreateNestedOneWithoutUserInput
+    goals?: GoalCreateNestedManyWithoutUserInput
+    studySessions?: StudySessionCreateNestedManyWithoutUserInput
+    studiedTexts?: StudiedTextCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutPointsInput = {
+    id?: string
+    userKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    streak?: StreakUncheckedCreateNestedOneWithoutUserInput
+    level?: LevelUncheckedCreateNestedOneWithoutUserInput
+    goals?: GoalUncheckedCreateNestedManyWithoutUserInput
+    studySessions?: StudySessionUncheckedCreateNestedManyWithoutUserInput
+    studiedTexts?: StudiedTextUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutPointsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPointsInput, UserUncheckedCreateWithoutPointsInput>
+  }
+
+  export type UserUpsertWithoutPointsInput = {
+    update: XOR<UserUpdateWithoutPointsInput, UserUncheckedUpdateWithoutPointsInput>
+    create: XOR<UserCreateWithoutPointsInput, UserUncheckedCreateWithoutPointsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPointsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPointsInput, UserUncheckedUpdateWithoutPointsInput>
+  }
+
+  export type UserUpdateWithoutPointsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    streak?: StreakUpdateOneWithoutUserNestedInput
+    level?: LevelUpdateOneWithoutUserNestedInput
+    goals?: GoalUpdateManyWithoutUserNestedInput
+    studySessions?: StudySessionUpdateManyWithoutUserNestedInput
+    studiedTexts?: StudiedTextUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPointsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    streak?: StreakUncheckedUpdateOneWithoutUserNestedInput
+    level?: LevelUncheckedUpdateOneWithoutUserNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutUserNestedInput
+    studySessions?: StudySessionUncheckedUpdateManyWithoutUserNestedInput
+    studiedTexts?: StudiedTextUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutLevelInput = {
+    id?: string
+    userKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    streak?: StreakCreateNestedOneWithoutUserInput
+    points?: PointsCreateNestedManyWithoutUserInput
+    goals?: GoalCreateNestedManyWithoutUserInput
+    studySessions?: StudySessionCreateNestedManyWithoutUserInput
+    studiedTexts?: StudiedTextCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutLevelInput = {
+    id?: string
+    userKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    streak?: StreakUncheckedCreateNestedOneWithoutUserInput
+    points?: PointsUncheckedCreateNestedManyWithoutUserInput
+    goals?: GoalUncheckedCreateNestedManyWithoutUserInput
+    studySessions?: StudySessionUncheckedCreateNestedManyWithoutUserInput
+    studiedTexts?: StudiedTextUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutLevelInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutLevelInput, UserUncheckedCreateWithoutLevelInput>
+  }
+
+  export type UserUpsertWithoutLevelInput = {
+    update: XOR<UserUpdateWithoutLevelInput, UserUncheckedUpdateWithoutLevelInput>
+    create: XOR<UserCreateWithoutLevelInput, UserUncheckedCreateWithoutLevelInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutLevelInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutLevelInput, UserUncheckedUpdateWithoutLevelInput>
+  }
+
+  export type UserUpdateWithoutLevelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    streak?: StreakUpdateOneWithoutUserNestedInput
+    points?: PointsUpdateManyWithoutUserNestedInput
+    goals?: GoalUpdateManyWithoutUserNestedInput
+    studySessions?: StudySessionUpdateManyWithoutUserNestedInput
+    studiedTexts?: StudiedTextUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutLevelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    streak?: StreakUncheckedUpdateOneWithoutUserNestedInput
+    points?: PointsUncheckedUpdateManyWithoutUserNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutUserNestedInput
+    studySessions?: StudySessionUncheckedUpdateManyWithoutUserNestedInput
+    studiedTexts?: StudiedTextUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutGoalsInput = {
+    id?: string
+    userKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    streak?: StreakCreateNestedOneWithoutUserInput
+    points?: PointsCreateNestedManyWithoutUserInput
+    level?: LevelCreateNestedOneWithoutUserInput
+    studySessions?: StudySessionCreateNestedManyWithoutUserInput
+    studiedTexts?: StudiedTextCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutGoalsInput = {
+    id?: string
+    userKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    streak?: StreakUncheckedCreateNestedOneWithoutUserInput
+    points?: PointsUncheckedCreateNestedManyWithoutUserInput
+    level?: LevelUncheckedCreateNestedOneWithoutUserInput
+    studySessions?: StudySessionUncheckedCreateNestedManyWithoutUserInput
+    studiedTexts?: StudiedTextUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutGoalsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutGoalsInput, UserUncheckedCreateWithoutGoalsInput>
+  }
+
+  export type UserUpsertWithoutGoalsInput = {
+    update: XOR<UserUpdateWithoutGoalsInput, UserUncheckedUpdateWithoutGoalsInput>
+    create: XOR<UserCreateWithoutGoalsInput, UserUncheckedCreateWithoutGoalsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutGoalsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutGoalsInput, UserUncheckedUpdateWithoutGoalsInput>
+  }
+
+  export type UserUpdateWithoutGoalsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    streak?: StreakUpdateOneWithoutUserNestedInput
+    points?: PointsUpdateManyWithoutUserNestedInput
+    level?: LevelUpdateOneWithoutUserNestedInput
+    studySessions?: StudySessionUpdateManyWithoutUserNestedInput
+    studiedTexts?: StudiedTextUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutGoalsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    streak?: StreakUncheckedUpdateOneWithoutUserNestedInput
+    points?: PointsUncheckedUpdateManyWithoutUserNestedInput
+    level?: LevelUncheckedUpdateOneWithoutUserNestedInput
+    studySessions?: StudySessionUncheckedUpdateManyWithoutUserNestedInput
+    studiedTexts?: StudiedTextUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutStudySessionsInput = {
+    id?: string
+    userKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    streak?: StreakCreateNestedOneWithoutUserInput
+    points?: PointsCreateNestedManyWithoutUserInput
+    level?: LevelCreateNestedOneWithoutUserInput
+    goals?: GoalCreateNestedManyWithoutUserInput
+    studiedTexts?: StudiedTextCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutStudySessionsInput = {
+    id?: string
+    userKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    streak?: StreakUncheckedCreateNestedOneWithoutUserInput
+    points?: PointsUncheckedCreateNestedManyWithoutUserInput
+    level?: LevelUncheckedCreateNestedOneWithoutUserInput
+    goals?: GoalUncheckedCreateNestedManyWithoutUserInput
+    studiedTexts?: StudiedTextUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutStudySessionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutStudySessionsInput, UserUncheckedCreateWithoutStudySessionsInput>
+  }
+
+  export type UserUpsertWithoutStudySessionsInput = {
+    update: XOR<UserUpdateWithoutStudySessionsInput, UserUncheckedUpdateWithoutStudySessionsInput>
+    create: XOR<UserCreateWithoutStudySessionsInput, UserUncheckedCreateWithoutStudySessionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutStudySessionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutStudySessionsInput, UserUncheckedUpdateWithoutStudySessionsInput>
+  }
+
+  export type UserUpdateWithoutStudySessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    streak?: StreakUpdateOneWithoutUserNestedInput
+    points?: PointsUpdateManyWithoutUserNestedInput
+    level?: LevelUpdateOneWithoutUserNestedInput
+    goals?: GoalUpdateManyWithoutUserNestedInput
+    studiedTexts?: StudiedTextUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutStudySessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    streak?: StreakUncheckedUpdateOneWithoutUserNestedInput
+    points?: PointsUncheckedUpdateManyWithoutUserNestedInput
+    level?: LevelUncheckedUpdateOneWithoutUserNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutUserNestedInput
+    studiedTexts?: StudiedTextUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutStudiedTextsInput = {
+    id?: string
+    userKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    streak?: StreakCreateNestedOneWithoutUserInput
+    points?: PointsCreateNestedManyWithoutUserInput
+    level?: LevelCreateNestedOneWithoutUserInput
+    goals?: GoalCreateNestedManyWithoutUserInput
+    studySessions?: StudySessionCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutStudiedTextsInput = {
+    id?: string
+    userKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    streak?: StreakUncheckedCreateNestedOneWithoutUserInput
+    points?: PointsUncheckedCreateNestedManyWithoutUserInput
+    level?: LevelUncheckedCreateNestedOneWithoutUserInput
+    goals?: GoalUncheckedCreateNestedManyWithoutUserInput
+    studySessions?: StudySessionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutStudiedTextsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutStudiedTextsInput, UserUncheckedCreateWithoutStudiedTextsInput>
+  }
+
+  export type UserUpsertWithoutStudiedTextsInput = {
+    update: XOR<UserUpdateWithoutStudiedTextsInput, UserUncheckedUpdateWithoutStudiedTextsInput>
+    create: XOR<UserCreateWithoutStudiedTextsInput, UserUncheckedCreateWithoutStudiedTextsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutStudiedTextsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutStudiedTextsInput, UserUncheckedUpdateWithoutStudiedTextsInput>
+  }
+
+  export type UserUpdateWithoutStudiedTextsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    streak?: StreakUpdateOneWithoutUserNestedInput
+    points?: PointsUpdateManyWithoutUserNestedInput
+    level?: LevelUpdateOneWithoutUserNestedInput
+    goals?: GoalUpdateManyWithoutUserNestedInput
+    studySessions?: StudySessionUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutStudiedTextsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    streak?: StreakUncheckedUpdateOneWithoutUserNestedInput
+    points?: PointsUncheckedUpdateManyWithoutUserNestedInput
+    level?: LevelUncheckedUpdateOneWithoutUserNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutUserNestedInput
+    studySessions?: StudySessionUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type FlashcardReviewCreateManyFlashcardInput = {
     id?: string
     dueAt?: Date | string
@@ -7088,6 +17214,174 @@ export namespace Prisma {
     lastReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PointsCreateManyUserInput = {
+    id?: string
+    action: $Enums.PointAction
+    points: number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    earnedAt?: Date | string
+  }
+
+  export type GoalCreateManyUserInput = {
+    id?: string
+    type: $Enums.GoalType
+    target: number
+    progress?: number
+    period: $Enums.GoalPeriod
+    startDate?: Date | string
+    endDate?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudySessionCreateManyUserInput = {
+    id?: string
+    date: Date | string
+    duration?: number
+    textsRead?: number
+    flashcardsReviewed?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudiedTextCreateManyUserInput = {
+    id?: string
+    userKey: string
+    ref: string
+    heRef?: string | null
+    url?: string | null
+    title?: string | null
+    snippet?: string | null
+    createdAt?: Date | string
+  }
+
+  export type PointsUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    action?: EnumPointActionFieldUpdateOperationsInput | $Enums.PointAction
+    points?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    earnedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PointsUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    action?: EnumPointActionFieldUpdateOperationsInput | $Enums.PointAction
+    points?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    earnedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PointsUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    action?: EnumPointActionFieldUpdateOperationsInput | $Enums.PointAction
+    points?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    earnedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GoalUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumGoalTypeFieldUpdateOperationsInput | $Enums.GoalType
+    target?: IntFieldUpdateOperationsInput | number
+    progress?: IntFieldUpdateOperationsInput | number
+    period?: EnumGoalPeriodFieldUpdateOperationsInput | $Enums.GoalPeriod
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GoalUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumGoalTypeFieldUpdateOperationsInput | $Enums.GoalType
+    target?: IntFieldUpdateOperationsInput | number
+    progress?: IntFieldUpdateOperationsInput | number
+    period?: EnumGoalPeriodFieldUpdateOperationsInput | $Enums.GoalPeriod
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GoalUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumGoalTypeFieldUpdateOperationsInput | $Enums.GoalType
+    target?: IntFieldUpdateOperationsInput | number
+    progress?: IntFieldUpdateOperationsInput | number
+    period?: EnumGoalPeriodFieldUpdateOperationsInput | $Enums.GoalPeriod
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudySessionUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    duration?: IntFieldUpdateOperationsInput | number
+    textsRead?: IntFieldUpdateOperationsInput | number
+    flashcardsReviewed?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudySessionUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    duration?: IntFieldUpdateOperationsInput | number
+    textsRead?: IntFieldUpdateOperationsInput | number
+    flashcardsReviewed?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudySessionUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    duration?: IntFieldUpdateOperationsInput | number
+    textsRead?: IntFieldUpdateOperationsInput | number
+    flashcardsReviewed?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudiedTextUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    ref?: StringFieldUpdateOperationsInput | string
+    heRef?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    snippet?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudiedTextUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    ref?: StringFieldUpdateOperationsInput | string
+    heRef?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    snippet?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudiedTextUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userKey?: StringFieldUpdateOperationsInput | string
+    ref?: StringFieldUpdateOperationsInput | string
+    heRef?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    snippet?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

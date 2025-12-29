@@ -123,9 +123,70 @@ exports.Prisma.FlashcardReviewScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  userKey: 'userKey',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StreakScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  currentStreak: 'currentStreak',
+  longestStreak: 'longestStreak',
+  lastStudyDate: 'lastStudyDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PointsScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  action: 'action',
+  points: 'points',
+  metadata: 'metadata',
+  earnedAt: 'earnedAt'
+};
+
+exports.Prisma.LevelScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  currentLevel: 'currentLevel',
+  totalPoints: 'totalPoints',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.GoalScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  target: 'target',
+  progress: 'progress',
+  period: 'period',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StudySessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  date: 'date',
+  duration: 'duration',
+  textsRead: 'textsRead',
+  flashcardsReviewed: 'flashcardsReviewed',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.StudiedTextScalarFieldEnum = {
   id: 'id',
   userKey: 'userKey',
+  userId: 'userId',
   ref: 'ref',
   heRef: 'heRef',
   url: 'url',
@@ -139,6 +200,11 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -147,6 +213,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 exports.PortionType = exports.$Enums.PortionType = {
   Parasha: 'Parasha',
@@ -161,10 +233,39 @@ exports.Grade = exports.$Enums.Grade = {
   Easy: 'Easy'
 };
 
+exports.PointAction = exports.$Enums.PointAction = {
+  STUDY_TEXT: 'STUDY_TEXT',
+  COMPLETE_FLASHCARD: 'COMPLETE_FLASHCARD',
+  STREAK_BONUS: 'STREAK_BONUS',
+  GOAL_COMPLETED: 'GOAL_COMPLETED',
+  LEVEL_UP: 'LEVEL_UP',
+  FIRST_STUDY_TODAY: 'FIRST_STUDY_TODAY'
+};
+
+exports.GoalType = exports.$Enums.GoalType = {
+  TEXTS_STUDIED: 'TEXTS_STUDIED',
+  FLASHCARDS_REVIEWED: 'FLASHCARDS_REVIEWED',
+  STUDY_MINUTES: 'STUDY_MINUTES',
+  STREAK_DAYS: 'STREAK_DAYS'
+};
+
+exports.GoalPeriod = exports.$Enums.GoalPeriod = {
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY',
+  MONTHLY: 'MONTHLY',
+  CUSTOM: 'CUSTOM'
+};
+
 exports.Prisma.ModelName = {
   Post: 'Post',
   Flashcard: 'Flashcard',
   FlashcardReview: 'FlashcardReview',
+  User: 'User',
+  Streak: 'Streak',
+  Points: 'Points',
+  Level: 'Level',
+  Goal: 'Goal',
+  StudySession: 'StudySession',
   StudiedText: 'StudiedText'
 };
 /**
@@ -206,7 +307,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -215,13 +315,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Post {\n  id        Int      @id @default(autoincrement())\n  name      String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@index([name])\n}\n\nenum PortionType {\n  Parasha\n  Daf\n  Perek\n}\n\nenum Grade {\n  Again\n  Hard\n  Good\n  Easy\n}\n\nmodel Flashcard {\n  id           String      @id @default(cuid())\n  portionType  PortionType\n  portionLabel String\n  prompt       String\n  answer       String\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  reviews FlashcardReview[]\n\n  @@index([portionType, portionLabel])\n}\n\nmodel FlashcardReview {\n  id          String    @id @default(cuid())\n  flashcardId String\n  flashcard   Flashcard @relation(fields: [flashcardId], references: [id], onDelete: Cascade)\n\n  // scheduling (simple SM-2-ish)\n  dueAt        DateTime @default(now())\n  intervalDays Int      @default(0)\n  ease         Float    @default(2.5)\n  reps         Int      @default(0)\n\n  lastGrade      Grade?\n  lastReviewedAt DateTime?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now())\n\n  @@index([dueAt])\n  @@index([flashcardId])\n}\n\nmodel StudiedText {\n  id      String @id @default(cuid())\n  userKey String // simple identifier (e.g. from localStorage) until auth exists\n\n  // Sefaria reference\n  ref   String\n  heRef String?\n  url   String?\n\n  // Snapshot for display\n  title   String?\n  snippet String?\n\n  createdAt DateTime @default(now())\n\n  @@unique([userKey, ref])\n  @@index([userKey, createdAt])\n}\n",
-  "inlineSchemaHash": "b1b8bf75c068f6567033f74db4ad6d2f3398f3f45a4f73aa213948b15dd10449",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Post {\n  id        Int      @id @default(autoincrement())\n  name      String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@index([name])\n}\n\nenum PortionType {\n  Parasha\n  Daf\n  Perek\n}\n\nenum Grade {\n  Again\n  Hard\n  Good\n  Easy\n}\n\nmodel Flashcard {\n  id           String      @id @default(cuid())\n  portionType  PortionType\n  portionLabel String\n  prompt       String\n  answer       String\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  reviews FlashcardReview[]\n\n  @@index([portionType, portionLabel])\n}\n\nmodel FlashcardReview {\n  id          String    @id @default(cuid())\n  flashcardId String\n  flashcard   Flashcard @relation(fields: [flashcardId], references: [id], onDelete: Cascade)\n\n  // scheduling (simple SM-2-ish)\n  dueAt        DateTime @default(now())\n  intervalDays Int      @default(0)\n  ease         Float    @default(2.5)\n  reps         Int      @default(0)\n\n  lastGrade      Grade?\n  lastReviewedAt DateTime?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now())\n\n  @@index([dueAt])\n  @@index([flashcardId])\n}\n\n// ==================== GAMIFICATION MODELS ====================\n\nmodel User {\n  id        String   @id @default(cuid())\n  userKey   String   @unique // localStorage identifier until auth exists\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  // Relations\n  streak        Streak?\n  points        Points[]\n  level         Level?\n  goals         Goal[]\n  studySessions StudySession[]\n  studiedTexts  StudiedText[]\n\n  @@index([userKey])\n}\n\nmodel Streak {\n  id     String @id @default(cuid())\n  userId String @unique\n  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  currentStreak Int       @default(0)\n  longestStreak Int       @default(0)\n  lastStudyDate DateTime?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@index([userId])\n}\n\nmodel Points {\n  id     String @id @default(cuid())\n  userId String\n  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  action   PointAction\n  points   Int\n  metadata Json? // Optional: store context like { ref: \"Genesis 1:1\" }\n\n  earnedAt DateTime @default(now())\n\n  @@index([userId, earnedAt])\n  @@index([userId, action])\n}\n\nenum PointAction {\n  STUDY_TEXT // Reading a text\n  COMPLETE_FLASHCARD // Reviewing a flashcard\n  STREAK_BONUS // Daily streak bonus\n  GOAL_COMPLETED // Completing a goal\n  LEVEL_UP // Leveling up bonus\n  FIRST_STUDY_TODAY // First study of the day\n}\n\nmodel Level {\n  id     String @id @default(cuid())\n  userId String @unique\n  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  currentLevel Int @default(1)\n  totalPoints  Int @default(0)\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@index([userId])\n}\n\nmodel Goal {\n  id     String @id @default(cuid())\n  userId String\n  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  type     GoalType\n  target   Int // e.g., 5 texts, 10 flashcards\n  progress Int        @default(0)\n  period   GoalPeriod\n\n  startDate   DateTime  @default(now())\n  endDate     DateTime?\n  completedAt DateTime?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@index([userId, period])\n  @@index([userId, completedAt])\n}\n\nenum GoalType {\n  TEXTS_STUDIED\n  FLASHCARDS_REVIEWED\n  STUDY_MINUTES\n  STREAK_DAYS\n}\n\nenum GoalPeriod {\n  DAILY\n  WEEKLY\n  MONTHLY\n  CUSTOM\n}\n\nmodel StudySession {\n  id     String @id @default(cuid())\n  userId String\n  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  date     DateTime @db.Date // Just the date, no time\n  duration Int      @default(0) // Minutes studied\n\n  textsRead          Int @default(0)\n  flashcardsReviewed Int @default(0)\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@unique([userId, date])\n  @@index([userId, date])\n}\n\nmodel StudiedText {\n  id      String  @id @default(cuid())\n  userKey String // Keep for backward compatibility\n  userId  String?\n  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)\n\n  // Sefaria reference\n  ref   String\n  heRef String?\n  url   String?\n\n  // Snapshot for display\n  title   String?\n  snippet String?\n\n  createdAt DateTime @default(now())\n\n  @@unique([userKey, ref])\n  @@index([userKey, createdAt])\n  @@index([userId, createdAt])\n}\n",
+  "inlineSchemaHash": "59942ef83f8728cdbc3d8701d2ceefb433430ae9b3296f2044d121e421101f12",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Post\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Flashcard\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"portionType\",\"kind\":\"enum\",\"type\":\"PortionType\"},{\"name\":\"portionLabel\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"prompt\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"answer\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"reviews\",\"kind\":\"object\",\"type\":\"FlashcardReview\",\"relationName\":\"FlashcardToFlashcardReview\"}],\"dbName\":null},\"FlashcardReview\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"flashcardId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"flashcard\",\"kind\":\"object\",\"type\":\"Flashcard\",\"relationName\":\"FlashcardToFlashcardReview\"},{\"name\":\"dueAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"intervalDays\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"ease\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"reps\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"lastGrade\",\"kind\":\"enum\",\"type\":\"Grade\"},{\"name\":\"lastReviewedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"StudiedText\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"ref\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"heRef\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"snippet\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Post\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Flashcard\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"portionType\",\"kind\":\"enum\",\"type\":\"PortionType\"},{\"name\":\"portionLabel\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"prompt\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"answer\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"reviews\",\"kind\":\"object\",\"type\":\"FlashcardReview\",\"relationName\":\"FlashcardToFlashcardReview\"}],\"dbName\":null},\"FlashcardReview\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"flashcardId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"flashcard\",\"kind\":\"object\",\"type\":\"Flashcard\",\"relationName\":\"FlashcardToFlashcardReview\"},{\"name\":\"dueAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"intervalDays\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"ease\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"reps\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"lastGrade\",\"kind\":\"enum\",\"type\":\"Grade\"},{\"name\":\"lastReviewedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"streak\",\"kind\":\"object\",\"type\":\"Streak\",\"relationName\":\"StreakToUser\"},{\"name\":\"points\",\"kind\":\"object\",\"type\":\"Points\",\"relationName\":\"PointsToUser\"},{\"name\":\"level\",\"kind\":\"object\",\"type\":\"Level\",\"relationName\":\"LevelToUser\"},{\"name\":\"goals\",\"kind\":\"object\",\"type\":\"Goal\",\"relationName\":\"GoalToUser\"},{\"name\":\"studySessions\",\"kind\":\"object\",\"type\":\"StudySession\",\"relationName\":\"StudySessionToUser\"},{\"name\":\"studiedTexts\",\"kind\":\"object\",\"type\":\"StudiedText\",\"relationName\":\"StudiedTextToUser\"}],\"dbName\":null},\"Streak\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"StreakToUser\"},{\"name\":\"currentStreak\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"longestStreak\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"lastStudyDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Points\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"PointsToUser\"},{\"name\":\"action\",\"kind\":\"enum\",\"type\":\"PointAction\"},{\"name\":\"points\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"earnedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Level\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"LevelToUser\"},{\"name\":\"currentLevel\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"totalPoints\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Goal\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"GoalToUser\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"GoalType\"},{\"name\":\"target\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"progress\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"period\",\"kind\":\"enum\",\"type\":\"GoalPeriod\"},{\"name\":\"startDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"completedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"StudySession\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"StudySessionToUser\"},{\"name\":\"date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"duration\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"textsRead\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"flashcardsReviewed\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"StudiedText\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"StudiedTextToUser\"},{\"name\":\"ref\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"heRef\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"snippet\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

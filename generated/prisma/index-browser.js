@@ -151,9 +151,70 @@ exports.Prisma.FlashcardReviewScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  userKey: 'userKey',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StreakScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  currentStreak: 'currentStreak',
+  longestStreak: 'longestStreak',
+  lastStudyDate: 'lastStudyDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PointsScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  action: 'action',
+  points: 'points',
+  metadata: 'metadata',
+  earnedAt: 'earnedAt'
+};
+
+exports.Prisma.LevelScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  currentLevel: 'currentLevel',
+  totalPoints: 'totalPoints',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.GoalScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  target: 'target',
+  progress: 'progress',
+  period: 'period',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StudySessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  date: 'date',
+  duration: 'duration',
+  textsRead: 'textsRead',
+  flashcardsReviewed: 'flashcardsReviewed',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.StudiedTextScalarFieldEnum = {
   id: 'id',
   userKey: 'userKey',
+  userId: 'userId',
   ref: 'ref',
   heRef: 'heRef',
   url: 'url',
@@ -167,6 +228,11 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -175,6 +241,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 exports.PortionType = exports.$Enums.PortionType = {
   Parasha: 'Parasha',
@@ -189,10 +261,39 @@ exports.Grade = exports.$Enums.Grade = {
   Easy: 'Easy'
 };
 
+exports.PointAction = exports.$Enums.PointAction = {
+  STUDY_TEXT: 'STUDY_TEXT',
+  COMPLETE_FLASHCARD: 'COMPLETE_FLASHCARD',
+  STREAK_BONUS: 'STREAK_BONUS',
+  GOAL_COMPLETED: 'GOAL_COMPLETED',
+  LEVEL_UP: 'LEVEL_UP',
+  FIRST_STUDY_TODAY: 'FIRST_STUDY_TODAY'
+};
+
+exports.GoalType = exports.$Enums.GoalType = {
+  TEXTS_STUDIED: 'TEXTS_STUDIED',
+  FLASHCARDS_REVIEWED: 'FLASHCARDS_REVIEWED',
+  STUDY_MINUTES: 'STUDY_MINUTES',
+  STREAK_DAYS: 'STREAK_DAYS'
+};
+
+exports.GoalPeriod = exports.$Enums.GoalPeriod = {
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY',
+  MONTHLY: 'MONTHLY',
+  CUSTOM: 'CUSTOM'
+};
+
 exports.Prisma.ModelName = {
   Post: 'Post',
   Flashcard: 'Flashcard',
   FlashcardReview: 'FlashcardReview',
+  User: 'User',
+  Streak: 'Streak',
+  Points: 'Points',
+  Level: 'Level',
+  Goal: 'Goal',
+  StudySession: 'StudySession',
   StudiedText: 'StudiedText'
 };
 

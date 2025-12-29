@@ -1,12 +1,22 @@
 import db from "~/server/db";
-import type { Portion } from "~/lib/mock-data";
+import { PortionType } from "../../../generated/prisma";
+
+type Portion = {
+  type: "parasha" | "daf" | "perek";
+  label: string;
+};
+
 import { getSeedsForPortion } from "~/lib/flashcards/mock-bank";
 
 type Grade = "Again" | "Hard" | "Good" | "Easy";
 
-function toPrismaPortionType(type: Portion["type"]) {
-  // matches prisma enum names
-  return type;
+function toPrismaPortionType(type: Portion["type"]): PortionType {
+  const mapping: Record<Portion["type"], PortionType> = {
+    parasha: "Parasha",
+    daf: "Daf",
+    perek: "Perek",
+  };
+  return mapping[type];
 }
 
 export async function ensureFlashcardsForPortion(portion: Portion) {
