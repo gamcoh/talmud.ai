@@ -13,3 +13,4 @@ export { TopicCard } from "./TopicCard";
 export { DailyGoalWidget } from "./DailyGoalWidget";
 export { WeeklyCalendar } from "./WeeklyCalendar";
 export { LeaderboardItem } from "./LeaderboardItem";
+export { PointsNotification } from "./PointsNotification";

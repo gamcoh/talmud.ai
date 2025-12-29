@@ -1,6 +1,7 @@
 import { WidgetCard } from "~/components/ui/WidgetCard";
 import { Button } from "~/components/ui/Button";
 import { Input } from "~/components/ui/Input";
+import { PointsNotification } from "~/components/ui/PointsNotification";
 import { useState, useRef, useEffect } from "react";
 import confetti from "canvas-confetti";
 
@@ -29,6 +30,7 @@ export function SearchSection({
 }: Props) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [earnedPoints, setEarnedPoints] = useState<number | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const addButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -78,15 +80,42 @@ export function SearchSection({
       });
     }
     
+    // Show points notification immediately
+    const pointsToAward = 10;
+    setEarnedPoints(pointsToAward);
+    
     // Call the actual add function
     await onAddStudied(result);
+    
+    // Award points for studying text in background
+    try {
+      const userKey = localStorage.getItem("talmud-user-key") || "demo-user";
+      const ref = result?.ref || query.trim();
+      
+      await fetch("/api/gamification/study", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-user-key": userKey,
+        },
+        body: JSON.stringify({ type: "text", ref }),
+      });
+    } catch (error) {
+      console.error("Error awarding points:", error);
+    }
     
     // Reset after a short delay
     setTimeout(() => setIsAdding(false), 1000);
   };
 
   return (
-    <WidgetCard>
+    <>
+      <PointsNotification 
+        points={earnedPoints} 
+        onClose={() => setEarnedPoints(null)} 
+      />
+
+      <WidgetCard>
       <h3 className="text-lg font-bold text-white mb-4">Search Sefaria</h3>
       <div className="flex flex-col gap-3 md:flex-row">
         <div className="flex-1">
@@ -227,5 +256,6 @@ export function SearchSection({
         </div>
       )}
     </WidgetCard>
+    </>
   );
 }
