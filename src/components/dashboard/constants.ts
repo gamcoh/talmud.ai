@@ -2,7 +2,7 @@ import type { Portion } from "~/lib/mock-data";
 
 export const STORAGE_KEY = "talmud.ai:user-progress:v1";
 export const USER_KEY_STORAGE = "talmud.ai:user-key:v1";
-export const PAGE_SIZE = 10;
+export const PAGE_SIZE = 6;
 
 export function portionToKey(p: Portion) {
   return `${p.type}:${p.label}`;
