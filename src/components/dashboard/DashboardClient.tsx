@@ -65,6 +65,11 @@ export function DashboardClient() {
 
   const [studied, setStudied] = useState<StudiedText[]>([]);
   const [studiedLoading, setStudiedLoading] = useState(false);
+  const [studiedPage, setStudiedPage] = useState(1);
+  const [studiedHasMore, setStudiedHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  const PAGE_SIZE = 10;
 
   useEffect(() => {
     setUserKey(getOrCreateUserKey());
@@ -73,18 +78,44 @@ export function DashboardClient() {
   useEffect(() => {
     if (!userKey) return;
     setStudiedLoading(true);
+    setStudiedPage(1);
     void (async () => {
       try {
-        const res = await fetch(`/api/studied-texts?userKey=${encodeURIComponent(userKey)}`, {
-          cache: "no-store",
-        });
-        const data = (await res.json()) as { items?: StudiedText[] };
+        const res = await fetch(
+          `/api/studied-texts?userKey=${encodeURIComponent(userKey)}&page=1&limit=${PAGE_SIZE}`,
+          { cache: "no-store" }
+        );
+        const data = (await res.json()) as { items?: StudiedText[]; hasMore?: boolean };
         setStudied(Array.isArray(data.items) ? data.items : []);
+        setStudiedHasMore(!!data.hasMore);
       } finally {
         setStudiedLoading(false);
       }
     })();
   }, [userKey]);
+
+  async function loadMoreStudied() {
+    if (!userKey || loadingMore || !studiedHasMore) return;
+    setLoadingMore(true);
+    const nextPage = studiedPage + 1;
+    try {
+      const res = await fetch(
+        `/api/studied-texts?userKey=${encodeURIComponent(userKey)}&page=${nextPage}&limit=${PAGE_SIZE}`,
+        { cache: "no-store" }
+      );
+      const data = (await res.json()) as { items?: StudiedText[]; hasMore?: boolean };
+      const newItems = Array.isArray(data.items) ? data.items : [];
+      setStudied((prev) => {
+        const combined = [...prev, ...newItems];
+        const seen = new Set<string>();
+        return combined.filter((x) => (seen.has(x.id) ? false : (seen.add(x.id), true)));
+      });
+      setStudiedPage(nextPage);
+      setStudiedHasMore(!!data.hasMore);
+    } finally {
+      setLoadingMore(false);
+    }
+  }
 
   async function runSearch() {
     const q = query.trim();
@@ -117,36 +148,63 @@ export function DashboardClient() {
     const versions = Array.isArray(result?.versions) ? result.versions : [];
     const baseTextArray = Array.isArray(versions[0]?.text) ? versions[0].text : [];
 
-    // Use the selected section (can be HTML) or fallback to all sections joined
-    const chosenText =
-      typeof selectedSectionIndex === "number" && baseTextArray[selectedSectionIndex]
-        ? String(baseTextArray[selectedSectionIndex])
-        : baseTextArray.filter(Boolean).join(" ");
-
-    const payload = {
+    const basePayload = {
       userKey,
       ref,
       heRef: (result?.heRef ?? null) as string | null,
       url: result?.url ? `https://www.sefaria.org/${result.url}` : null,
       title: (result?.title ?? result?.primaryTitle ?? null) as string | null,
-      // store raw HTML / text (truncated), we’ll render it as HTML later
-      snippet:
-        (chosenText
-          ? chosenText.slice(0, 1800) // allow a bit more for HTML
-          : typeof result?.text === "string"
-            ? result.text.slice(0, 1800)
-            : null) ?? null,
     };
 
-    const res = await fetch("/api/studied-texts", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    const data = (await res.json()) as { item?: StudiedText };
+    const makeSnippet = (raw: unknown) => {
+      const s = raw == null ? "" : String(raw);
+      return s ? s.slice(0, 1800) : null;
+    };
 
-    if (data.item) {
-      setStudied((prev) => [data.item!, ...prev.filter((x) => x.id !== data.item!.id)]);
+    // If a specific section is selected => single entry (existing behavior).
+    // If "All sections (default)" => create one entry per section.
+    const payloads =
+      typeof selectedSectionIndex === "number"
+        ? [
+            {
+              ...basePayload,
+              snippet: makeSnippet(baseTextArray[selectedSectionIndex] ?? result?.text),
+            },
+          ]
+        : baseTextArray.length > 0
+        ? baseTextArray
+            .map((section: any, idx: number) => ({
+              ...basePayload,
+              // make refs distinct per saved section (best-effort, works for many sectioned refs)
+              ref: `${ref}:${idx + 1}`,
+              snippet: makeSnippet(section),
+            }))
+            .filter((p) => p.snippet) // skip empty sections
+        : [
+            {
+              ...basePayload,
+              snippet: makeSnippet(result?.text),
+            },
+          ];
+
+    const createdItems: StudiedText[] = [];
+
+    for (const payload of payloads) {
+      const res = await fetch("/api/studied-texts", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = (await res.json()) as { item?: StudiedText };
+      if (data.item) createdItems.push(data.item);
+    }
+
+    if (createdItems.length > 0) {
+      setStudied((prev) => {
+        const next = [...createdItems, ...prev];
+        const seen = new Set<string>();
+        return next.filter((x) => (seen.has(x.id) ? false : (seen.add(x.id), true)));
+      });
     }
   }
 
@@ -159,9 +217,9 @@ export function DashboardClient() {
 
       const lastStudied =
         parsed.lastStudied &&
-          typeof parsed.lastStudied === "object" &&
-          "type" in parsed.lastStudied &&
-          "label" in parsed.lastStudied
+        typeof parsed.lastStudied === "object" &&
+        "type" in parsed.lastStudied &&
+        "label" in parsed.lastStudied
           ? (parsed.lastStudied as Portion)
           : DEFAULT_PROGRESS.lastStudied;
 
@@ -349,18 +407,11 @@ export function DashboardClient() {
                       dangerouslySetInnerHTML={{
                         __html: (() => {
                           const html = String(t.snippet ?? "");
-
-                          // Truncate by words but keep HTML (best-effort).
-                          // NOTE: This does not sanitize HTML. Only do this if you trust the source.
                           const FIRST_WORDS = 18;
                           const LAST_WORDS = 12;
-
                           const words = html.split(/\s+/).filter(Boolean);
-
                           const head = words.slice(0, FIRST_WORDS).join(" ");
                           const tail = words.slice(-LAST_WORDS).join(" ");
-
-                          // Render truncated as HTML (simple text wrapped), preserving injection
                           return `<span>${head} … ${tail}</span>`;
                         })(),
                       }}
@@ -379,6 +430,16 @@ export function DashboardClient() {
                   )}
                 </div>
               ))}
+
+              {studiedHasMore && (
+                <button
+                  className="w-full sm:min-w-[180px] sm:max-w-[180px] sm:flex-shrink-0 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur flex items-center justify-center text-sm font-semibold text-white hover:bg-white/10 disabled:opacity-60"
+                  onClick={() => void loadMoreStudied()}
+                  disabled={loadingMore}
+                >
+                  {loadingMore ? "Loading…" : "Load more"}
+                </button>
+              )}
             </div>
           )}
         </div>

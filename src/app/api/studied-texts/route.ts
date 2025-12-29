@@ -1,18 +1,29 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "~/server/db";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const userKey = (searchParams.get("userKey") ?? "").trim();
-  if (!userKey) return NextResponse.json({ error: "Missing userKey" }, { status: 400 });
+  const userKey = searchParams.get("userKey");
+  const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
+  const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") ?? "20", 10)));
+
+  if (!userKey) {
+    return NextResponse.json({ items: [], hasMore: false });
+  }
+
+  const skip = (page - 1) * limit;
 
   const items = await prisma.studiedText.findMany({
     where: { userKey },
     orderBy: { createdAt: "desc" },
-    take: 30,
+    skip,
+    take: limit + 1, // fetch one extra to detect if more exist
   });
 
-  return NextResponse.json({ items });
+  const hasMore = items.length > limit;
+  const returnItems = hasMore ? items.slice(0, limit) : items;
+
+  return NextResponse.json({ items: returnItems, hasMore });
 }
 
 export async function POST(req: Request) {
