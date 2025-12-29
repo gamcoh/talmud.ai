@@ -8,8 +8,18 @@ import {
   type Portion,
   type UserProgress,
 } from "~/lib/mock-data";
-import { ProgressBar } from "~/components/ui/ProgressBar";
+import { WidgetCard } from "~/components/ui/WidgetCard";
+import { StreakFlame } from "~/components/ui/StreakFlame";
 import { StatCard } from "~/components/ui/StatCard";
+import { LevelBadge } from "~/components/ui/LevelBadge";
+import { AnimatedNumber } from "~/components/ui/AnimatedNumber";
+import { QuoteWidget } from "~/components/ui/QuoteWidget";
+import { DailyGoalWidget } from "~/components/ui/DailyGoalWidget";
+import { WeeklyCalendar } from "~/components/ui/WeeklyCalendar";
+import { Button } from "~/components/ui/Button";
+import { Input } from "~/components/ui/Input";
+import { ProgressBar } from "~/components/ui/ProgressBar";
+import Link from "next/link";
 
 const STORAGE_KEY = "talmud.ai:user-progress:v1";
 const USER_KEY_STORAGE = "talmud.ai:user-key:v1";
@@ -52,25 +62,50 @@ function getOrCreateUserKey() {
   }
 }
 
+// Generate mock weekly data
+function generateWeeklyData() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const days = [];
+  
+  // Start from Sunday of current week
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - today.getDay());
+  
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(startOfWeek);
+    date.setDate(startOfWeek.getDate() + i);
+    const isPast = date < today;
+    const isToday = date.getTime() === today.getTime();
+    
+    days.push({
+      date,
+      studied: isPast ? Math.random() > 0.3 : isToday ? true : false,
+      minutes: isPast || isToday ? Math.floor(Math.random() * 30) + 5 : 0,
+    });
+  }
+  
+  return days;
+}
+
 export function DashboardClient() {
   const [progress, setProgress] = useState<UserProgress>(DEFAULT_PROGRESS);
-
   const [userKey, setUserKey] = useState<string>("anon");
-
   const [query, setQuery] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
   const [searchResult, setSearchResult] = useState<any | null>(null);
   const [selectedSectionIndex, setSelectedSectionIndex] = useState<number | null>(null);
-
   const [studied, setStudied] = useState<StudiedText[]>([]);
   const [studiedLoading, setStudiedLoading] = useState(false);
   const [studiedPage, setStudiedPage] = useState(1);
   const [studiedHasMore, setStudiedHasMore] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [weeklyData] = useState(generateWeeklyData);
 
   const PAGE_SIZE = 10;
 
+  // ...existing useEffect and functions for userKey, studied texts loading...
   useEffect(() => {
     setUserKey(getOrCreateUserKey());
   }, []);
@@ -132,7 +167,6 @@ export function DashboardClient() {
         return;
       }
       const data = (await res.json()) as any;
-      console.log(data);
       setSearchResult(data);
     } catch {
       setSearchError("Failed to fetch from Sefaria");
@@ -161,34 +195,20 @@ export function DashboardClient() {
       return s ? s.slice(0, 1800) : null;
     };
 
-    // If a specific section is selected => single entry (existing behavior).
-    // If "All sections (default)" => create one entry per section.
     const payloads =
       typeof selectedSectionIndex === "number"
-        ? [
-            {
-              ...basePayload,
-              snippet: makeSnippet(baseTextArray[selectedSectionIndex] ?? result?.text),
-            },
-          ]
+        ? [{ ...basePayload, snippet: makeSnippet(baseTextArray[selectedSectionIndex] ?? result?.text) }]
         : baseTextArray.length > 0
         ? baseTextArray
             .map((section: any, idx: number) => ({
               ...basePayload,
-              // make refs distinct per saved section (best-effort, works for many sectioned refs)
               ref: `${ref}:${idx + 1}`,
               snippet: makeSnippet(section),
             }))
-            .filter((p) => p.snippet) // skip empty sections
-        : [
-            {
-              ...basePayload,
-              snippet: makeSnippet(result?.text),
-            },
-          ];
+            .filter((p) => p.snippet)
+        : [{ ...basePayload, snippet: makeSnippet(result?.text) }];
 
     const createdItems: StudiedText[] = [];
-
     for (const payload of payloads) {
       const res = await fetch("/api/studied-texts", {
         method: "POST",
@@ -224,53 +244,114 @@ export function DashboardClient() {
           : DEFAULT_PROGRESS.lastStudied;
 
       setProgress({
-        points:
-          typeof parsed.points === "number" ? parsed.points : DEFAULT_PROGRESS.points,
-        streakDays:
-          typeof parsed.streakDays === "number"
-            ? parsed.streakDays
-            : DEFAULT_PROGRESS.streakDays,
+        points: typeof parsed.points === "number" ? parsed.points : DEFAULT_PROGRESS.points,
+        streakDays: typeof parsed.streakDays === "number" ? parsed.streakDays : DEFAULT_PROGRESS.streakDays,
         lastStudied,
       });
-    } catch {
-      // ignore
-    }
+    } catch {}
   }, []);
 
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-    } catch {
-      // ignore
-    }
+    } catch {}
   }, [progress]);
 
-  const levelInfo = useMemo(
-    () => getLevelFromPoints(progress.points),
-    [progress.points],
-  );
-
+  const levelInfo = useMemo(() => getLevelFromPoints(progress.points), [progress.points]);
   const selectedKey = portionToKey(progress.lastStudied);
+  const currentStreak = weeklyData.filter(d => d.studied).length;
 
   return (
     <div className="space-y-8">
-      <section className="space-y-2">
-        <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
-        <p className="text-white/70">
-          Keep your streak alive. Small wins, every day.
-        </p>
+      {/* Header Section */}
+      <section className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold tracking-tight text-white">
+            Welcome back! 👋
+          </h1>
+          <p className="text-white/60">
+            Keep your streak alive. Small wins, every day.
+          </p>
+        </div>
+        <Link href="/flashcards">
+          <Button variant="primary" size="lg" rightIcon={<span>→</span>}>
+            Start Learning
+          </Button>
+        </Link>
       </section>
 
-      <section className="space-y-3">
-        <div className="flex flex-col gap-2 md:flex-row md:items-end">
-          <div className="w-full md:flex-1">
-            <label className="text-sm text-white/70" htmlFor="sefariaSearch">
-              Search Sefaria
-            </label>
-            <input
-              id="sefariaSearch"
-              className="mt-2 w-full rounded-xl border border-white/10 bg-[#15162c]/60 px-3 py-2 text-white outline-none ring-0 focus:border-white/20"
-              placeholder='e.g. "Berakhot 2a"'
+      {/* Stats Row */}
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          label="Streak"
+          value={<><AnimatedNumber value={progress.streakDays} /> days</>}
+          icon={<StreakFlame days={progress.streakDays} size="lg" />}
+          variant="highlight"
+        />
+
+        <StatCard
+          label="Total Points"
+          value={<AnimatedNumber value={progress.points} />}
+          icon={<span className="text-3xl">⭐</span>}
+        />
+
+        <StatCard
+          label="Level"
+          value={levelInfo.level}
+          subtitle={`${Math.round(levelInfo.progress * 100)}% to next`}
+          icon={<LevelBadge level={levelInfo.level} progress={levelInfo.progress} size="md" />}
+        />
+
+        <StatCard
+          label="Current Focus"
+          value={progress.lastStudied.label}
+          subtitle={progress.lastStudied.type}
+          variant="warm"
+        />
+      </section>
+
+      {/* Main Content Grid */}
+      <section className="grid gap-6 lg:grid-cols-3">
+        {/* Left Column - Daily Goal & Weekly Calendar */}
+        <div className="space-y-6 lg:col-span-2">
+          <DailyGoalWidget
+            currentMinutes={18}
+            goalMinutes={30}
+            lessonsCompleted={3}
+          />
+          <WeeklyCalendar days={weeklyData} currentStreak={currentStreak} />
+        </div>
+
+        {/* Right Column - Quote & Quick Actions */}
+        <div className="space-y-6">
+          <QuoteWidget />
+          
+          <WidgetCard>
+            <h3 className="text-lg font-bold text-white mb-4">Quick Actions</h3>
+            <div className="space-y-3">
+              <Link href="/flashcards" className="block">
+                <Button variant="primary" className="w-full justify-start" leftIcon={<span>📚</span>}>
+                  Daily Flashcards
+                </Button>
+              </Link>
+              <Button variant="secondary" className="w-full justify-start" leftIcon={<span>🎯</span>}>
+                Review Mistakes
+              </Button>
+              <Button variant="ghost" className="w-full justify-start" leftIcon={<span>📖</span>}>
+                Continue Reading
+              </Button>
+            </div>
+          </WidgetCard>
+        </div>
+      </section>
+
+      {/* Sefaria Search Section */}
+      <WidgetCard>
+        <h3 className="text-lg font-bold text-white mb-4">Search Sefaria</h3>
+        <div className="flex flex-col gap-3 md:flex-row">
+          <div className="flex-1">
+            <Input
+              placeholder='e.g. "Berakhot 2a" or "Genesis 1"'
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => {
@@ -278,221 +359,134 @@ export function DashboardClient() {
               }}
             />
           </div>
-
-          <button
-            className="mt-2 md:mt-0 md:h-[42px] md:self-end rounded-xl bg-white px-4 py-2 text-sm font-semibold text-[#15162c] hover:bg-white/90 disabled:opacity-60"
+          <Button
+            variant="primary"
             onClick={() => void runSearch()}
-            disabled={searchLoading || !query.trim()}
+            isLoading={searchLoading}
+            disabled={!query.trim()}
           >
-            {searchLoading ? "Searching…" : "Search"}
-          </button>
+            Search
+          </Button>
         </div>
 
-        {searchError && <div className="text-sm text-red-200/90">{searchError}</div>}
+        {searchError && (
+          <div className="mt-3 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-sm text-red-300">
+            {searchError}
+          </div>
+        )}
 
         {searchResult && (
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur">
+          <div className="mt-4 p-4 rounded-2xl bg-white/5 border border-white/10">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-              <div className="space-y-1 min-w-0">
-                <div className="text-sm font-medium text-white/70">Result</div>
+              <div className="space-y-2 min-w-0 flex-1">
                 <div className="text-lg font-semibold text-white">
                   {searchResult?.ref ?? query.trim()}
                 </div>
                 {searchResult?.heRef && (
-                  <div
-                    className="text-sm text-white/60"
-                    style={{ fontFamily: "var(--font-hebrew-serif)" }}
-                    dir="rtl"
-                    lang="he"
-                  >
+                  <div className="text-sm text-white/60" dir="rtl" lang="he">
                     {searchResult.heRef}
                   </div>
                 )}
                 {Array.isArray(searchResult?.versions?.[0]?.text) &&
                   searchResult.versions[0].text.length > 0 && (
-                    <div className="mt-3 space-y-1">
-                      <div className="text-xs font-medium text-white/60">
+                    <div className="mt-3">
+                      <label className="text-xs font-medium text-white/60 block mb-1">
                         Pick a section to save
-                      </div>
+                      </label>
                       <select
-                        className="w-full rounded-xl border border-white/10 bg-[#15162c]/60 px-2 py-1 text-xs text-white outline-none ring-0 focus:border-white/20"
-                        value={
-                          selectedSectionIndex !== null ? String(selectedSectionIndex) : ""
-                        }
+                        className="w-full rounded-xl border border-white/10 bg-[var(--surface-card)] px-3 py-2 text-sm text-white outline-none focus:border-ocean-400"
+                        value={selectedSectionIndex !== null ? String(selectedSectionIndex) : ""}
                         onChange={(e) => {
                           const v = e.target.value;
                           setSelectedSectionIndex(v === "" ? null : Number(v));
                         }}
                       >
-                        <option value="">All sections (default)</option>
+                        <option value="">All sections</option>
                         {searchResult.versions[0].text.map(
                           (section: any, idx: number) =>
                             section && (
                               <option key={idx} value={idx}>
-                                {`${idx + 1}. ${String(section).slice(0, 60)}${String(section).length > 60 ? "…" : ""
-                                  }`}
+                                {`${idx + 1}. ${String(section).slice(0, 50)}${String(section).length > 50 ? "…" : ""}`}
                               </option>
-                            ),
+                            )
                         )}
                       </select>
                     </div>
                   )}
-                {/* show selected section content (HTML) */}
-                {Array.isArray(searchResult?.versions?.[0]?.text) && (
-                  <div className="mt-3 rounded-xl border border-white/10 bg-[#15162c]/40 p-3 text-sm text-white/80">
-                    <div className="mb-1 text-xs font-medium text-white/60">
-                      Preview
-                    </div>
-                    <div
-                      className="prose prose-invert max-w-none text-sm"
-                      style={{ fontFamily: "var(--font-hebrew-sans)" }}
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          typeof selectedSectionIndex === "number" &&
-                            searchResult.versions[0].text[selectedSectionIndex]
-                            ? String(searchResult.versions[0].text[selectedSectionIndex])
-                            : String(
-                              searchResult.versions[0].text
-                                .filter(Boolean)
-                                .join(" "),
-                            ),
-                      }}
-                    />
-                  </div>
-                )}
               </div>
-              <button
-                className="w-full md:w-auto rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10"
-                onClick={() => void addStudiedFromSefaria(searchResult)}
-              >
-                Add to dashboard
-              </button>
+              <Button variant="warm" onClick={() => void addStudiedFromSefaria(searchResult)}>
+                Add to Dashboard
+              </Button>
             </div>
           </div>
         )}
+      </WidgetCard>
 
-        <div className="space-y-2">
-          <div className="text-sm font-medium text-white/70">What you studied</div>
-
-          {studiedLoading ? (
-            <div className="text-sm text-white/60">Loading…</div>
-          ) : studied.length === 0 ? (
-            <div className="text-sm text-white/60">
-              No saved texts yet. Search above and add one.
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-3 sm:flex sm:gap-3 sm:overflow-x-auto sm:pb-2">
-              {studied.map((t) => (
-                <div
-                  key={t.id}
-                  className="w-full sm:min-w-[280px] sm:max-w-[360px] sm:flex-shrink-0 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"
-                >
-                  <div className="text-xs text-white/60">Studied</div>
-                  <div className="mt-1 text-base font-semibold text-white">{t.ref}</div>
-                  {t.heRef && (
-                    <div
-                      className="mt-1 text-sm text-white/60"
-                      style={{ fontFamily: "var(--font-hebrew-serif)" }}
-                      dir="rtl"
-                      lang="he"
-                    >
-                      {t.heRef}
-                    </div>
-                  )}
-
-                  {t.snippet && (
-                    <div
-                      className="mt-2 text-sm text-white/75 prose prose-invert max-w-none"
-                      style={{ fontFamily: "var(--font-hebrew-sans)" }}
-                      dangerouslySetInnerHTML={{
-                        __html: (() => {
-                          const html = String(t.snippet ?? "");
-                          const FIRST_WORDS = 18;
-                          const LAST_WORDS = 12;
-                          const words = html.split(/\s+/).filter(Boolean);
-                          const head = words.slice(0, FIRST_WORDS).join(" ");
-                          const tail = words.slice(-LAST_WORDS).join(" ");
-                          return `<span>${head} … ${tail}</span>`;
-                        })(),
-                      }}
-                    />
-                  )}
-
-                  {t.url && (
-                    <a
-                      className="mt-3 inline-block text-sm font-semibold text-white/80 hover:text-white"
-                      href={t.url}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Open on Sefaria
-                    </a>
-                  )}
-                </div>
-              ))}
-
-              {studiedHasMore && (
-                <button
-                  className="w-full sm:min-w-[180px] sm:max-w-[180px] sm:flex-shrink-0 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur flex items-center justify-center text-sm font-semibold text-white hover:bg-white/10 disabled:opacity-60"
-                  onClick={() => void loadMoreStudied()}
-                  disabled={loadingMore}
-                >
-                  {loadingMore ? "Loading…" : "Load more"}
-                </button>
-              )}
-            </div>
-          )}
+      {/* Studied Texts Section */}
+      <WidgetCard>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-bold text-white">Your Study History</h3>
+          <span className="text-sm text-white/50">{studied.length} texts saved</span>
         </div>
-      </section>
 
-      <section className="grid gap-4 sm:grid-cols-3">
-        <StatCard
-          label="Streak"
-          value={
-            <span className="tabular-nums">
-              {progress.streakDays}
-              <span className="ml-2 text-base font-medium text-white/70">
-                days
-              </span>
-            </span>
-          }
-          hint="Study today to extend it."
-        />
-        <StatCard
-          label="Total points"
-          value={<span className="tabular-nums">{progress.points}</span>}
-          hint="Earn points from flashcards."
-        />
-        <StatCard
-          label="Level"
-          value={<span className="tabular-nums">{levelInfo.level}</span>}
-          hint="Progress to the next level below."
-        />
-      </section>
+        {studiedLoading ? (
+          <div className="text-sm text-white/60 py-8 text-center">Loading your texts...</div>
+        ) : studied.length === 0 ? (
+          <div className="text-center py-8">
+            <div className="text-4xl mb-3">📚</div>
+            <div className="text-white/60">No saved texts yet.</div>
+            <div className="text-sm text-white/40">Search above and add your first one!</div>
+          </div>
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {studied.slice(0, 6).map((t) => (
+              <div
+                key={t.id}
+                className="rounded-2xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition-all duration-200"
+              >
+                <div className="text-base font-semibold text-white truncate">{t.ref}</div>
+                {t.heRef && (
+                  <div className="mt-1 text-sm text-white/50 truncate" dir="rtl" lang="he">
+                    {t.heRef}
+                  </div>
+                )}
+                {t.url && (
+                  <a
+                    className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-ocean-400 hover:text-ocean-300"
+                    href={t.url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Open on Sefaria →
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
 
-      <section className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
-        <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+        {studiedHasMore && (
+          <div className="mt-4 text-center">
+            <Button variant="ghost" onClick={() => void loadMoreStudied()} isLoading={loadingMore}>
+              Load More
+            </Button>
+          </div>
+        )}
+      </WidgetCard>
+
+      {/* Focus Selection */}
+      <WidgetCard>
+        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div className="space-y-2">
-            <div className="text-sm font-medium text-white/70">
-              Current focus
-            </div>
-            <div className="text-xl font-semibold">
-              {progress.lastStudied.type}:{" "}
-              <span className="text-white/90">{progress.lastStudied.label}</span>
-            </div>
-            <div className="text-sm text-white/60">
-              Pick what you last learned. We’ll generate flashcards from it
-              later.
-            </div>
+            <h3 className="text-lg font-bold text-white">Update Your Focus</h3>
+            <p className="text-sm text-white/60">
+              Pick what you're currently studying. We'll generate flashcards from it.
+            </p>
           </div>
 
-          <div className="w-full md:max-w-sm">
-            <label className="text-sm text-white/70" htmlFor="portion">
-              Update last studied
-            </label>
+          <div className="w-full md:max-w-sm space-y-4">
             <select
-              id="portion"
-              className="mt-2 w-full rounded-xl border border-white/10 bg-[#15162c]/60 px-3 py-2 text-white outline-none ring-0 focus:border-white/20"
+              className="w-full rounded-xl border border-white/10 bg-[var(--surface-card)] px-4 py-3 text-white outline-none focus:border-ocean-400 transition-colors"
               value={selectedKey}
               onChange={(e) => {
                 const next = keyToPortion(e.target.value);
@@ -507,33 +501,10 @@ export function DashboardClient() {
               ))}
             </select>
 
-            <div className="mt-4">
-              <ProgressBar value={levelInfo.progress} label="Next level" />
-            </div>
+            <ProgressBar value={levelInfo.progress} label="Progress to next level" variant="ocean" />
           </div>
         </div>
-      </section>
-
-      <section className="grid gap-4 md:grid-cols-2">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
-          <div className="text-sm font-medium text-white/70">Next up</div>
-          <div className="mt-2 text-lg font-semibold">Daily warm-up</div>
-          <p className="mt-2 text-sm text-white/65">
-            Answer 5 flashcards to get a quick points boost.
-          </p>
-          <div className="mt-4 text-sm text-white/60">
-            (Flashcards page coming next.)
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
-          <div className="text-sm font-medium text-white/70">Momentum</div>
-          <div className="mt-2 text-lg font-semibold">Streak tip</div>
-          <p className="mt-2 text-sm text-white/65">
-            Keep it easy: 2 minutes counts. Consistency beats intensity.
-          </p>
-        </div>
-      </section>
+      </WidgetCard>
     </div>
   );
 }
