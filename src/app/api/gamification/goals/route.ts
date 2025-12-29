@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createGoal, getOrCreateUser } from "@/server/gamification/service";
-import { db } from "@/server/db";
-import { GoalType, GoalPeriod } from "../../../../generated/prisma";
+import { createGoal, getOrCreateUser } from "~/server/gamification/service";
+import { db } from "~/server/db";
+import { GoalType, GoalPeriod } from "~/generated/prisma";
 
 export async function GET(request: NextRequest) {
   const userKey = request.headers.get("x-user-key");

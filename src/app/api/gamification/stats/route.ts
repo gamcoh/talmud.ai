@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getUserStats, getCurrentFocus, getDailyWisdom } from "@/server/gamification/service";
+import { getUserStats, getCurrentFocus, getDailyWisdom, getWeeklyCalendar } from "~/server/gamification/service";
 
 export async function GET(request: NextRequest) {
   const userKey = request.headers.get("x-user-key");
@@ -9,16 +9,18 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const [stats, currentFocus, dailyWisdom] = await Promise.all([
+    const [stats, currentFocus, dailyWisdom, weeklyCalendar] = await Promise.all([
       getUserStats(userKey),
       getCurrentFocus(userKey),
       getDailyWisdom(),
+      getWeeklyCalendar(userKey),
     ]);
 
     return NextResponse.json({
       ...stats,
       currentFocus,
       dailyWisdom,
+      weeklyCalendar,
     });
   } catch (error) {
     console.error("Error fetching stats:", error);

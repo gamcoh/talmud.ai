@@ -8,16 +8,16 @@ import { DailyGoalWidget } from "~/components/ui/DailyGoalWidget";
 import { WeeklyCalendar } from "~/components/ui/WeeklyCalendar";
 import { Button } from "~/components/ui/Button";
 import Link from "next/link";
+import confetti from "canvas-confetti";
 
-import { getOrCreateUserKey, generateWeeklyData } from "./constants";
 import { useUserProgress, useStudiedTexts, useSefariaSearch } from "./hooks";
 import { StatsSection, SearchSection, StudyHistorySection, FocusSection } from "./sections";
 
 export function DashboardClient() {
-  const [userKey, setUserKey] = useState<string>("anon");
-  const [weeklyData] = useState(generateWeeklyData);
+  const [userKey, setUserKey] = useState<string>("demo-user");
+  const [dashboardPulse, setDashboardPulse] = useState(false);
 
-  const { progress, setProgress } = useUserProgress();
+  const { progress, stats, loading } = useUserProgress();
   const {
     studied,
     studiedLoading,
@@ -26,6 +26,23 @@ export function DashboardClient() {
     loadMoreStudied,
     addStudiedItems,
   } = useStudiedTexts(userKey);
+
+  // Wrap addStudiedItems to trigger celebration
+  const handleAddStudiedItems = (items: any[]) => {
+    addStudiedItems(items);
+    
+    // Trigger dashboard pulse animation
+    setDashboardPulse(true);
+    setTimeout(() => setDashboardPulse(false), 600);
+    
+    // Trigger confetti from top of page
+    confetti({
+      particleCount: 100,
+      spread: 120,
+      origin: { y: 0.3 },
+      colors: ['#3b82f6', '#60a5fa', '#93c5fd', '#fbbf24', '#fcd34d'],
+    });
+  };
   const {
     query,
     setQuery,
@@ -36,17 +53,40 @@ export function DashboardClient() {
     setSelectedSectionIndex,
     runSearch,
     addStudiedFromSefaria,
-  } = useSefariaSearch(userKey, addStudiedItems);
+  } = useSefariaSearch(userKey, handleAddStudiedItems);
 
   useEffect(() => {
-    setUserKey(getOrCreateUserKey());
+    // Set to demo-user by default for development
+    let key = localStorage.getItem("talmud-user-key");
+    if (!key) {
+      key = "demo-user";
+      localStorage.setItem("talmud-user-key", key);
+    }
+    setUserKey(key);
   }, []);
 
   const levelInfo = useMemo(() => getLevelFromPoints(progress.points), [progress.points]);
+  const weeklyData = stats?.weeklyCalendar ?? [];
   const currentStreak = weeklyData.filter((d) => d.studied).length;
 
+  // Get daily goal from stats
+  const dailyGoal = stats?.activeGoals?.find(
+    (g) => g.type === "STUDY_MINUTES" && g.period === "DAILY"
+  );
+  const textsGoal = stats?.activeGoals?.find(
+    (g) => g.type === "TEXTS_STUDIED" && g.period === "DAILY"
+  );
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-white/60">Loading...</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-8">
+    <div className={`space-y-8 transition-all duration-300 ${dashboardPulse ? 'scale-[0.99]' : 'scale-100'}`}>
       {/* Header Section */}
       <section className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="space-y-1">
@@ -72,16 +112,16 @@ export function DashboardClient() {
         {/* Left Column - Daily Goal & Weekly Calendar */}
         <div className="space-y-6 lg:col-span-2">
           <DailyGoalWidget
-            currentMinutes={18}
-            goalMinutes={30}
-            lessonsCompleted={3}
+            currentMinutes={dailyGoal?.progress ?? 0}
+            goalMinutes={dailyGoal?.target ?? 30}
+            lessonsCompleted={textsGoal?.progress ?? 0}
           />
           <WeeklyCalendar days={weeklyData} currentStreak={currentStreak} />
         </div>
 
         {/* Right Column - Quote & Quick Actions */}
         <div className="space-y-6">
-          <QuoteWidget />
+          <QuoteWidget dailyWisdom={stats?.dailyWisdom ?? null} />
 
           <WidgetCard>
             <h3 className="text-lg font-bold text-white mb-4">Quick Actions</h3>
@@ -128,7 +168,7 @@ export function DashboardClient() {
       <FocusSection
         lastStudied={progress.lastStudied}
         levelProgress={levelInfo.progress}
-        onPortionChange={(portion) => setProgress((p) => ({ ...p, lastStudied: portion }))}
+        onPortionChange={() => {}}
       />
     </div>
   );

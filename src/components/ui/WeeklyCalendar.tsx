@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 
 type DayData = {
-  date: Date;
+  day: string;
+  date: string; // ISO date string
   studied: boolean;
   minutes: number;
 };
@@ -67,8 +68,10 @@ export function WeeklyCalendar({ days, currentStreak }: WeeklyCalendarProps) {
 
         {/* Day cells */}
         {days.map((day, i) => {
-          const isToday = day.date.getTime() === today.getTime();
-          const isFuture = day.date > today;
+          const dayDate = new Date(day.date);
+          dayDate.setHours(0, 0, 0, 0);
+          const isToday = dayDate.getTime() === today.getTime();
+          const isFuture = dayDate > today;
 
           return (
             <div
@@ -85,7 +88,7 @@ export function WeeklyCalendar({ days, currentStreak }: WeeklyCalendarProps) {
               `}
             >
               <span className={`text-sm font-medium ${day.studied && !isFuture ? "text-white" : "text-white/40"}`}>
-                {day.date.getDate()}
+                {dayDate.getDate()}
               </span>
               {day.studied && !isFuture && (
                 <div className="absolute -bottom-0.5 w-1.5 h-1.5 rounded-full bg-ocean-400" />

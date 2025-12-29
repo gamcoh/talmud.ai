@@ -3,8 +3,8 @@ import {
   recordStudySession,
   awardPoints,
   updateGoalProgress,
-} from "@/server/gamification/service";
-import { GoalType } from "../../../../generated/prisma";
+} from "~/server/gamification/service";
+import { GoalType } from "~/generated/prisma";
 
 export async function POST(request: NextRequest) {
   const userKey = request.headers.get("x-user-key");

@@ -330,23 +330,82 @@ export async function getDailyWisdom() {
     mishnah -= chapters[i]!;
   }
 
-  const ref = `Pirkei_Avot.${chapter}.${mishnah}`;
+  const ref = `Pirkei Avot.${chapter}.${mishnah}`;
 
   try {
     const response = await fetch(
-      `https://www.sefaria.org/api/v3/texts/${ref}?version=english`
+      `https://www.sefaria.org/api/texts/${ref}?context=0`,
+      {
+        headers: {
+          'Accept': 'application/json',
+        },
+      }
     );
+    
+    if (!response.ok) {
+      throw new Error(`Sefaria API returned ${response.status}`);
+    }
+    
     const data = await response.json();
 
+    // Sefaria API returns text as array if multiple verses, or string if single verse
+    const englishText = Array.isArray(data.text) ? data.text.join(' ') : data.text;
+    const hebrewText = Array.isArray(data.he) ? data.he.join(' ') : data.he;
+
     return {
-      ref,
-      heRef: data.heRef,
-      text: data.text,
-      heText: data.he,
-      url: `https://www.sefaria.org/${ref}`,
+      ref: data.ref || ref,
+      heRef: data.heRef || ref,
+      text: englishText || '',
+      heText: hebrewText || '',
+      url: `https://www.sefaria.org/${ref.replace(/ /g, '_')}`,
     };
   } catch (error) {
     console.error("Failed to fetch daily wisdom:", error);
     return null;
   }
+}
+
+export async function getWeeklyCalendar(userKey: string) {
+  const user = await getOrCreateUser(userKey);
+  
+  // Get study sessions for the last 7 days
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  const sevenDaysAgo = new Date(today);
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+
+  const sessions = await db.studySession.findMany({
+    where: {
+      userId: user.id,
+      date: {
+        gte: sevenDaysAgo,
+        lte: today,
+      },
+    },
+    orderBy: { date: "asc" },
+  });
+
+  // Build array of last 7 days
+  const weekData = [];
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+    
+    const session = sessions.find(s => {
+      const sessionDate = new Date(s.date);
+      return sessionDate.getTime() === date.getTime();
+    });
+
+    const dayName = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][date.getDay()];
+
+    weekData.push({
+      day: dayName!,
+      date: date.toISOString(), // Return ISO string for JSON serialization
+      studied: !!session,
+      minutes: session?.duration ?? 0,
+    });
+  }
+
+  return weekData;
 }
