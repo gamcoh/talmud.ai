@@ -8,6 +8,7 @@ export function useStudiedTexts(userKey: string) {
   const [studiedPage, setStudiedPage] = useState(1);
   const [studiedHasMore, setStudiedHasMore] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
     if (!userKey) return;
@@ -19,9 +20,10 @@ export function useStudiedTexts(userKey: string) {
           `/api/studied-texts?userKey=${encodeURIComponent(userKey)}&page=1&limit=${PAGE_SIZE}`,
           { cache: "no-store" }
         );
-        const data = (await res.json()) as { items?: StudiedText[]; hasMore?: boolean };
+        const data = (await res.json()) as { items?: StudiedText[]; hasMore?: boolean; totalCount?: number };
         setStudied(Array.isArray(data.items) ? data.items : []);
         setStudiedHasMore(!!data.hasMore);
+        setTotalCount(data.totalCount ?? 0);
       } finally {
         setStudiedLoading(false);
       }
@@ -37,7 +39,7 @@ export function useStudiedTexts(userKey: string) {
         `/api/studied-texts?userKey=${encodeURIComponent(userKey)}&page=${nextPage}&limit=${PAGE_SIZE}`,
         { cache: "no-store" }
       );
-      const data = (await res.json()) as { items?: StudiedText[]; hasMore?: boolean };
+      const data = (await res.json()) as { items?: StudiedText[]; hasMore?: boolean; totalCount?: number };
       const newItems = Array.isArray(data.items) ? data.items : [];
       setStudied((prev) => {
         const combined = [...prev, ...newItems];
@@ -46,6 +48,7 @@ export function useStudiedTexts(userKey: string) {
       });
       setStudiedPage(nextPage);
       setStudiedHasMore(!!data.hasMore);
+      setTotalCount(data.totalCount ?? 0);
     } finally {
       setLoadingMore(false);
     }
@@ -57,6 +60,8 @@ export function useStudiedTexts(userKey: string) {
       const seen = new Set<string>();
       return next.filter((x) => (seen.has(x.id) ? false : (seen.add(x.id), true)));
     });
+    // Increment total count by the number of new items added
+    setTotalCount((prev) => prev + items.length);
   }
 
   return {
@@ -66,5 +71,6 @@ export function useStudiedTexts(userKey: string) {
     loadingMore,
     loadMoreStudied,
     addStudiedItems,
+    totalCount,
   };
 }

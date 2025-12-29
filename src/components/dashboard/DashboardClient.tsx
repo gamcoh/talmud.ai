@@ -25,6 +25,7 @@ export function DashboardClient() {
     loadingMore,
     loadMoreStudied,
     addStudiedItems,
+    totalCount,
   } = useStudiedTexts(userKey);
 
   // Wrap addStudiedItems to trigger celebration
@@ -162,6 +163,7 @@ export function DashboardClient() {
         studiedHasMore={studiedHasMore}
         loadingMore={loadingMore}
         onLoadMore={() => void loadMoreStudied()}
+        totalCount={totalCount}
       />
 
       {/* Focus Selection */}

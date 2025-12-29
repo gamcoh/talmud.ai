@@ -13,17 +13,22 @@ export async function GET(req: NextRequest) {
 
   const skip = (page - 1) * limit;
 
-  const items = await prisma.studiedText.findMany({
-    where: { userKey },
-    orderBy: { createdAt: "desc" },
-    skip,
-    take: limit + 1, // fetch one extra to detect if more exist
-  });
+  const [items, totalCount] = await Promise.all([
+    prisma.studiedText.findMany({
+      where: { userKey },
+      orderBy: { createdAt: "desc" },
+      skip,
+      take: limit + 1, // fetch one extra to detect if more exist
+    }),
+    prisma.studiedText.count({
+      where: { userKey },
+    }),
+  ]);
 
   const hasMore = items.length > limit;
   const returnItems = hasMore ? items.slice(0, limit) : items;
 
-  return NextResponse.json({ items: returnItems, hasMore });
+  return NextResponse.json({ items: returnItems, hasMore, totalCount });
 }
 
 export async function POST(req: Request) {

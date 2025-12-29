@@ -166,3 +166,54 @@ body {
   ring-offset: 2px;
   ring-color: var(--color-ocean-400);
 }
+/* Snippet content styling for HTML from Sefaria */
+.snippet-content {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-feature-settings: "liga" 1, "calt" 1;
+}
+
+.snippet-content b,
+.snippet-content strong {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.snippet-content i,
+.snippet-content em {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.snippet-content a {
+  color: var(--color-ocean-400);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.snippet-content a:hover {
+  color: var(--color-ocean-300);
+}
+
+.snippet-content small {
+  font-size: 0.85em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Handle Hebrew text in snippets with better font rendering */
+.snippet-content [dir="rtl"],
+.snippet-content [lang="he"] {
+  direction: rtl;
+  text-align: right;
+  font-family: var(--font-hebrew-serif), serif;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+}
+
+/* Line clamp utilities for snippet truncation */
+.line-clamp-4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
