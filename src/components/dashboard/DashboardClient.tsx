@@ -1,107 +1,98 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useState, useTransition, useMemo } from "react";
 import { getLevelFromPoints } from "~/lib/mock-data";
 import { WidgetCard } from "~/components/ui/WidgetCard";
 import { QuoteWidget } from "~/components/ui/QuoteWidget";
 import { DailyGoalWidget } from "~/components/ui/DailyGoalWidget";
 import { WeeklyCalendar } from "~/components/ui/WeeklyCalendar";
 import { Button } from "~/components/ui/Button";
+import { PointsNotification } from "~/components/ui/PointsNotification";
 import Link from "next/link";
 import confetti from "canvas-confetti";
-import { useDashboard } from "~/contexts/DashboardContext";
-
-import { useUserProgress, useStudiedTexts, useSefariaSearch } from "./hooks";
+import { addStudiedText } from "~/server/actions/dashboard";
 import { StatsSection, SearchSection, StudyHistorySection, FocusSection } from "./sections";
 
-export function DashboardClient() {
-  const [userKey, setUserKey] = useState<string>("demo-user");
-  const [dashboardPulse, setDashboardPulse] = useState(false);
-  const dashboard = useDashboard();
+type DashboardClientProps = {
+  userKey: string;
+  initialData: Awaited<ReturnType<typeof import("~/server/actions/dashboard").getDashboardData>>;
+  initialStudiedTexts: Awaited<ReturnType<typeof import("~/server/actions/dashboard").getStudiedTexts>>;
+};
 
-  const { progress, stats, loading } = useUserProgress();
-  const {
-    studied,
-    studiedLoading,
-    studiedHasMore,
-    loadingMore,
-    loadMoreStudied,
-    addStudiedItems,
-    totalCount,
-  } = useStudiedTexts(userKey);
+export function DashboardClient({ userKey, initialData, initialStudiedTexts }: DashboardClientProps) {
+  const [isPending, startTransition] = useTransition();
+  const [studiedTexts, setStudiedTexts] = useState(initialStudiedTexts.items);
+  const [totalCount, setTotalCount] = useState(initialStudiedTexts.totalCount);
+  const [currentPoints, setCurrentPoints] = useState(initialData.stats.level?.totalPoints ?? 0);
+  const [earnedPoints, setEarnedPoints] = useState<number | null>(null);
 
-  // Wrap addStudiedItems to trigger celebration
-  const handleAddStudiedItems = (items: any[]) => {
-    addStudiedItems(items);
-    
-    // Trigger dashboard pulse animation
-    setDashboardPulse(true);
-    setTimeout(() => setDashboardPulse(false), 600);
-    
-    // Trigger confetti from top of page
+  const stats = initialData.stats;
+  const levelInfo = useMemo(() => getLevelFromPoints(currentPoints), [currentPoints]);
+  const weeklyData = initialData.weeklyCalendar;
+  const currentStreak = weeklyData.filter((d) => d.studied).length;
+
+  const handleAddStudiedItem = async (data: Parameters<typeof addStudiedText>[0]) => {
+    // Optimistic updates - happen immediately
     confetti({
       particleCount: 100,
       spread: 120,
       origin: { y: 0.3 },
-      colors: ['#3b82f6', '#60a5fa', '#93c5fd', '#fbbf24', '#fcd34d'],
+      colors: ["#3b82f6", "#60a5fa", "#93c5fd", "#fbbf24", "#fcd34d"],
+    });
+
+    const optimisticItem = {
+      id: `temp-${Date.now()}`,
+      userKey: data.userKey,
+      ref: data.ref,
+      heRef: data.heRef ?? null,
+      url: data.url ?? null,
+      title: data.title ?? null,
+      snippet: data.snippet ?? null,
+      studiedAt: new Date(),
+    };
+
+    setStudiedTexts((prev) => [optimisticItem, ...prev]);
+    setTotalCount((prev) => prev + 1);
+    setEarnedPoints(10); // STUDY_TEXT points
+
+    // Server action
+    startTransition(async () => {
+      try {
+        const result = await addStudiedText(data);
+        
+        // Update optimistic item with real data
+        setStudiedTexts((prev) => 
+          prev.map(item => item.id === optimisticItem.id ? result : item)
+        );
+        setCurrentPoints(result.newTotalPoints);
+      } catch (error) {
+        console.error("Failed to add studied text:", error);
+        // Rollback optimistic updates
+        setStudiedTexts((prev) => prev.filter(item => item.id !== optimisticItem.id));
+        setTotalCount((prev) => prev - 1);
+        setEarnedPoints(null);
+      }
     });
   };
-  const {
-    query,
-    setQuery,
-    searchLoading,
-    searchError,
-    searchResult,
-    selectedSectionIndex,
-    setSelectedSectionIndex,
-    runSearch,
-    addStudiedFromSefaria,
-  } = useSefariaSearch(userKey, handleAddStudiedItems);
 
-  useEffect(() => {
-    // Set to demo-user by default for development
-    let key = localStorage.getItem("talmud-user-key");
-    if (!key) {
-      key = "demo-user";
-      localStorage.setItem("talmud-user-key", key);
-    }
-    setUserKey(key);
-  }, []);
-
-  const levelInfo = useMemo(() => getLevelFromPoints(dashboard.state.stats.points || progress.points), [dashboard.state.stats.points, progress.points]);
-  const weeklyData = stats?.weeklyCalendar ?? [];
-  const currentStreak = weeklyData.filter((d) => d.studied).length;
-
-  // Get the most recently added studied text from context
-  const lastStudiedText = dashboard.state.studiedTexts.length > 0 ? dashboard.state.studiedTexts[0] : null;
-
-  // Use context stats with fallback to API stats
-  const displayProgress = {
-    points: dashboard.state.stats.points || progress.points,
-    streakDays: dashboard.state.stats.streakDays || progress.streakDays,
-    lastStudied: progress.lastStudied,
+  const progress = {
+    points: currentPoints,
+    streakDays: stats.streak?.currentStreak ?? 0,
+    lastStudied: { type: "Parasha" as const, label: "Bereshit" },
   };
 
-  // Get daily goal from stats
-  const dailyGoal = stats?.activeGoals?.find(
+  const dailyGoal = stats.activeGoals?.find(
     (g) => g.type === "STUDY_MINUTES" && g.period === "DAILY"
   );
-  const textsGoal = stats?.activeGoals?.find(
+  const textsGoal = stats.activeGoals?.find(
     (g) => g.type === "TEXTS_STUDIED" && g.period === "DAILY"
   );
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-white/60">Loading...</div>
-      </div>
-    );
-  }
-
   return (
-    <div className={`space-y-8 transition-all duration-300 ${dashboardPulse ? 'scale-[0.99]' : 'scale-100'}`}>
-      {/* Header Section */}
-      <section className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <>
+      <PointsNotification points={earnedPoints} onClose={() => setEarnedPoints(null)} />
+      <div className="space-y-8">
+        <section className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="space-y-1">
           <h1 className="text-3xl font-bold tracking-tight text-white">
             Welcome back! 👋
@@ -117,12 +108,13 @@ export function DashboardClient() {
         </Link>
       </section>
 
-      {/* Stats Row */}
-      <StatsSection progress={displayProgress} levelInfo={levelInfo} lastStudiedText={lastStudiedText} />
+      <StatsSection 
+        progress={progress} 
+        levelInfo={levelInfo} 
+        lastStudiedText={studiedTexts[0] ?? null} 
+      />
 
-      {/* Main Content Grid */}
       <section className="grid gap-6 lg:grid-cols-3">
-        {/* Left Column - Daily Goal & Weekly Calendar */}
         <div className="space-y-6 lg:col-span-2">
           <DailyGoalWidget
             currentMinutes={dailyGoal?.progress ?? 0}
@@ -132,9 +124,8 @@ export function DashboardClient() {
           <WeeklyCalendar days={weeklyData} currentStreak={currentStreak} />
         </div>
 
-        {/* Right Column - Quote & Quick Actions */}
         <div className="space-y-6">
-          <QuoteWidget dailyWisdom={stats?.dailyWisdom ?? null} />
+          <QuoteWidget dailyWisdom={initialData.dailyWisdom} />
 
           <WidgetCard>
             <h3 className="text-lg font-bold text-white mb-4">Quick Actions</h3>
@@ -155,35 +146,24 @@ export function DashboardClient() {
         </div>
       </section>
 
-      {/* Sefaria Search Section */}
       <SearchSection
-        query={query}
-        setQuery={setQuery}
-        searchLoading={searchLoading}
-        searchError={searchError}
-        searchResult={searchResult}
-        selectedSectionIndex={selectedSectionIndex}
-        setSelectedSectionIndex={setSelectedSectionIndex}
-        onSearch={() => void runSearch()}
-        onAddStudied={(result) => void addStudiedFromSefaria(result)}
+        userKey={userKey}
+        onAddStudied={handleAddStudiedItem}
+        isPending={isPending}
       />
 
-      {/* Studied Texts Section */}
       <StudyHistorySection
-        studied={dashboard.state.studiedTexts.length > 0 ? dashboard.state.studiedTexts : studied}
-        studiedLoading={studiedLoading}
-        studiedHasMore={studiedHasMore}
-        loadingMore={loadingMore}
-        onLoadMore={() => void loadMoreStudied()}
-        totalCount={dashboard.state.totalCount || totalCount}
+        studied={studiedTexts}
+        totalCount={totalCount}
+        userKey={userKey}
       />
 
-      {/* Focus Selection */}
       <FocusSection
         lastStudied={progress.lastStudied}
         levelProgress={levelInfo.progress}
         onPortionChange={() => {}}
       />
-    </div>
+      </div>
+    </>
   );
 }
