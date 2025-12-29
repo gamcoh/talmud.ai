@@ -70,6 +70,9 @@ export function DashboardClient() {
   const weeklyData = stats?.weeklyCalendar ?? [];
   const currentStreak = weeklyData.filter((d) => d.studied).length;
 
+  // Get the most recently added studied text
+  const lastStudiedText = studied.length > 0 ? studied[0] : null;
+
   // Get daily goal from stats
   const dailyGoal = stats?.activeGoals?.find(
     (g) => g.type === "STUDY_MINUTES" && g.period === "DAILY"
@@ -106,7 +109,7 @@ export function DashboardClient() {
       </section>
 
       {/* Stats Row */}
-      <StatsSection progress={progress} levelInfo={levelInfo} />
+      <StatsSection progress={progress} levelInfo={levelInfo} lastStudiedText={lastStudiedText} />
 
       {/* Main Content Grid */}
       <section className="grid gap-6 lg:grid-cols-3">
