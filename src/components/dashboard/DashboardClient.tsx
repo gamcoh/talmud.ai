@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, useMemo } from "react";
+import { useTransition, useMemo, useEffect, useRef } from "react";
 import { getLevelFromPoints } from "~/lib/mock-data";
 import { WidgetCard } from "~/components/ui/WidgetCard";
 import { QuoteWidget } from "~/components/ui/QuoteWidget";
@@ -12,6 +12,7 @@ import Link from "next/link";
 import confetti from "canvas-confetti";
 import { addStudiedText } from "~/server/actions/dashboard";
 import { StatsSection, SearchSection, StudyHistorySection } from "./sections";
+import { useAppStore, selectPoints, selectStreak, type StudiedText } from "~/stores/appStore";
 
 type DashboardClientProps = {
   userKey: string;
@@ -21,13 +22,76 @@ type DashboardClientProps = {
 
 export function DashboardClient({ userKey, initialData, initialStudiedTexts }: DashboardClientProps) {
   const [isPending, startTransition] = useTransition();
-  const [studiedTexts, setStudiedTexts] = useState(initialStudiedTexts.items);
-  const [totalCount, setTotalCount] = useState(initialStudiedTexts.totalCount);
-  const [currentPoints, setCurrentPoints] = useState(initialData.stats.level?.totalPoints ?? 0);
-  const [earnedPoints, setEarnedPoints] = useState<number | null>(null);
+  
+  // Zustand store
+  const studiedTexts = useAppStore((state) => state.studiedTexts);
+  const totalTextsCount = useAppStore((state) => state.totalTextsCount);
+  const hasMoreTexts = useAppStore((state) => state.hasMoreTexts);
+  const earnedPointsNotification = useAppStore((state) => state.earnedPointsNotification);
+  const points = useAppStore(selectPoints);
+  const streakDays = useAppStore(selectStreak);
+  
+  // Actions
+  const setUserKey = useAppStore((state) => state.setUserKey);
+  const setStudiedTexts = useAppStore((state) => state.setStudiedTexts);
+  const addStudiedTextToStore = useAppStore((state) => state.addStudiedText);
+  const removeStudiedText = useAppStore((state) => state.removeStudiedText);
+  const showPointsNotification = useAppStore((state) => state.showPointsNotification);
+  const hidePointsNotification = useAppStore((state) => state.hidePointsNotification);
+  const updateStats = useAppStore((state) => state.updateStats);
 
-  const stats = initialData.stats;
-  const levelInfo = useMemo(() => getLevelFromPoints(currentPoints), [currentPoints]);
+  // Initialize store with server data only once
+  const initialized = useRef(false);
+  useEffect(() => {
+    if (!initialized.current) {
+      initialized.current = true;
+      setUserKey(userKey);
+      setStudiedTexts(
+        initialStudiedTexts.items,
+        initialStudiedTexts.totalCount,
+        initialStudiedTexts.hasMore
+      );
+      // Only set stats if they're not already set (e.g., from flashcards page)
+      const currentPoints = useAppStore.getState().stats.points;
+      if (currentPoints === 0) {
+        updateStats({
+          points: initialData.stats.level?.totalPoints ?? 0,
+          level: initialData.stats.level?.currentLevel ?? 1,
+          streakDays: initialData.stats.streak?.currentStreak ?? 0,
+          longestStreak: initialData.stats.streak?.longestStreak ?? 0,
+        });
+      }
+    }
+  }, [userKey, initialData, initialStudiedTexts, setUserKey, setStudiedTexts, updateStats]);
+
+  // Sync stats when returning from other pages (like flashcards)
+  useEffect(() => {
+    const handleVisibilityChange = async () => {
+      if (document.visibilityState === 'visible') {
+        try {
+          const res = await fetch(`/api/gamification/stats?userKey=${encodeURIComponent(userKey)}`, {
+            cache: 'no-store',
+          });
+          const data = await res.json() as { level?: { totalPoints: number; currentLevel: number } };
+          if (data.level) {
+            updateStats({
+              points: data.level.totalPoints,
+              level: data.level.currentLevel,
+            });
+          }
+        } catch (error) {
+          console.error('Failed to refresh stats:', error);
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [userKey, updateStats]);
+
+  const levelInfo = useMemo(() => getLevelFromPoints(points), [points]);
   const weeklyData = initialData.weeklyCalendar;
   const currentStreak = weeklyData.filter((d) => d.studied).length;
 
@@ -40,7 +104,7 @@ export function DashboardClient({ userKey, initialData, initialStudiedTexts }: D
       colors: ["#3b82f6", "#60a5fa", "#93c5fd", "#fbbf24", "#fcd34d"],
     });
 
-    const optimisticItem = {
+    const optimisticItem: StudiedText = {
       id: `temp-${Date.now()}`,
       userKey: data.userKey,
       ref: data.ref,
@@ -48,38 +112,39 @@ export function DashboardClient({ userKey, initialData, initialStudiedTexts }: D
       url: data.url ?? null,
       title: data.title ?? null,
       snippet: data.snippet ?? null,
-      studiedAt: new Date(),
+      createdAt: new Date().toISOString(),
     };
 
-    setStudiedTexts((prev) => [optimisticItem, ...prev]);
-    setTotalCount((prev) => prev + 1);
-    setEarnedPoints(10); // STUDY_TEXT points
+    addStudiedTextToStore(optimisticItem);
+    showPointsNotification(10); // STUDY_TEXT points
 
     // Server action
     startTransition(async () => {
       try {
         const result = await addStudiedText(data);
         
-        // Update optimistic item with real data
-        setStudiedTexts((prev) => 
-          prev.map(item => item.id === optimisticItem.id ? result : item)
-        );
-        setCurrentPoints(result.newTotalPoints);
+        // Remove temp and add real item
+        removeStudiedText(optimisticItem.id);
+        addStudiedTextToStore(result as any);
+        
+        // Update stats
+        updateStats({ points: result.newTotalPoints });
       } catch (error) {
         console.error("Failed to add studied text:", error);
         // Rollback optimistic updates
-        setStudiedTexts((prev) => prev.filter(item => item.id !== optimisticItem.id));
-        setTotalCount((prev) => prev - 1);
-        setEarnedPoints(null);
+        removeStudiedText(optimisticItem.id);
+        hidePointsNotification();
       }
     });
   };
 
   const progress = {
-    points: currentPoints,
-    streakDays: stats.streak?.currentStreak ?? 0,
+    points,
+    streakDays,
     lastStudied: { type: "Parasha" as const, label: "Bereshit" },
   };
+
+  const stats = initialData.stats;
 
   const dailyGoal = stats.activeGoals?.find(
     (g) => g.type === "STUDY_MINUTES" && g.period === "DAILY"
@@ -90,7 +155,7 @@ export function DashboardClient({ userKey, initialData, initialStudiedTexts }: D
 
   return (
     <>
-      <PointsNotification points={earnedPoints} onClose={() => setEarnedPoints(null)} />
+      <PointsNotification points={earnedPointsNotification} onClose={hidePointsNotification} />
       <div className="space-y-8">
         <section className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="space-y-1">
@@ -111,7 +176,7 @@ export function DashboardClient({ userKey, initialData, initialStudiedTexts }: D
       <StatsSection 
         progress={progress} 
         levelInfo={levelInfo} 
-        lastStudiedText={studiedTexts[0] ?? null} 
+        lastStudiedText={studiedTexts[0] ? { ...studiedTexts[0], createdAt: String(studiedTexts[0].createdAt) } : null} 
       />
 
       <section className="grid gap-6 lg:grid-cols-3">
@@ -153,8 +218,8 @@ export function DashboardClient({ userKey, initialData, initialStudiedTexts }: D
       />
 
       <StudyHistorySection
-        studied={studiedTexts}
-        totalCount={totalCount}
+        studied={studiedTexts.map(t => ({ ...t, createdAt: String(t.createdAt) }))}
+        totalCount={totalTextsCount}
         userKey={userKey}
       />
       </div>

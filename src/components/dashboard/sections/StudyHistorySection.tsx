@@ -30,7 +30,7 @@ export function StudyHistorySection({ studied, totalCount, userKey }: Props) {
       try {
         const nextPage = page + 1;
         const result = await getStudiedTexts(userKey, nextPage, 6);
-        setAdditionalStudied((prev) => [...prev, ...result.items]);
+        setAdditionalStudied((prev) => [...prev, ...result.items.map((item: any) => ({ ...item, createdAt: String(item.createdAt) }))]);
         setHasMore(result.hasMore);
         setPage(nextPage);
       } catch (error) {

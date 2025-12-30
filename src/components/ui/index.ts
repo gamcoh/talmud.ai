@@ -9,8 +9,6 @@ export { AnimatedNumber } from "./AnimatedNumber";
 export { AchievementBadge } from "./AchievementBadge";
 export { Button } from "./Button";
 export { Input } from "./Input";
-export { TopicCard } from "./TopicCard";
 export { DailyGoalWidget } from "./DailyGoalWidget";
 export { WeeklyCalendar } from "./WeeklyCalendar";
-export { LeaderboardItem } from "./LeaderboardItem";
 export { PointsNotification } from "./PointsNotification";

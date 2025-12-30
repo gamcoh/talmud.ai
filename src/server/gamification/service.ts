@@ -66,7 +66,7 @@ export async function awardPoints(
       userId: user.id,
       action,
       points,
-      metadata: metadata ?? undefined,
+      metadata: metadata ? (metadata as any) : undefined,
     },
   });
 

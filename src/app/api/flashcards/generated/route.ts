@@ -36,26 +36,23 @@ export async function GET(request: Request) {
     }
 
     // Get flashcards the user hasn't completed yet
-    const where: Parameters<typeof db.generatedFlashcard.findMany>[0]["where"] = {
+    const where = {
       isActive: true,
       userCompletions: {
         none: {
           userId: user.id,
         },
       },
-    };
+    } as const;
 
     if (difficulty && ["EASY", "MEDIUM", "HARD"].includes(difficulty)) {
-      where.difficulty = difficulty as "EASY" | "MEDIUM" | "HARD";
+      (where as any).difficulty = difficulty as "EASY" | "MEDIUM" | "HARD";
     }
 
-    const flashcards = await db.generatedFlashcard.findMany({
-      where,
-      take: limit,
-      orderBy: [
-        { difficulty: "asc" }, // Start with easier questions
-        { generatedAt: "desc" }, // Newer questions first
-      ],
+    // Fetch more flashcards than needed to allow for random selection
+    const allFlashcards = await db.generatedFlashcard.findMany({
+      where: where as any,
+      take: limit * 3, // Fetch 3x more to have a good pool for randomization
       select: {
         id: true,
         ref: true,
@@ -67,6 +64,15 @@ export async function GET(request: Request) {
         points: true,
       },
     });
+
+    // Shuffle and take the requested limit
+    const shuffled = allFlashcards
+      .map(card => ({ card, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ card }) => card)
+      .slice(0, limit);
+
+    const flashcards = shuffled;
 
     return NextResponse.json({
       flashcards,
@@ -163,6 +169,7 @@ export async function POST(request: Request) {
     });
 
     // Award points if correct
+    let updatedLevel = null;
     if (wasCorrect && pointsEarned > 0) {
       await db.points.create({
         data: {
@@ -177,8 +184,8 @@ export async function POST(request: Request) {
         },
       });
 
-      // Update user's level
-      await db.level.upsert({
+      // Update user's level and get the new total
+      updatedLevel = await db.level.upsert({
         where: { userId: user.id },
         create: {
           userId: user.id,
@@ -201,6 +208,8 @@ export async function POST(request: Request) {
       correctAnswer: flashcard.correctAnswer,
       pointsEarned,
       difficulty: flashcard.difficulty,
+      newTotalPoints: updatedLevel?.totalPoints,
+      currentLevel: updatedLevel?.currentLevel,
     });
   } catch (error) {
     console.error("Error submitting flashcard answer:", error);

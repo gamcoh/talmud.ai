@@ -63,11 +63,11 @@ export function useSefariaSearch(userKey: string, onAddStudied: (items: StudiedT
               ref: `${ref}:${idx + 1}`,
               snippet: makeSnippet(section),
             }))
-            .filter((p) => p.snippet)
+            .filter((p: any) => p.snippet)
         : [{ ...basePayload, snippet: makeSnippet(result?.text) }];
 
     // Create temporary items for optimistic update
-    const tempItems: StudiedText[] = payloads.map((payload, idx) => ({
+    const tempItems: StudiedText[] = payloads.map((payload: any, idx: number) => ({
       id: `temp-${Date.now()}-${idx}`,
       userKey: payload.userKey,
       ref: payload.ref,

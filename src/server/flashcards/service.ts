@@ -29,7 +29,7 @@ export async function ensureFlashcardsForPortion(portion: Portion) {
 
   if (existing > 0) return;
 
-  const seeds = getSeedsForPortion(portion);
+  const seeds = getSeedsForPortion(portion as any);
   await db.flashcard.createMany({
     data: seeds.map((s) => ({
       portionType,

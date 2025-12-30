@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { ProgressBar } from "~/components/ui/ProgressBar";
 import { Button } from "~/components/ui/Button";
 import { WidgetCard } from "~/components/ui/WidgetCard";
@@ -8,40 +8,73 @@ import { AnimatedNumber } from "~/components/ui/AnimatedNumber";
 import { StreakFlame } from "~/components/ui/StreakFlame";
 import Link from "next/link";
 import confetti from "canvas-confetti";
+import {
+  useAppStore,
+  selectCurrentFlashcard,
+  selectFlashcardsProgress,
+  selectUserKey,
+  selectPoints,
+  selectStreak,
+  type GeneratedFlashcard,
+} from "~/stores/appStore";
 
-type GeneratedFlashcard = {
-  id: string;
-  ref: string;
-  heRef: string | null;
-  question: string;
-  options: string[];
-  correctAnswer: string;
-  difficulty: "EASY" | "MEDIUM" | "HARD";
-  points: number;
-};
-
-type UserProgress = {
-  points: number;
-  streakDays: number;
-};
+// Helper function to shuffle an array
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j]!, shuffled[i]!];
+  }
+  return shuffled;
+}
 
 export default function FlashcardsPage() {
-  const [userKey, setUserKey] = useState("");
-  const [items, setItems] = useState<GeneratedFlashcard[]>([]);
-  const [idx, setIdx] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-  const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
-  const [showResult, setShowResult] = useState(false);
-  const [wasCorrect, setWasCorrect] = useState(false);
-  const [correctAnswer, setCorrectAnswer] = useState<string | null>(null);
-  const [earnedPoints, setEarnedPoints] = useState<number | null>(null);
-  const [totalPoints, setTotalPoints] = useState(0);
-  const [streakDays] = useState(0);
+  // Zustand store
+  const userKey = useAppStore(selectUserKey);
+  const setUserKey = useAppStore((state) => state.setUserKey);
+  const flashcards = useAppStore((state) => state.flashcards);
+  const currentIndex = useAppStore((state) => state.currentIndex);
+  const isLoading = useAppStore((state) => state.isLoading);
+  const isSubmitting = useAppStore((state) => state.isSubmitting);
+  const selectedChoice = useAppStore((state) => state.selectedChoice);
+  const showResult = useAppStore((state) => state.showResult);
+  const wasCorrect = useAppStore((state) => state.wasCorrect);
+  const correctAnswer = useAppStore((state) => state.correctAnswer);
+  const earnedPoints = useAppStore((state) => state.earnedPoints);
+  const shuffledOptions = useAppStore((state) => state.shuffledOptions);
+  const points = useAppStore(selectPoints);
+  const streakDays = useAppStore(selectStreak);
+  
+  // Actions
+  const setFlashcards = useAppStore((state) => state.setFlashcards);
+  const setLoading = useAppStore((state) => state.setLoading);
+  const setSubmitting = useAppStore((state) => state.setSubmitting);
+  const selectChoiceAction = useAppStore((state) => state.selectChoice);
+  const setResult = useAppStore((state) => state.setResult);
+  const nextCard = useAppStore((state) => state.nextCard);
+  const setShuffledOptions = useAppStore((state) => state.setShuffledOptions);
+  const updateStats = useAppStore((state) => state.updateStats);
+  const showPointsNotification = useAppStore((state) => state.showPointsNotification);
+  const hidePointsNotification = useAppStore((state) => state.hidePointsNotification);
+  
+  const current = useAppStore(selectCurrentFlashcard);
+  const progress = useMemo(() => {
+    const current = currentIndex;
+    const total = flashcards.length;
+    return {
+      current,
+      total,
+      remaining: Math.max(0, total - current),
+      progress: total ? current / total : 0,
+    };
+  }, [currentIndex, flashcards.length]);
 
-  const current = items[idx] ?? null;
-  const remaining = useMemo(() => Math.max(0, items.length - idx), [items.length, idx]);
-  const doneProgress = useMemo(() => (items.length ? idx / items.length : 0), [idx, items.length]);
+  // Shuffle options when current card changes
+  useEffect(() => {
+    if (current) {
+      setShuffledOptions(shuffleArray(current.options));
+    }
+  }, [current, setShuffledOptions]);
 
   useEffect(() => {
     // Fetch userKey from the server-side cookie
@@ -49,15 +82,12 @@ export default function FlashcardsPage() {
       .then(res => res.json())
       .then(data => setUserKey(data.userKey))
       .catch(() => setUserKey("demo-user"));
-  }, []);
+  }, [setUserKey]);
 
   async function loadQueue() {
     if (!userKey) return;
     
     setLoading(true);
-    setIdx(0);
-    setSelectedChoice(null);
-    setShowResult(false);
 
     try {
       // Fetch flashcards and user level in parallel
@@ -71,17 +101,21 @@ export default function FlashcardsPage() {
       ]);
       
       const flashcardsData = (await flashcardsRes.json()) as { flashcards?: GeneratedFlashcard[] };
-      const levelData = (await levelRes.json()) as { level?: { totalPoints: number } };
+      const levelData = (await levelRes.json()) as { level?: { totalPoints: number; currentLevel: number }; streak?: { currentStreak: number } };
       
-      setItems(flashcardsData.flashcards ?? []);
+      setFlashcards(flashcardsData.flashcards ?? []);
       
-      // Set initial points from user's level
-      if (levelData.level?.totalPoints) {
-        setTotalPoints(levelData.level.totalPoints);
+      // Update stats from server
+      if (levelData.level) {
+        updateStats({
+          points: levelData.level.totalPoints,
+          level: levelData.level.currentLevel,
+          streakDays: levelData.streak?.currentStreak ?? 0,
+        });
       }
     } catch (error) {
       console.error("Failed to load flashcards:", error);
-      setItems([]);
+      setFlashcards([]);
     } finally {
       setLoading(false);
     }
@@ -91,19 +125,18 @@ export default function FlashcardsPage() {
     if (userKey) {
       void loadQueue();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userKey]);
 
   async function handleChoiceClick(choice: string) {
-    if (!current || submitting || showResult) return;
+    if (!current || isSubmitting || showResult) return;
     
     // Check answer immediately
     const isCorrect = choice === current.correctAnswer;
     
     // Update UI immediately with correct validation
-    setSelectedChoice(choice);
-    setWasCorrect(isCorrect);
-    setCorrectAnswer(current.correctAnswer);
-    setShowResult(true);
+    selectChoiceAction(choice);
+    setResult(isCorrect, current.correctAnswer, isCorrect ? current.points : 0);
     setSubmitting(true);
 
     // Show confetti immediately for correct answers
@@ -133,31 +166,27 @@ export default function FlashcardsPage() {
         wasCorrect?: boolean;
         correctAnswer?: string;
         pointsEarned?: number;
+        newTotalPoints?: number;
+        currentLevel?: number;
       };
       
-      // Update points from server response
-      const earned = data.pointsEarned ?? 0;
-      if (earned > 0) {
-        setEarnedPoints(earned);
-        setTotalPoints(prev => prev + earned);
-        setTimeout(() => setEarnedPoints(null), 2000);
+      // Update stats from server response
+      if (data.newTotalPoints !== undefined) {
+        updateStats({
+          points: data.newTotalPoints,
+          level: data.currentLevel ?? 1,
+        });
       }
 
       // Auto-advance after 2 seconds
       setTimeout(() => {
-        setIdx((i) => i + 1);
-        setSelectedChoice(null);
-        setShowResult(false);
-        setSubmitting(false);
+        nextCard();
       }, 2000);
     } catch (error) {
       console.error("Failed to submit answer:", error);
       // Still advance even on error
       setTimeout(() => {
-        setIdx((i) => i + 1);
-        setSelectedChoice(null);
-        setShowResult(false);
-        setSubmitting(false);
+        nextCard();
       }, 2000);
     }
   }
@@ -179,7 +208,7 @@ export default function FlashcardsPage() {
           <div className="px-4 py-2 rounded-2xl bg-gradient-to-r from-ocean-500/20 to-sage-500/20 border border-ocean-400/20">
             <span className="text-sm text-white/60">Points: </span>
             <span className="font-bold text-white tabular-nums">
-              <AnimatedNumber value={totalPoints} />
+              <AnimatedNumber value={points} />
             </span>
           </div>
         </div>
@@ -189,13 +218,13 @@ export default function FlashcardsPage() {
       <WidgetCard hover={false}>
         <div className="flex items-center justify-between mb-3">
           <span className="text-sm text-white/60">
-            {loading ? "Loading..." : remaining > 0 ? `${remaining} cards remaining` : "Session complete!"}
+            {isLoading ? "Loading..." : progress.remaining > 0 ? `${progress.remaining} cards remaining` : "Session complete!"}
           </span>
           <span className="text-sm font-medium text-white">
-            {idx} / {items.length}
+            {progress.current} / {progress.total}
           </span>
         </div>
-        <ProgressBar value={doneProgress} showPercent={false} variant="ocean" />
+        <ProgressBar value={progress.progress} showPercent={false} variant="ocean" />
       </WidgetCard>
 
       {/* Points Earned Toast */}
@@ -208,7 +237,7 @@ export default function FlashcardsPage() {
       )}
 
       {/* Main Card Area */}
-      {loading ? (
+      {isLoading ? (
         <WidgetCard hover={false} className="py-16 text-center">
           <div className="animate-pulse">
             <div className="text-4xl mb-4">📚</div>
@@ -246,7 +275,7 @@ export default function FlashcardsPage() {
                 {current.difficulty} • {current.points} pts
               </span>
               <span className="text-xs text-white/40">
-                Card {idx + 1} of {items.length}
+                Card {progress.current + 1} of {progress.total}
               </span>
             </div>
             <div className="text-xl font-semibold text-white leading-relaxed">
@@ -257,7 +286,7 @@ export default function FlashcardsPage() {
           {/* Answer Section - Multiple Choice */}
           <div className="space-y-4">
             <div className="grid gap-3">
-              {current.options.map((choice) => {
+              {shuffledOptions.map((choice) => {
                 const isSelected = selectedChoice === choice;
                 const isCorrectAnswer = showResult && choice === correctAnswer;
                 const showFeedback = showResult;
@@ -275,7 +304,7 @@ export default function FlashcardsPage() {
                       }
                       disabled:cursor-not-allowed
                     `}
-                    disabled={submitting || showResult}
+                      disabled={isSubmitting || showResult}
                     onClick={() => void handleChoiceClick(choice)}
                   >
                     {choice}

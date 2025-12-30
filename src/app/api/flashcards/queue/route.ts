@@ -29,7 +29,7 @@ export async function GET(req: Request) {
     Math.max(1, Number(url.searchParams.get("limit") ?? "10")),
   );
 
-  const queue = await getDueQueue(portion.data, limit);
+  const queue = await getDueQueue(portion.data as any, limit);
 
   return NextResponse.json({
     items: queue.map((r) => ({
