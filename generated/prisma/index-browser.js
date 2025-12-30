@@ -186,9 +186,41 @@ exports.Prisma.FlashcardReviewScalarFieldEnum = {
 
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
-  userKey: 'userKey',
+  name: 'name',
+  email: 'email',
+  emailVerified: 'emailVerified',
+  image: 'image',
+  password: 'password',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AccountScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  provider: 'provider',
+  providerAccountId: 'providerAccountId',
+  refresh_token: 'refresh_token',
+  access_token: 'access_token',
+  expires_at: 'expires_at',
+  token_type: 'token_type',
+  scope: 'scope',
+  id_token: 'id_token',
+  session_state: 'session_state'
+};
+
+exports.Prisma.SessionScalarFieldEnum = {
+  id: 'id',
+  sessionToken: 'sessionToken',
+  userId: 'userId',
+  expires: 'expires'
+};
+
+exports.Prisma.VerificationTokenScalarFieldEnum = {
+  identifier: 'identifier',
+  token: 'token',
+  expires: 'expires'
 };
 
 exports.Prisma.StreakScalarFieldEnum = {
@@ -246,7 +278,6 @@ exports.Prisma.StudySessionScalarFieldEnum = {
 
 exports.Prisma.StudiedTextScalarFieldEnum = {
   id: 'id',
-  userKey: 'userKey',
   userId: 'userId',
   ref: 'ref',
   heRef: 'heRef',
@@ -338,6 +369,9 @@ exports.Prisma.ModelName = {
   FlashcardGenerationJob: 'FlashcardGenerationJob',
   FlashcardReview: 'FlashcardReview',
   User: 'User',
+  Account: 'Account',
+  Session: 'Session',
+  VerificationToken: 'VerificationToken',
   Streak: 'Streak',
   Points: 'Points',
   Level: 'Level',

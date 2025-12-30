@@ -1,17 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createGoal, getOrCreateUser } from "~/server/gamification/service";
+import { createGoal } from "~/server/gamification/service";
+import { requireUser } from "~/server/auth-helpers";
 import { db } from "~/server/db";
 import { GoalType, GoalPeriod } from "~/generated/prisma";
 
 export async function GET(request: NextRequest) {
-  const userKey = request.headers.get("x-user-key");
-
-  if (!userKey) {
-    return NextResponse.json({ error: "User key required" }, { status: 400 });
-  }
-
   try {
-    const user = await getOrCreateUser(userKey);
+    const user = await requireUser();
     const goals = await db.goal.findMany({
       where: { userId: user.id },
       orderBy: { createdAt: "desc" },
@@ -19,19 +14,17 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ goals });
   } catch (error) {
+    if (error instanceof Error && error.message === "Unauthorized") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     console.error("Error fetching goals:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
-  const userKey = request.headers.get("x-user-key");
-
-  if (!userKey) {
-    return NextResponse.json({ error: "User key required" }, { status: 400 });
-  }
-
   try {
+    const user = await requireUser();
     const body = await request.json();
     const { type, target, period, endDate } = body as {
       type: GoalType;
@@ -40,7 +33,7 @@ export async function POST(request: NextRequest) {
       endDate?: string;
     };
 
-    const goal = await createGoal(userKey, {
+    const goal = await createGoal(user.id, {
       type,
       target,
       period,
@@ -49,6 +42,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ goal });
   } catch (error) {
+    if (error instanceof Error && error.message === "Unauthorized") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     console.error("Error creating goal:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }

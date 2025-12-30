@@ -26,9 +26,9 @@ const LEVEL_THRESHOLDS = [
   // Add more as needed
 ];
 
-export async function getOrCreateUser(userKey: string) {
-  let user = await db.user.findUnique({
-    where: { userKey },
+export async function getUser(userId: string) {
+  const user = await db.user.findUnique({
+    where: { id: userId },
     include: {
       streak: true,
       level: true,
@@ -36,16 +36,19 @@ export async function getOrCreateUser(userKey: string) {
   });
 
   if (!user) {
-    user = await db.user.create({
-      data: {
-        userKey,
-        streak: { create: {} },
-        level: { create: {} },
-      },
-      include: {
-        streak: true,
-        level: true,
-      },
+    throw new Error("User not found");
+  }
+
+  // Initialize streak and level if they don't exist
+  if (!user.streak) {
+    await db.streak.create({
+      data: { userId: user.id },
+    });
+  }
+
+  if (!user.level) {
+    await db.level.create({
+      data: { userId: user.id },
     });
   }
 
@@ -53,11 +56,11 @@ export async function getOrCreateUser(userKey: string) {
 }
 
 export async function awardPoints(
-  userKey: string,
+  userId: string,
   action: PointAction,
   metadata?: Record<string, unknown>
 ) {
-  const user = await getOrCreateUser(userKey);
+  const user = await getUser(userId);
   const points = POINT_VALUES[action];
 
   // Create points record
@@ -112,8 +115,8 @@ function calculateLevel(totalPoints: number): number {
   return 1;
 }
 
-export async function updateStreak(userKey: string) {
-  const user = await getOrCreateUser(userKey);
+export async function updateStreak(userId: string) {
+  const user = await getUser(userId);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -155,21 +158,21 @@ export async function updateStreak(userKey: string) {
 
   // Award streak bonus for milestone streaks (every 7 days)
   if (shouldAwardBonus && newCurrentStreak % 7 === 0) {
-    await awardPoints(userKey, "STREAK_BONUS", { streakDays: newCurrentStreak });
+    await awardPoints(userId, "STREAK_BONUS", { streakDays: newCurrentStreak });
   }
 
   return updatedStreak;
 }
 
 export async function recordStudySession(
-  userKey: string,
+  userId: string,
   data: {
     textsRead?: number;
     flashcardsReviewed?: number;
     durationMinutes?: number;
   }
 ) {
-  const user = await getOrCreateUser(userKey);
+  const user = await getUser(userId);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -200,15 +203,15 @@ export async function recordStudySession(
     session.flashcardsReviewed === (data.flashcardsReviewed ?? 0);
 
   if (wasFirstStudy) {
-    await awardPoints(userKey, "FIRST_STUDY_TODAY");
-    await updateStreak(userKey);
+    await awardPoints(userId, "FIRST_STUDY_TODAY");
+    await updateStreak(userId);
   }
 
   return session;
 }
 
-export async function getUserStats(userKey: string) {
-  const user = await getOrCreateUser(userKey);
+export async function getUserStats(userId: string) {
+  const user = await getUser(userId);
 
   const [streak, level, recentPoints, studySessions, goals] = await Promise.all([
     db.streak.findUnique({ where: { userId: user.id } }),
@@ -238,9 +241,8 @@ export async function getUserStats(userKey: string) {
   };
 }
 
-export async function getCurrentFocus(userKey: string) {
-  const latestText = await db.studiedText.findFirst({
-    where: { userKey },
+export async function getCurrentFocus(userId: string) {
+  const latestText = await db.studiedText.findFirst({where: { userId },
     orderBy: { createdAt: "desc" },
   });
 
@@ -248,7 +250,7 @@ export async function getCurrentFocus(userKey: string) {
 }
 
 export async function createGoal(
-  userKey: string,
+  userId: string,
   data: {
     type: GoalType;
     target: number;
@@ -256,7 +258,7 @@ export async function createGoal(
     endDate?: Date;
   }
 ) {
-  const user = await getOrCreateUser(userKey);
+  const user = await getUser(userId);
 
   return db.goal.create({
     data: {
@@ -270,11 +272,11 @@ export async function createGoal(
 }
 
 export async function updateGoalProgress(
-  userKey: string,
+  userId: string,
   goalType: GoalType,
   increment: number
 ) {
-  const user = await getOrCreateUser(userKey);
+  const user = await getUser(userId);
 
   const activeGoals = await db.goal.findMany({
     where: {
@@ -297,7 +299,7 @@ export async function updateGoalProgress(
     });
 
     if (isCompleted) {
-      await awardPoints(userKey, "GOAL_COMPLETED", {
+      await awardPoints(userId, "GOAL_COMPLETED", {
         goalId: goal.id,
         goalType: goal.type,
       });
@@ -365,8 +367,8 @@ export async function getDailyWisdom() {
   }
 }
 
-export async function getWeeklyCalendar(userKey: string) {
-  const user = await getOrCreateUser(userKey);
+export async function getWeeklyCalendar(userId: string) {
+  const user = await getUser(userId);
   
   // Get the start of the current week (Sunday)
   const today = new Date();
@@ -392,7 +394,7 @@ export async function getWeeklyCalendar(userKey: string) {
     }),
     db.studiedText.findMany({
       where: {
-        userKey,
+        userId: user.id,
         createdAt: {
           gte: startOfWeek,
           lte: new Date(endOfWeek.getTime() + 24 * 60 * 60 * 1000 - 1), // End of Saturday

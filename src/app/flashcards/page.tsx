@@ -12,7 +12,6 @@ import {
   useAppStore,
   selectCurrentFlashcard,
   selectFlashcardsProgress,
-  selectUserKey,
   selectPoints,
   selectStreak,
   type GeneratedFlashcard,
@@ -30,8 +29,6 @@ function shuffleArray<T>(array: T[]): T[] {
 
 export default function FlashcardsPage() {
   // Zustand store
-  const userKey = useAppStore(selectUserKey);
-  const setUserKey = useAppStore((state) => state.setUserKey);
   const flashcards = useAppStore((state) => state.flashcards);
   const currentIndex = useAppStore((state) => state.currentIndex);
   const isLoading = useAppStore((state) => state.isLoading);
@@ -76,26 +73,16 @@ export default function FlashcardsPage() {
     }
   }, [current, setShuffledOptions]);
 
-  useEffect(() => {
-    // Fetch userKey from the server-side cookie
-    fetch("/api/user-key")
-      .then(res => res.json())
-      .then(data => setUserKey(data.userKey))
-      .catch(() => setUserKey("demo-user"));
-  }, [setUserKey]);
-
   async function loadQueue() {
-    if (!userKey) return;
-    
     setLoading(true);
 
     try {
       // Fetch flashcards and user level in parallel
       const [flashcardsRes, levelRes] = await Promise.all([
-        fetch(`/api/flashcards/generated?userKey=${encodeURIComponent(userKey)}&limit=10`, {
+        fetch(`/api/flashcards/generated?limit=10`, {
           cache: "no-store",
         }),
-        fetch(`/api/gamification/stats?userKey=${encodeURIComponent(userKey)}`, {
+        fetch(`/api/gamification/stats`, {
           cache: "no-store",
         }),
       ]);
@@ -122,11 +109,9 @@ export default function FlashcardsPage() {
   }
 
   useEffect(() => {
-    if (userKey) {
-      void loadQueue();
-    }
+    void loadQueue();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userKey]);
+  }, []);
 
   async function handleChoiceClick(choice: string) {
     if (!current || isSubmitting || showResult) return;
@@ -155,7 +140,6 @@ export default function FlashcardsPage() {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          userKey,
           flashcardId: current.id,
           selectedAnswer: choice,
         }),

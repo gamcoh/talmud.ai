@@ -2,6 +2,7 @@ import "~/styles/globals.css";
 
 import { type Metadata } from "next";
 import { Geist, Noto_Sans_Hebrew, Frank_Ruhl_Libre } from "next/font/google";
+import { SessionProvider } from "next-auth/react";
 import { AppShell } from "~/components/app/AppShell";
 
 export const metadata: Metadata = {
@@ -52,7 +53,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable} ${hebrewSans.variable} ${hebrewSerif.variable}`}>
       <body>
-        <AppShell>{children}</AppShell>
+        <SessionProvider>
+          <AppShell>{children}</AppShell>
+        </SessionProvider>
       </body>
     </html>
   );

@@ -9,6 +9,11 @@ export const env = createEnv({
       .default("development"),
     OPENAI_API_KEY: z.string().min(1),
     CRON_SECRET: z.string().optional(), // For securing cron endpoint
+    
+    // NextAuth
+    AUTH_SECRET: z.string().min(1),
+    AUTH_GOOGLE_ID: z.string().min(1),
+    AUTH_GOOGLE_SECRET: z.string().min(1),
   },
 
   client: {
@@ -21,6 +26,9 @@ export const env = createEnv({
     NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     CRON_SECRET: process.env.CRON_SECRET,
+    AUTH_SECRET: process.env.AUTH_SECRET,
+    AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
+    AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
   },
 
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

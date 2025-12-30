@@ -15,12 +15,11 @@ import { StatsSection, SearchSection, StudyHistorySection } from "./sections";
 import { useAppStore, selectPoints, selectStreak, type StudiedText } from "~/stores/appStore";
 
 type DashboardClientProps = {
-  userKey: string;
   initialData: Awaited<ReturnType<typeof import("~/server/actions/dashboard").getDashboardData>>;
   initialStudiedTexts: Awaited<ReturnType<typeof import("~/server/actions/dashboard").getStudiedTexts>>;
 };
 
-export function DashboardClient({ userKey, initialData, initialStudiedTexts }: DashboardClientProps) {
+export function DashboardClient({ initialData, initialStudiedTexts }: DashboardClientProps) {
   const [isPending, startTransition] = useTransition();
   
   // Zustand store
@@ -32,7 +31,6 @@ export function DashboardClient({ userKey, initialData, initialStudiedTexts }: D
   const streakDays = useAppStore(selectStreak);
   
   // Actions
-  const setUserKey = useAppStore((state) => state.setUserKey);
   const setStudiedTexts = useAppStore((state) => state.setStudiedTexts);
   const addStudiedTextToStore = useAppStore((state) => state.addStudiedText);
   const removeStudiedText = useAppStore((state) => state.removeStudiedText);
@@ -45,7 +43,6 @@ export function DashboardClient({ userKey, initialData, initialStudiedTexts }: D
   useEffect(() => {
     if (!initialized.current) {
       initialized.current = true;
-      setUserKey(userKey);
       setStudiedTexts(
         initialStudiedTexts.items,
         initialStudiedTexts.totalCount,
@@ -62,14 +59,14 @@ export function DashboardClient({ userKey, initialData, initialStudiedTexts }: D
         });
       }
     }
-  }, [userKey, initialData, initialStudiedTexts, setUserKey, setStudiedTexts, updateStats]);
+  }, [initialData, initialStudiedTexts, setStudiedTexts, updateStats]);
 
   // Sync stats when returning from other pages (like flashcards)
   useEffect(() => {
     const handleVisibilityChange = async () => {
       if (document.visibilityState === 'visible') {
         try {
-          const res = await fetch(`/api/gamification/stats?userKey=${encodeURIComponent(userKey)}`, {
+          const res = await fetch(`/api/gamification/stats`, {
             cache: 'no-store',
           });
           const data = await res.json() as { level?: { totalPoints: number; currentLevel: number } };
@@ -89,7 +86,7 @@ export function DashboardClient({ userKey, initialData, initialStudiedTexts }: D
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [userKey, updateStats]);
+  }, [updateStats]);
 
   const levelInfo = useMemo(() => getLevelFromPoints(points), [points]);
   const weeklyData = initialData.weeklyCalendar;
@@ -106,7 +103,7 @@ export function DashboardClient({ userKey, initialData, initialStudiedTexts }: D
 
     const optimisticItem: StudiedText = {
       id: `temp-${Date.now()}`,
-      userKey: data.userKey,
+      userId: '', // Will be updated by server
       ref: data.ref,
       heRef: data.heRef ?? null,
       url: data.url ?? null,
@@ -212,7 +209,6 @@ export function DashboardClient({ userKey, initialData, initialStudiedTexts }: D
       </section>
 
       <SearchSection
-        userKey={userKey}
         onAddStudied={handleAddStudiedItem}
         isPending={isPending}
       />
@@ -220,7 +216,6 @@ export function DashboardClient({ userKey, initialData, initialStudiedTexts }: D
       <StudyHistorySection
         studied={studiedTexts.map(t => ({ ...t, createdAt: String(t.createdAt) }))}
         totalCount={totalTextsCount}
-        userKey={userKey}
       />
       </div>
     </>

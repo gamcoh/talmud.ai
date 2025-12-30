@@ -4,15 +4,13 @@ import { useState, useTransition } from "react";
 import { WidgetCard } from "~/components/ui/WidgetCard";
 import { Button } from "~/components/ui/Button";
 import type { StudiedText } from "../types";
-import { getStudiedTexts } from "~/server/actions/dashboard";
 
 type Props = {
   studied: StudiedText[];
   totalCount: number;
-  userKey: string;
 };
 
-export function StudyHistorySection({ studied, totalCount, userKey }: Props) {
+export function StudyHistorySection({ studied, totalCount }: Props) {
   const [page, setPage] = useState(1);
   const [additionalStudied, setAdditionalStudied] = useState<StudiedText[]>([]);
   const [hasMore, setHasMore] = useState(studied.length >= 6);
@@ -29,10 +27,13 @@ export function StudyHistorySection({ studied, totalCount, userKey }: Props) {
     startTransition(async () => {
       try {
         const nextPage = page + 1;
-        const result = await getStudiedTexts(userKey, nextPage, 6);
-        setAdditionalStudied((prev) => [...prev, ...result.items.map((item: any) => ({ ...item, createdAt: String(item.createdAt) }))]);
-        setHasMore(result.hasMore);
-        setPage(nextPage);
+        const res = await fetch(`/api/studied-texts?page=${nextPage}&limit=6`);
+        const result = await res.json();
+        if (result.items) {
+          setAdditionalStudied((prev) => [...prev, ...result.items.map((item: any) => ({ ...item, createdAt: String(item.createdAt) }))]);
+          setHasMore(result.hasMore);
+          setPage(nextPage);
+        }
       } catch (error) {
         console.error("Failed to load more texts:", error);
       }

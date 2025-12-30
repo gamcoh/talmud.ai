@@ -1,20 +1,24 @@
 import { Suspense } from "react";
 import { DashboardClient } from "~/components/dashboard/DashboardClient";
 import { getDashboardData, getStudiedTexts } from "~/server/actions/dashboard";
-import { getUserKey } from "~/lib/user-session";
+import { auth } from "~/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
-  const userKey = await getUserKey();
+  const session = await auth();
+  
+  if (!session?.user?.id) {
+    redirect("/auth/signin");
+  }
   
   const [dashboardData, studiedTexts] = await Promise.all([
-    getDashboardData(userKey),
-    getStudiedTexts(userKey, 1, 6),
+    getDashboardData(session.user.id),
+    getStudiedTexts(session.user.id, 1, 6),
   ]);
 
   return (
     <Suspense fallback={<DashboardSkeleton />}>
       <DashboardClient
-        userKey={userKey}
         initialData={dashboardData}
         initialStudiedTexts={studiedTexts}
       />

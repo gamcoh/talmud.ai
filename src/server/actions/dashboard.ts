@@ -1,17 +1,17 @@
 "use server";
 
-import { revalidateTag, unstable_cache } from "next/cache";
+import { revalidatePath, unstable_cache } from "next/cache";
 import { db } from "../db";
 import { getUserStats, getCurrentFocus, getDailyWisdom, getWeeklyCalendar, awardPoints } from "../gamification/service";
 
-export async function getDashboardData(userKey: string) {
+export async function getDashboardData(userId: string) {
   return unstable_cache(
     async () => {
       const [stats, currentFocus, dailyWisdom, weeklyCalendar] = await Promise.all([
-        getUserStats(userKey),
-        getCurrentFocus(userKey),
+        getUserStats(userId),
+        getCurrentFocus(userId),
         getDailyWisdom(),
-        getWeeklyCalendar(userKey),
+        getWeeklyCalendar(userId),
       ]);
 
       return {
@@ -21,26 +21,26 @@ export async function getDashboardData(userKey: string) {
         weeklyCalendar,
       };
     },
-    [`dashboard-${userKey}`],
+    [`dashboard-${userId}`],
     {
-      tags: [`user-${userKey}`, "dashboard"],
+      tags: [`user-${userId}`, "dashboard"],
       revalidate: 60,
     }
   )();
 }
 
-export async function getStudiedTexts(userKey: string, page = 1, limit = 20) {
+export async function getStudiedTexts(userId: string, page = 1, limit = 20) {
   return unstable_cache(
     async () => {
       const skip = (page - 1) * limit;
       const [items, totalCount] = await Promise.all([
         db.studiedText.findMany({
-          where: { userKey },
+          where: { userId },
           orderBy: { createdAt: "desc" },
           skip,
           take: limit + 1,
         }),
-        db.studiedText.count({ where: { userKey } }),
+        db.studiedText.count({ where: { userId } }),
       ]);
 
       const hasMore = items.length > limit;
@@ -50,37 +50,47 @@ export async function getStudiedTexts(userKey: string, page = 1, limit = 20) {
         totalCount,
       };
     },
-    [`studied-${userKey}-${page}`],
+    [`studied-${userId}-${page}`],
     {
-      tags: [`user-${userKey}`, "studied-texts"],
+      tags: [`user-${userId}`, "studied-texts"],
       revalidate: 30,
     }
   )();
 }
 
 export async function addStudiedText(data: {
-  userKey: string;
   ref: string;
   heRef?: string | null;
   url?: string | null;
   title?: string | null;
   snippet?: string | null;
 }) {
+  const { auth } = await import("~/lib/auth");
+  const session = await auth();
+  
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  const userId = session.user.id;
+
   const created = await db.studiedText.upsert({
-    where: { userKey_ref: { userKey: data.userKey, ref: data.ref } },
+    where: { userId_ref: { userId, ref: data.ref } },
     update: {
       heRef: data.heRef,
       url: data.url,
       title: data.title,
       snippet: data.snippet,
     },
-    create: data,
+    create: {
+      userId,
+      ...data,
+    },
   });
 
-  const pointsResult = await awardPoints(data.userKey, "STUDY_TEXT", { ref: data.ref });
+  const pointsResult = await awardPoints(userId, "STUDY_TEXT", { ref: data.ref });
 
-  revalidateTag(`user-${data.userKey}`, "max");
-  revalidateTag("studied-texts", "max");
+  revalidatePath("/dashboard");
   
   return { ...created, pointsAwarded: pointsResult.points, newTotalPoints: pointsResult.newTotalPoints };
 }

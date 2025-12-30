@@ -7,12 +7,11 @@ import { Input } from "~/components/ui/Input";
 import { searchSefaria } from "~/server/actions/dashboard";
 
 type Props = {
-  userKey: string;
   onAddStudied: (data: any) => Promise<void>;
   isPending: boolean;
 };
 
-export function SearchSection({ userKey, onAddStudied, isPending }: Props) {
+export function SearchSection({ onAddStudied, isPending }: Props) {
   const [query, setQuery] = useState("");
   const [searchResult, setSearchResult] = useState<any>(null);
   const [searchError, setSearchError] = useState<string | null>(null);
@@ -79,7 +78,6 @@ export function SearchSection({ userKey, onAddStudied, isPending }: Props) {
     }
 
     const data = {
-      userKey,
       ref: searchResult.ref || query.trim(),
       heRef: searchResult.heRef,
       url: searchResult.url,

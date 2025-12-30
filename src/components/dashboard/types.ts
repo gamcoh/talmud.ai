@@ -1,6 +1,6 @@
 export type StudiedText = {
   id: string;
-  userKey: string;
+  userId: string;
   ref: string;
   heRef?: string | null;
   url?: string | null;

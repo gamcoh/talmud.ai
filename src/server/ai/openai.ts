@@ -38,7 +38,10 @@ Rules:
 6. HARD questions: Deep analysis, connections to other texts, or complex interpretations
 7. All questions and answers should be clear and unambiguous
 8. Use both Hebrew terms and English explanations when appropriate
-9. Return ONLY valid JSON, no additional text
+9. When generating a medium or hard question, use both Hebrew and English terminology.
+10. Most of the time when using expressions from the text, use the Hebrew terms.
+11. If you feel the need to provide some context from the source text, include it in the question.
+12. Return ONLY valid JSON, no additional text
 
 Format your response as a JSON array. Important: correctAnswer must be the exact option text (not an index):
 [

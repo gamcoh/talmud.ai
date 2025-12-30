@@ -1,39 +1,22 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import db from "~/server/db";
+import { requireUser } from "~/server/auth-helpers";
 
 /**
  * GET: Fetch generated flashcards for a user
  * Query params:
- * - userKey: User identifier
  * - limit: Number of flashcards to return (default 10)
  * - difficulty: Filter by difficulty (optional)
  */
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const userKey = searchParams.get("userKey");
-  const limit = Math.min(50, Math.max(1, parseInt(searchParams.get("limit") ?? "10")));
-  const difficulty = searchParams.get("difficulty");
-
-  if (!userKey) {
-    return NextResponse.json(
-      { error: "Missing userKey parameter" },
-      { status: 400 }
-    );
-  }
-
   try {
-    // Find or create user
-    let user = await db.user.findUnique({
-      where: { userKey },
-    });
-
-    if (!user) {
-      user = await db.user.create({
-        data: { userKey },
-      });
-    }
+    const user = await requireUser();
+    
+    const { searchParams } = new URL(request.url);
+    const limit = Math.min(50, Math.max(1, parseInt(searchParams.get("limit") ?? "10")));
+    const difficulty = searchParams.get("difficulty");
 
     // Get flashcards the user hasn't completed yet
     const where = {
@@ -79,6 +62,12 @@ export async function GET(request: Request) {
       count: flashcards.length,
     });
   } catch (error) {
+    if (error instanceof Error && error.message === "Unauthorized") {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
     console.error("Error fetching generated flashcards:", error);
     return NextResponse.json(
       { error: "Failed to fetch flashcards" },
@@ -88,7 +77,6 @@ export async function GET(request: Request) {
 }
 
 const SubmitSchema = z.object({
-  userKey: z.string().min(1),
   flashcardId: z.string().min(1),
   selectedAnswer: z.string().min(1),
 });
@@ -96,12 +84,13 @@ const SubmitSchema = z.object({
 /**
  * POST: Submit an answer to a flashcard
  * Body:
- * - userKey: User identifier
  * - flashcardId: ID of the flashcard
  * - selectedAnswer: The answer the user selected
  */
 export async function POST(request: Request) {
   try {
+    const user = await requireUser();
+    
     const json = await request.json();
     const validation = SubmitSchema.safeParse(json);
 
@@ -112,18 +101,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { userKey, flashcardId, selectedAnswer } = validation.data;
-
-    // Find or create user
-    let user = await db.user.findUnique({
-      where: { userKey },
-    });
-
-    if (!user) {
-      user = await db.user.create({
-        data: { userKey },
-      });
-    }
+    const { flashcardId, selectedAnswer } = validation.data;
 
     // Get the flashcard
     const flashcard = await db.generatedFlashcard.findUnique({
@@ -198,9 +176,8 @@ export async function POST(request: Request) {
       });
     }
 
-    // Revalidate dashboard cache so points show up immediately
-    revalidateTag(`user-${user.userKey}`, "max");
-    revalidateTag("dashboard", "max");
+    // Revalidate dashboard cache
+    revalidatePath("/dashboard");
 
     return NextResponse.json({
       success: true,
@@ -212,6 +189,12 @@ export async function POST(request: Request) {
       currentLevel: updatedLevel?.currentLevel,
     });
   } catch (error) {
+    if (error instanceof Error && error.message === "Unauthorized") {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
     console.error("Error submitting flashcard answer:", error);
     return NextResponse.json(
       { error: "Failed to submit answer" },

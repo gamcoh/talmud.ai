@@ -17,14 +17,13 @@ export type GeneratedFlashcard = {
 
 export type StudiedText = {
   id: string;
-  userKey: string;
+  userId: string;
   ref: string;
   heRef: string | null;
   url: string | null;
   title: string | null;
   snippet: string | null;
   createdAt: Date | string;
-  userId?: string | null;
 };
 
 export type UserStats = {
@@ -42,11 +41,6 @@ export type DailyGoal = {
 };
 
 // Store slices
-interface UserSlice {
-  userKey: string;
-  setUserKey: (key: string) => void;
-}
-
 interface StatsSlice {
   stats: UserStats;
   updateStats: (stats: Partial<UserStats>) => void;
@@ -107,7 +101,7 @@ interface SearchSlice {
 }
 
 // Combined store type
-type AppStore = UserSlice & StatsSlice & FlashcardsSlice & DashboardSlice & SearchSlice;
+type AppStore = StatsSlice & FlashcardsSlice & DashboardSlice & SearchSlice;
 
 // Initial states
 const initialStats: UserStats = {
@@ -136,10 +130,6 @@ export const useAppStore = create<AppStore>()(
   devtools(
     persist(
       (set, get) => ({
-        // User Slice
-        userKey: '',
-        setUserKey: (key) => set({ userKey: key }, false, 'setUserKey'),
-
         // Stats Slice
         stats: initialStats,
         updateStats: (newStats) =>
@@ -280,7 +270,6 @@ export const useAppStore = create<AppStore>()(
       {
         name: 'talmud-ai-storage',
         partialize: (state) => ({
-          userKey: state.userKey,
           stats: state.stats,
         }),
       }
@@ -289,7 +278,6 @@ export const useAppStore = create<AppStore>()(
 );
 
 // Selectors for better performance
-export const selectUserKey = (state: AppStore) => state.userKey;
 export const selectStats = (state: AppStore) => state.stats;
 export const selectPoints = (state: AppStore) => state.stats.points;
 export const selectLevel = (state: AppStore) => state.stats.level;
