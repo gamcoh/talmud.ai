@@ -1,171 +1,185 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { Portion, UserProgress } from "~/lib/mock-data";
-import { DEFAULT_PROGRESS } from "~/lib/mock-data";
 import { ProgressBar } from "~/components/ui/ProgressBar";
 import { Button } from "~/components/ui/Button";
 import { WidgetCard } from "~/components/ui/WidgetCard";
 import { AnimatedNumber } from "~/components/ui/AnimatedNumber";
 import { StreakFlame } from "~/components/ui/StreakFlame";
 import Link from "next/link";
+import confetti from "canvas-confetti";
 
-const STORAGE_KEY = "talmud.ai:user-progress:v1";
-
-type QueueItem = {
-  reviewId: string;
-  prompt: string;
-  answer: string;
-  portion: Portion;
-  choices?: string[];
+type GeneratedFlashcard = {
+  id: string;
+  ref: string;
+  heRef: string | null;
+  question: string;
+  options: string[];
+  correctAnswer: string;
+  difficulty: "EASY" | "MEDIUM" | "HARD";
+  points: number;
 };
 
-function loadProgress(): UserProgress {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return DEFAULT_PROGRESS;
-    const parsed = JSON.parse(raw) as Partial<UserProgress> | null;
-    if (!parsed) return DEFAULT_PROGRESS;
-    return {
-      points: typeof parsed.points === "number" ? parsed.points : DEFAULT_PROGRESS.points,
-      streakDays: typeof parsed.streakDays === "number" ? parsed.streakDays : DEFAULT_PROGRESS.streakDays,
-      lastStudied:
-        parsed.lastStudied && typeof parsed.lastStudied === "object"
-          ? (parsed.lastStudied as Portion)
-          : DEFAULT_PROGRESS.lastStudied,
-    };
-  } catch {
-    return DEFAULT_PROGRESS;
-  }
-}
-
-function saveProgress(p: UserProgress) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
-  } catch {}
-}
+type UserProgress = {
+  points: number;
+  streakDays: number;
+};
 
 export default function FlashcardsPage() {
-  const [progress, setProgress] = useState<UserProgress>(DEFAULT_PROGRESS);
-  const portion = progress.lastStudied;
-
-  const [items, setItems] = useState<QueueItem[]>([]);
+  const [userKey, setUserKey] = useState("");
+  const [items, setItems] = useState<GeneratedFlashcard[]>([]);
   const [idx, setIdx] = useState(0);
-  const [revealed, setRevealed] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [grading, setGrading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
+  const [showResult, setShowResult] = useState(false);
+  const [wasCorrect, setWasCorrect] = useState(false);
+  const [correctAnswer, setCorrectAnswer] = useState<string | null>(null);
   const [earnedPoints, setEarnedPoints] = useState<number | null>(null);
+  const [totalPoints, setTotalPoints] = useState(0);
+  const [streakDays] = useState(0);
 
   const current = items[idx] ?? null;
   const remaining = useMemo(() => Math.max(0, items.length - idx), [items.length, idx]);
   const doneProgress = useMemo(() => (items.length ? idx / items.length : 0), [idx, items.length]);
 
   useEffect(() => {
-    setProgress(loadProgress());
+    // Fetch userKey from the server-side cookie
+    fetch("/api/user-key")
+      .then(res => res.json())
+      .then(data => setUserKey(data.userKey))
+      .catch(() => setUserKey("demo-user"));
   }, []);
 
-  async function loadQueue(p: Portion) {
+  async function loadQueue() {
+    if (!userKey) return;
+    
     setLoading(true);
     setIdx(0);
-    setRevealed(false);
     setSelectedChoice(null);
+    setShowResult(false);
 
-    const portionParam = encodeURIComponent(JSON.stringify(p));
-    const res = await fetch(`/api/flashcards/queue?portion=${portionParam}&limit=10`, {
-      cache: "no-store",
-    });
-    const data = (await res.json()) as { items?: QueueItem[] };
-
-    const rawItems = Array.isArray(data.items) ? data.items : [];
-    const withQcm = rawItems.map((it, i, all) => {
-      if (Array.isArray(it.choices) && it.choices.length > 1) return it;
-
-      const distractors = Array.from(
-        new Set(
-          all
-            .filter((x) => x.reviewId !== it.reviewId)
-            .map((x) => x.answer)
-            .filter((a) => typeof a === "string" && a.trim().length > 0)
-        )
-      ).slice(0, 3);
-
-      if (distractors.length < 2) return it;
-
-      const shuffled = [it.answer, ...distractors]
-        .filter((v) => typeof v === "string" && v.trim().length > 0)
-        .sort(() => Math.random() - 0.5);
-
-      return { ...it, choices: shuffled };
-    });
-
-    setItems(withQcm);
-    setLoading(false);
-  }
-
-  useEffect(() => {
-    void loadQueue(portion);
-  }, [portion.type, portion.label]);
-
-  async function grade(gradeValue: "Again" | "Hard" | "Good" | "Easy") {
-    if (!current) return;
-    setGrading(true);
     try {
-      const res = await fetch("/api/flashcards/grade", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ reviewId: current.reviewId, grade: gradeValue }),
-      });
-      const data = (await res.json()) as { pointsEarned?: number };
-      const earned = typeof data.pointsEarned === "number" ? data.pointsEarned : 0;
-
-      setEarnedPoints(earned);
-      setTimeout(() => setEarnedPoints(null), 1500);
-
-      const nextProgress: UserProgress = {
-        ...progress,
-        points: progress.points + earned,
-      };
-      setProgress(nextProgress);
-      saveProgress(nextProgress);
-
-      setIdx((i) => i + 1);
-      setRevealed(false);
-      setSelectedChoice(null);
+      // Fetch flashcards and user level in parallel
+      const [flashcardsRes, levelRes] = await Promise.all([
+        fetch(`/api/flashcards/generated?userKey=${encodeURIComponent(userKey)}&limit=10`, {
+          cache: "no-store",
+        }),
+        fetch(`/api/gamification/stats?userKey=${encodeURIComponent(userKey)}`, {
+          cache: "no-store",
+        }),
+      ]);
+      
+      const flashcardsData = (await flashcardsRes.json()) as { flashcards?: GeneratedFlashcard[] };
+      const levelData = (await levelRes.json()) as { level?: { totalPoints: number } };
+      
+      setItems(flashcardsData.flashcards ?? []);
+      
+      // Set initial points from user's level
+      if (levelData.level?.totalPoints) {
+        setTotalPoints(levelData.level.totalPoints);
+      }
+    } catch (error) {
+      console.error("Failed to load flashcards:", error);
+      setItems([]);
     } finally {
-      setGrading(false);
+      setLoading(false);
     }
   }
 
+  useEffect(() => {
+    if (userKey) {
+      void loadQueue();
+    }
+  }, [userKey]);
+
   async function handleChoiceClick(choice: string) {
-    if (!current || grading) return;
+    if (!current || submitting || showResult) return;
+    
+    // Check answer immediately
+    const isCorrect = choice === current.correctAnswer;
+    
+    // Update UI immediately with correct validation
     setSelectedChoice(choice);
-    setRevealed(true);
+    setWasCorrect(isCorrect);
+    setCorrectAnswer(current.correctAnswer);
+    setShowResult(true);
+    setSubmitting(true);
 
-    const isCorrect = choice === current.answer;
-    await grade(isCorrect ? "Good" : "Again");
+    // Show confetti immediately for correct answers
+    if (isCorrect) {
+      confetti({
+        particleCount: 50,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ["#3b82f6", "#60a5fa", "#fbbf24"],
+      });
+    }
+
+    // Submit to backend
+    try {
+      const res = await fetch("/api/flashcards/generated", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          userKey,
+          flashcardId: current.id,
+          selectedAnswer: choice,
+        }),
+      });
+      
+      const data = await res.json() as {
+        success?: boolean;
+        wasCorrect?: boolean;
+        correctAnswer?: string;
+        pointsEarned?: number;
+      };
+      
+      // Update points from server response
+      const earned = data.pointsEarned ?? 0;
+      if (earned > 0) {
+        setEarnedPoints(earned);
+        setTotalPoints(prev => prev + earned);
+        setTimeout(() => setEarnedPoints(null), 2000);
+      }
+
+      // Auto-advance after 2 seconds
+      setTimeout(() => {
+        setIdx((i) => i + 1);
+        setSelectedChoice(null);
+        setShowResult(false);
+        setSubmitting(false);
+      }, 2000);
+    } catch (error) {
+      console.error("Failed to submit answer:", error);
+      // Still advance even on error
+      setTimeout(() => {
+        setIdx((i) => i + 1);
+        setSelectedChoice(null);
+        setShowResult(false);
+        setSubmitting(false);
+      }, 2000);
+    }
   }
-
-  const isQcm = !!current?.choices && current.choices.length > 0;
 
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
       {/* Header */}
       <section className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">Flashcards</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-white">AI Generated Flashcards</h1>
           <p className="text-white/60 mt-1">
-            {portion.type}: {portion.label}
+            {current ? `${current.ref}` : "Your personalized study session"}
           </p>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/5 border border-white/10">
-            <StreakFlame days={progress.streakDays} size="sm" />
+            <StreakFlame days={streakDays} size="sm" />
           </div>
           <div className="px-4 py-2 rounded-2xl bg-gradient-to-r from-ocean-500/20 to-sage-500/20 border border-ocean-400/20">
             <span className="text-sm text-white/60">Points: </span>
             <span className="font-bold text-white tabular-nums">
-              <AnimatedNumber value={progress.points} />
+              <AnimatedNumber value={totalPoints} />
             </span>
           </div>
         </div>
@@ -209,7 +223,7 @@ export default function FlashcardsPage() {
             Great job! You've finished all the flashcards for this session.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button variant="primary" onClick={() => void loadQueue(portion)}>
+            <Button variant="primary" onClick={() => void loadQueue()}>
               Start New Session
             </Button>
             <Link href="/dashboard">
@@ -222,112 +236,67 @@ export default function FlashcardsPage() {
           {/* Question */}
           <div className="mb-6">
             <div className="flex items-center gap-2 mb-3">
-              <span className="px-2 py-1 text-xs font-medium rounded-lg bg-ocean-500/20 text-ocean-300">
-                {isQcm ? "Multiple Choice" : "Free Recall"}
+              <span className={`px-2 py-1 text-xs font-medium rounded-lg ${
+                current.difficulty === "EASY" 
+                  ? "bg-green-500/20 text-green-300" 
+                  : current.difficulty === "MEDIUM"
+                  ? "bg-yellow-500/20 text-yellow-300"
+                  : "bg-red-500/20 text-red-300"
+              }`}>
+                {current.difficulty} • {current.points} pts
               </span>
               <span className="text-xs text-white/40">
                 Card {idx + 1} of {items.length}
               </span>
             </div>
             <div className="text-xl font-semibold text-white leading-relaxed">
-              {current.prompt}
+              {current.question}
             </div>
           </div>
 
-          {/* Answer Section */}
+          {/* Answer Section - Multiple Choice */}
           <div className="space-y-4">
-            {isQcm ? (
-              <>
-                <div className="grid gap-3">
-                  {current.choices!.map((choice) => {
-                    const isSelected = selectedChoice === choice;
-                    const isCorrect = choice === current.answer;
-                    const showFeedback = revealed && (isSelected || isCorrect);
+            <div className="grid gap-3">
+              {current.options.map((choice) => {
+                const isSelected = selectedChoice === choice;
+                const isCorrectAnswer = showResult && choice === correctAnswer;
+                const showFeedback = showResult;
 
-                    return (
-                      <button
-                        key={choice}
-                        className={`
-                          w-full text-left px-5 py-4 rounded-2xl border-2 font-medium transition-all duration-200
-                          ${showFeedback && isCorrect
-                            ? "border-green-400 bg-green-500/20 text-green-100 scale-[1.02]"
-                            : showFeedback && !isCorrect && isSelected
-                            ? "border-red-400 bg-red-500/20 text-red-100"
-                            : "border-white/10 bg-white/5 text-white hover:bg-white/10 hover:border-white/20"
-                          }
-                          disabled:cursor-not-allowed
-                        `}
-                        disabled={grading || revealed}
-                        onClick={() => void handleChoiceClick(choice)}
-                      >
-                        {choice}
-                        {showFeedback && isCorrect && <span className="float-right">✓</span>}
-                        {showFeedback && !isCorrect && isSelected && <span className="float-right">✗</span>}
-                      </button>
-                    );
-                  })}
+                return (
+                  <button
+                    key={choice}
+                    className={`
+                      w-full text-left px-5 py-4 rounded-2xl border-2 font-medium transition-all duration-200
+                      ${showFeedback && isCorrectAnswer
+                        ? "border-green-400 bg-green-500/20 text-green-100 scale-[1.02]"
+                        : showFeedback && isSelected && !wasCorrect
+                        ? "border-red-400 bg-red-500/20 text-red-100"
+                        : "border-white/10 bg-white/5 text-white hover:bg-white/10 hover:border-white/20"
+                      }
+                      disabled:cursor-not-allowed
+                    `}
+                    disabled={submitting || showResult}
+                    onClick={() => void handleChoiceClick(choice)}
+                  >
+                    {choice}
+                    {showFeedback && isCorrectAnswer && <span className="float-right">✓</span>}
+                    {showFeedback && isSelected && !wasCorrect && <span className="float-right">✗</span>}
+                  </button>
+                );
+              })}
+            </div>
+
+            {showResult && (
+              <div className={`p-4 rounded-2xl ${wasCorrect ? "bg-green-500/10 border border-green-500/20" : "bg-red-500/10 border border-red-500/20"}`}>
+                <div className="text-sm font-medium mb-1">
+                  {wasCorrect ? `🎉 Correct! +${current.points} points` : "❌ Not quite..."}
                 </div>
-
-                {revealed && (
-                  <div className={`p-4 rounded-2xl ${selectedChoice === current.answer ? "bg-green-500/10 border border-green-500/20" : "bg-red-500/10 border border-red-500/20"}`}>
-                    <div className="text-sm font-medium mb-1">
-                      {selectedChoice === current.answer ? "🎉 Correct!" : "❌ Not quite..."}
-                    </div>
-                    <div className="text-sm text-white/70">
-                      The answer is: <span className="font-semibold text-white">{current.answer}</span>
-                    </div>
+                {!wasCorrect && correctAnswer && (
+                  <div className="text-sm text-white/70">
+                    The correct answer is: <span className="font-semibold text-white">{correctAnswer}</span>
                   </div>
                 )}
-              </>
-            ) : (
-              <>
-                {!revealed ? (
-                  <Button variant="primary" size="lg" className="w-full" onClick={() => setRevealed(true)}>
-                    Reveal Answer
-                  </Button>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="p-5 rounded-2xl bg-gradient-to-br from-sage-500/10 to-ocean-500/10 border border-sage-400/20">
-                      <div className="text-sm font-medium text-white/60 mb-2">Answer</div>
-                      <div className="text-lg text-white">{current.answer}</div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <div className="text-sm text-white/60 text-center">How well did you know this?</div>
-                      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                        <Button
-                          variant="danger"
-                          disabled={grading}
-                          onClick={() => void grade("Again")}
-                        >
-                          Again
-                        </Button>
-                        <Button
-                          variant="secondary"
-                          disabled={grading}
-                          onClick={() => void grade("Hard")}
-                        >
-                          Hard
-                        </Button>
-                        <Button
-                          variant="secondary"
-                          disabled={grading}
-                          onClick={() => void grade("Good")}
-                        >
-                          Good
-                        </Button>
-                        <Button
-                          variant="warm"
-                          disabled={grading}
-                          onClick={() => void grade("Easy")}
-                        >
-                          Easy
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </>
+              </div>
             )}
           </div>
         </WidgetCard>
@@ -335,11 +304,7 @@ export default function FlashcardsPage() {
 
       {/* Keyboard Shortcuts Hint */}
       <div className="text-center text-xs text-white/40">
-        {isQcm
-          ? "Click an answer to submit"
-          : revealed
-          ? "Choose how well you knew the answer"
-          : "Press Space or Enter to reveal"}
+        Click an answer to submit
       </div>
     </div>
   );

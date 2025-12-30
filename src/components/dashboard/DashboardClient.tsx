@@ -11,7 +11,7 @@ import { PointsNotification } from "~/components/ui/PointsNotification";
 import Link from "next/link";
 import confetti from "canvas-confetti";
 import { addStudiedText } from "~/server/actions/dashboard";
-import { StatsSection, SearchSection, StudyHistorySection, FocusSection } from "./sections";
+import { StatsSection, SearchSection, StudyHistorySection } from "./sections";
 
 type DashboardClientProps = {
   userKey: string;
@@ -156,12 +156,6 @@ export function DashboardClient({ userKey, initialData, initialStudiedTexts }: D
         studied={studiedTexts}
         totalCount={totalCount}
         userKey={userKey}
-      />
-
-      <FocusSection
-        lastStudied={progress.lastStudied}
-        levelProgress={levelInfo.progress}
-        onPortionChange={() => {}}
       />
       </div>
     </>

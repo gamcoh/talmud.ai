@@ -33,6 +33,12 @@ enum Grade {
     Easy
 }
 
+enum Difficulty {
+    EASY
+    MEDIUM
+    HARD
+}
+
 model Flashcard {
     id          String     @id @default(cuid())
     portionType PortionType
@@ -46,6 +52,77 @@ model Flashcard {
     reviews     FlashcardReview[]
 
     @@index([portionType, portionLabel])
+}
+
+// AI-generated flashcards from studied texts
+model GeneratedFlashcard {
+    id          String     @id @default(cuid())
+    
+    // Reference to the studied text source
+    ref         String     // e.g., "Avot 1:1" or "Avoda Zara 2b:12"
+    heRef       String?
+    
+    // Question and answers (QCM format)
+    question    String
+    options     String[]   // Array of 3-4 possible answers
+    correctAnswer String   // The correct answer from options
+    
+    // Difficulty and points
+    difficulty  Difficulty
+    points      Int        // Points earned for correct answer
+    
+    // Context from Sefaria
+    contextText String?    // Full text context for segmented sources
+    
+    // Generation metadata
+    generatedAt DateTime   @default(now())
+    isActive    Boolean    @default(true)
+    
+    // Relations
+    userCompletions UserFlashcardCompletion[]
+    
+    @@index([ref])
+    @@index([difficulty])
+    @@index([generatedAt])
+}
+
+// Track which users completed which flashcards
+model UserFlashcardCompletion {
+    id            String   @id @default(cuid())
+    userId        String
+    user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    
+    flashcardId   String
+    flashcard     GeneratedFlashcard @relation(fields: [flashcardId], references: [id], onDelete: Cascade)
+    
+    wasCorrect    Boolean
+    pointsEarned  Int
+    completedAt   DateTime @default(now())
+    
+    @@unique([userId, flashcardId])
+    @@index([userId, completedAt])
+    @@index([flashcardId])
+}
+
+// Track flashcard generation jobs
+model FlashcardGenerationJob {
+    id          String   @id @default(cuid())
+    ref         String   @unique // Ensure we don't generate twice for same ref
+    status      FlashcardJobStatus @default(PENDING)
+    error       String?
+    attempts    Int      @default(0)
+    
+    createdAt   DateTime @default(now())
+    completedAt DateTime?
+    
+    @@index([status, createdAt])
+}
+
+enum FlashcardJobStatus {
+    PENDING
+    PROCESSING
+    COMPLETED
+    FAILED
 }
 
 model FlashcardReview {
@@ -84,6 +161,7 @@ model User {
     goals        Goal[]
     studySessions StudySession[]
     studiedTexts StudiedText[]
+    flashcardCompletions UserFlashcardCompletion[]
 
     @@index([userKey])
 }

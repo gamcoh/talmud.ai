@@ -138,6 +138,39 @@ exports.Prisma.FlashcardScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.GeneratedFlashcardScalarFieldEnum = {
+  id: 'id',
+  ref: 'ref',
+  heRef: 'heRef',
+  question: 'question',
+  options: 'options',
+  correctAnswer: 'correctAnswer',
+  difficulty: 'difficulty',
+  points: 'points',
+  contextText: 'contextText',
+  generatedAt: 'generatedAt',
+  isActive: 'isActive'
+};
+
+exports.Prisma.UserFlashcardCompletionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  flashcardId: 'flashcardId',
+  wasCorrect: 'wasCorrect',
+  pointsEarned: 'pointsEarned',
+  completedAt: 'completedAt'
+};
+
+exports.Prisma.FlashcardGenerationJobScalarFieldEnum = {
+  id: 'id',
+  ref: 'ref',
+  status: 'status',
+  error: 'error',
+  attempts: 'attempts',
+  createdAt: 'createdAt',
+  completedAt: 'completedAt'
+};
+
 exports.Prisma.FlashcardReviewScalarFieldEnum = {
   id: 'id',
   flashcardId: 'flashcardId',
@@ -254,6 +287,19 @@ exports.PortionType = exports.$Enums.PortionType = {
   Perek: 'Perek'
 };
 
+exports.Difficulty = exports.$Enums.Difficulty = {
+  EASY: 'EASY',
+  MEDIUM: 'MEDIUM',
+  HARD: 'HARD'
+};
+
+exports.FlashcardJobStatus = exports.$Enums.FlashcardJobStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
 exports.Grade = exports.$Enums.Grade = {
   Again: 'Again',
   Hard: 'Hard',
@@ -287,6 +333,9 @@ exports.GoalPeriod = exports.$Enums.GoalPeriod = {
 exports.Prisma.ModelName = {
   Post: 'Post',
   Flashcard: 'Flashcard',
+  GeneratedFlashcard: 'GeneratedFlashcard',
+  UserFlashcardCompletion: 'UserFlashcardCompletion',
+  FlashcardGenerationJob: 'FlashcardGenerationJob',
   FlashcardReview: 'FlashcardReview',
   User: 'User',
   Streak: 'Streak',
