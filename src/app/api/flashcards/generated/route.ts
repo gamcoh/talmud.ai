@@ -153,45 +153,52 @@ export async function POST(request: Request) {
     const wasCorrect = selectedAnswer === flashcard.correctAnswer;
     const pointsEarned = wasCorrect ? flashcard.points : 0;
 
-    // Create completion record
-    await db.userFlashcardCompletion.create({
-      data: {
-        userId: user.id,
-        flashcardId,
-        wasCorrect,
-        pointsEarned,
-      },
-    });
-
-    // Award points if correct
-    let updatedLevel = null;
-    if (wasCorrect && pointsEarned > 0) {
-      await db.points.create({
+    // Use a transaction to ensure all operations succeed or fail together
+    const result = await db.$transaction(async (tx) => {
+      // Create completion record
+      await tx.userFlashcardCompletion.create({
         data: {
           userId: user.id,
-          action: "COMPLETE_FLASHCARD",
-          points: pointsEarned,
-          metadata: {
-            ref: flashcard.ref,
-            difficulty: flashcard.difficulty,
-            flashcardId,
-          },
+          flashcardId,
+          wasCorrect,
+          pointsEarned,
         },
       });
 
-      // Update user's level and get the new total
-      updatedLevel = await db.level.upsert({
-        where: { userId: user.id },
-        create: {
-          userId: user.id,
-          currentLevel: 1,
-          totalPoints: pointsEarned,
-        },
-        update: {
-          totalPoints: { increment: pointsEarned },
-        },
-      });
-    }
+      // Award points if correct
+      let updatedLevel = null;
+      if (wasCorrect && pointsEarned > 0) {
+        await tx.points.create({
+          data: {
+            userId: user.id,
+            action: "COMPLETE_FLASHCARD",
+            points: pointsEarned,
+            metadata: {
+              ref: flashcard.ref,
+              difficulty: flashcard.difficulty,
+              flashcardId,
+            },
+          },
+        });
+
+        // Update user's level and get the new total
+        updatedLevel = await tx.level.upsert({
+          where: { userId: user.id },
+          create: {
+            userId: user.id,
+            currentLevel: 1,
+            totalPoints: pointsEarned,
+          },
+          update: {
+            totalPoints: { increment: pointsEarned },
+          },
+        });
+      }
+
+      return { updatedLevel };
+    });
+
+    const updatedLevel = result.updatedLevel;
 
     // Revalidate dashboard cache
     revalidatePath("/dashboard");
@@ -213,6 +220,11 @@ export async function POST(request: Request) {
       );
     }
     console.error("Error submitting flashcard answer:", error);
+    console.error("Error details:", {
+      flashcardId: request.url,
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return NextResponse.json(
       { error: "Failed to submit answer" },
       { status: 500 }

@@ -144,7 +144,13 @@ export default function FlashcardsPage() {
           selectedAnswer: choice,
         }),
       });
-      
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error("Server error submitting flashcard:", errorData);
+        throw new Error(errorData.error || `HTTP ${res.status}`);
+      }
+
       const data = await res.json() as {
         success?: boolean;
         wasCorrect?: boolean;
@@ -152,8 +158,14 @@ export default function FlashcardsPage() {
         pointsEarned?: number;
         newTotalPoints?: number;
         currentLevel?: number;
+        error?: string;
       };
-      
+
+      if (data.error) {
+        console.error("API returned error:", data.error);
+        throw new Error(data.error);
+      }
+
       // Update stats from server response
       if (data.newTotalPoints !== undefined) {
         updateStats({
@@ -168,6 +180,8 @@ export default function FlashcardsPage() {
       }, 2000);
     } catch (error) {
       console.error("Failed to submit answer:", error);
+      // Show error to user
+      alert(`Failed to submit answer: ${error instanceof Error ? error.message : 'Unknown error'}. Your progress may not have been saved.`);
       // Still advance even on error
       setTimeout(() => {
         nextCard();
