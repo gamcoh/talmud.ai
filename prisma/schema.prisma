@@ -57,30 +57,30 @@ model Flashcard {
 // AI-generated flashcards from studied texts
 model GeneratedFlashcard {
     id          String     @id @default(cuid())
-    
+
     // Reference to the studied text source
     ref         String     // e.g., "Avot 1:1" or "Avoda Zara 2b:12"
     heRef       String?
-    
+
     // Question and answers (QCM format)
     question    String
     options     String[]   // Array of 3-4 possible answers
     correctAnswer String   // The correct answer from options
-    
+
     // Difficulty and points
     difficulty  Difficulty
     points      Int        // Points earned for correct answer
-    
+
     // Context from Sefaria
     contextText String?    // Full text context for segmented sources
-    
+
     // Generation metadata
     generatedAt DateTime   @default(now())
     isActive    Boolean    @default(true)
-    
+
     // Relations
     userCompletions UserFlashcardCompletion[]
-    
+
     @@index([ref])
     @@index([difficulty])
     @@index([generatedAt])

@@ -13,13 +13,30 @@ import { requireUser } from "~/server/auth-helpers";
 export async function GET(request: Request) {
   try {
     const user = await requireUser();
-    
+
     const { searchParams } = new URL(request.url);
     const limit = Math.min(50, Math.max(1, parseInt(searchParams.get("limit") ?? "10")));
     const difficulty = searchParams.get("difficulty");
 
-    // Get flashcards the user hasn't completed yet
+    // Get all refs (sources) this user has studied
+    const studiedTexts = await db.studiedText.findMany({
+      where: { userId: user.id },
+      select: { ref: true },
+    });
+
+    const studiedRefs = studiedTexts.map((t) => t.ref);
+
+    if (studiedRefs.length === 0) {
+      // User hasn't studied any texts yet
+      return NextResponse.json({
+        flashcards: [],
+        count: 0,
+      });
+    }
+
+    // Get flashcards for sources the user has studied that they haven't completed yet
     const where = {
+      ref: { in: studiedRefs }, // Only flashcards from sources user has studied
       isActive: true,
       userCompletions: {
         none: {

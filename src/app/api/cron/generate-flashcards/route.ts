@@ -25,6 +25,7 @@ export async function GET(request: Request) {
     console.log("🚀 Starting flashcard generation cron job");
 
     // Generate flashcards for up to 20 refs per run
+    // Flashcards are shared: any user who studied a source can access its flashcards
     const result = await batchGenerateFlashcards(20);
 
     console.log("✅ Cron job completed:", result);
