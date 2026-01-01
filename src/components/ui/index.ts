@@ -12,3 +12,4 @@ export { Input } from "./Input";
 export { DailyGoalWidget } from "./DailyGoalWidget";
 export { WeeklyCalendar } from "./WeeklyCalendar";
 export { PointsNotification } from "./PointsNotification";
+export { UserMenu } from "./UserMenu";

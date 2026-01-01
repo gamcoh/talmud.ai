@@ -66,15 +66,34 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     error: "/auth/error",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
         token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
+        token.image = user.image;
+      }
+      // Refresh user data from DB when session is updated OR when token is missing image data
+      // (handles migration from old tokens that didn't store image)
+      if ((trigger === "update" || token.image === undefined) && token.id) {
+        const dbUser = await db.user.findUnique({
+          where: { id: token.id as string },
+          select: { name: true, email: true, image: true },
+        });
+        if (dbUser) {
+          token.name = dbUser.name;
+          token.email = dbUser.email;
+          token.image = dbUser.image;
+        }
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
+        session.user.name = token.name as string | null;
+        session.user.email = token.email as string;
+        session.user.image = token.image as string | null;
       }
       return session;
     },

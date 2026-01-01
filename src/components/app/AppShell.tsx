@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { type ReactNode } from "react";
 import { Logo } from "~/components/ui/Logo";
+import { UserMenu } from "~/components/ui/UserMenu";
 
 type AppShellProps = {
   children: ReactNode;
@@ -8,9 +9,6 @@ type AppShellProps = {
 
 const navLink =
   "rounded-xl px-4 py-2 text-sm font-medium text-white/70 hover:bg-white/10 hover:text-white transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ocean-400";
-
-const navLinkActive =
-  "rounded-xl px-4 py-2 text-sm font-medium text-white bg-white/10";
 
 export function AppShell({ children }: AppShellProps) {
   return (
@@ -31,6 +29,7 @@ export function AppShell({ children }: AppShellProps) {
               Leaderboard
             </Link>
           </nav>
+          <UserMenu />
         </div>
       </header>
 
