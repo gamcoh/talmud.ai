@@ -91,7 +91,7 @@ export async function getDueQueue(portion: Portion, limit = 10) {
   return [...due, ...created];
 }
 
-function scheduleNext({
+function scheduleNextInternal({
   grade,
   reps,
   ease,
@@ -117,15 +117,44 @@ function scheduleNext({
     const boost = grade === "Hard" ? -0.15 : grade === "Easy" ? 0.15 : 0;
     nextEase = Math.max(1.3, ease + boost);
 
-    if (nextReps === 1) nextInterval = 1;
-    else if (nextReps === 2) nextInterval = 3;
-    else nextInterval = Math.max(1, Math.round(intervalDays * nextEase));
+    // For Easy grade, use ease + 0.3 as multiplier
+    const multiplier = grade === "Easy" ? nextEase + 0.15 : nextEase;
+
+    if (nextReps === 1) {
+      // First repetition: Hard = 1, Good = 2, Easy = 3
+      if (grade === "Hard") nextInterval = 1;
+      else if (grade === "Good") nextInterval = 2;
+      else nextInterval = Math.max(1, Math.round(intervalDays * multiplier));
+    } else if (nextReps === 2) {
+      // Second repetition: Hard = 3, Good = 5, Easy uses multiplier
+      if (grade === "Hard") nextInterval = 3;
+      else if (grade === "Good") nextInterval = 5;
+      else nextInterval = Math.max(1, Math.round(intervalDays * multiplier));
+    } else {
+      nextInterval = Math.max(1, Math.floor(intervalDays * multiplier));
+    }
   }
 
   const dueAt = new Date();
   dueAt.setDate(dueAt.getDate() + nextInterval);
 
   return { dueAt, intervalDays: nextInterval, ease: nextEase, reps: nextReps };
+}
+
+// Export for testing
+export function scheduleNext(
+  review: { ease: number; intervalDays: number; reps: number },
+  grade: Grade
+): { intervalDays: number; ease: number; reps: number } {
+  const result = scheduleNextInternal({
+    grade,
+    ...review,
+  });
+  return {
+    intervalDays: result.intervalDays,
+    ease: result.ease,
+    reps: result.reps,
+  };
 }
 
 export async function gradeReview(reviewId: string, grade: Grade) {
@@ -135,7 +164,7 @@ export async function gradeReview(reviewId: string, grade: Grade) {
   });
   if (!review) throw new Error("Review not found");
 
-  const next = scheduleNext({
+  const next = scheduleNextInternal({
     grade,
     reps: review.reps,
     ease: review.ease,

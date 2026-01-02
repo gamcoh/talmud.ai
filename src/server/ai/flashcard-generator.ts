@@ -47,6 +47,19 @@ export async function generateFlashcardsForRef(ref: string): Promise<{
   const normalizedRef = normalizeRef(ref);
 
   try {
+    // Check if flashcards already exist for this ref
+    const existingCount = await db.generatedFlashcard.count({
+      where: { ref: normalizedRef },
+    });
+
+    if (existingCount > 0) {
+      console.log(`⏭️  Flashcards already exist for ref ${ref} (${existingCount} cards)`);
+      return {
+        success: true,
+        flashcardsCreated: 0,
+      };
+    }
+
     // Get a studied text to find heRef (any user's version is fine)
     const studiedText = await db.studiedText.findFirst({
       where: { ref },

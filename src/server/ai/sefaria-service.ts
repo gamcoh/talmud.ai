@@ -29,7 +29,7 @@ function parseReference(ref: string): {
   if (segmentMatch) {
     const [, book, page, segment] = segmentMatch;
     return {
-      base: `${book?.trim() ?? ""}${page ?? ""}`,
+      base: `${book?.trim() ?? ""} ${page ?? ""}`,
       isSegmented: true,
       segment: parseInt(segment ?? "0", 10),
     };

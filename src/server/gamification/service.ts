@@ -41,14 +41,18 @@ export async function getUser(userId: string) {
 
   // Initialize streak and level if they don't exist
   if (!user.streak) {
-    await db.streak.create({
-      data: { userId: user.id },
+    await db.streak.upsert({
+      where: { userId: user.id },
+      update: {},
+      create: { userId: user.id },
     });
   }
 
   if (!user.level) {
-    await db.level.create({
-      data: { userId: user.id },
+    await db.level.upsert({
+      where: { userId: user.id },
+      update: {},
+      create: { userId: user.id },
     });
   }
 
